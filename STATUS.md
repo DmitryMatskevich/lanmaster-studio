@@ -20,6 +20,8 @@ completed IDs:
   fixtures, protected-main evidence and repeated Gate P0 review
 - P1-01: PMD core entities and JSON Schema 2020-12 started; schema, example and
   negative fixtures added in `lanmaster-cad`
+- P1-02: PMD 2.0 Pydantic models and schema-conformance suite added in
+  `lanmaster-cad`
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -76,11 +78,15 @@ changed files:
 - `../lanmaster-cad/ids/wall_cabinet.IFC4.ids`
 - `../lanmaster-cad/ids/wall_cabinet.IFC4X3.ids`
 - `../lanmaster-cad/lmcad/pmd/schema/pmd-2.0.schema.json`
+- `../lanmaster-cad/lmcad/pmd/__init__.py`
+- `../lanmaster-cad/lmcad/pmd/io.py`
+- `../lanmaster-cad/lmcad/pmd/models.py`
 - `../lanmaster-cad/lmcad/pmd/examples/minimal_open_frame.json`
 - `../lanmaster-cad/lmcad/pmd/fixtures/negative/missing_assembly.json`
 - `../lanmaster-cad/lmcad/pmd/fixtures/negative/top_level_door.json`
 - `../lanmaster-cad/lmcad/pmd/fixtures/negative/unsafe_geometry_backend.json`
 - `../lanmaster-cad/tests/test_pmd_schema.py`
+- `../lanmaster-cad/tests/test_pmd_models.py`
 - `../lanmaster-cad/requirements.lock`
 
 test commands:
@@ -116,6 +122,7 @@ test commands:
 - `git remote -v`
 - `git branch --show-current`
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_pmd_schema.py -q`
+- `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_pmd_schema.py tests/test_pmd_models.py -q`
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest -q`
 
 results:
@@ -196,9 +203,18 @@ results:
 - PASS: P1-01 PMD schema tests passed: 3 passed in 1.08s.
 - PASS: full `lanmaster-cad` pytest suite passed after P1-01:
   109 passed, 10 warnings, 6 subtests passed in 153.55s.
+- PASS: P1-02 focused PMD schema/model conformance suite passed:
+  13 passed in 0.36s.
+- PASS: full `lanmaster-cad` pytest suite passed after P1-02:
+  119 passed, 10 warnings, 6 subtests passed in 150.67s.
+- BLOCKED: `$run-agents` review worker could not inspect because
+  `/Users/dmitrij/.local/bin/codex-code-mode-host` is missing.
+- PASS: coordinator local review completed for P1-02; no P1-03 canonical JSON,
+  content-hash, dependency-graph or semantic-reference implementation was
+  introduced.
 
 blockers:
 - none for Gate P0.
 
 next ID:
-- P1-02: Pydantic models and schema conformance suite
+- P1-03: units, canonical JSON and content hash
