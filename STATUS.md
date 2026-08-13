@@ -1,6 +1,6 @@
 # LANMASTER Studio Status
 
-milestone: P3 pilot migration and PMD stabilization
+milestone: P4 Studio API, data and workers
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -42,10 +42,22 @@ completed IDs:
 - P2-11: explicit v1 adapter/dispatcher without changing old CLI routing
 - P2-12: `pmd validate/preview/release/compare` headless CLI workflow
 - Gate P2: passed after two independent reviews and remediation of all findings
+- P3-01: v1 to PMD converter and migration report
+- P3-02: headless PDF/SVG/DXF/DWG/STEP intake with provenance and diagnostics
+- P3-03: complex floor cabinet pilot migrated through PMD
+- P3-04: wall cabinet pilot represented without unverified component reuse
+- P3-05: open frame pilot represented without cabinet-required schema fields
+- P3-06: non-cabinet PDU/imported STEP pilot represented
+- P3-07: declarative, import-step and legacy backends covered by pilots
+- P3-08: input/output format matrix completed
+- P3-09: legacy/PMD semantic parity completed
+- P3-10: PMD 2.0 stable contract and schema compatibility suite completed
+- P3-11: catalog migration cost/classification evidence completed
+- Gate P3: passed; PMD Stable is complete
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
-- API, frontend, editor and RAG are not scaffolded before PMD Stable gate P3.
+- API, frontend, editor and RAG may start from P4 after PMD Stable gate P3.
 - Remote branch protection is an external GitHub setting; local evidence is limited
   to CI and ownership configuration files.
 - Pilot set starts with `TWT-CBB-42U-8x10-P1`, `TWT-CBWNG-12U-6x6-BK`,
@@ -53,7 +65,7 @@ decisions/ADR:
 - `lanmaster-cad` P0/P1 changes were merged to `main` by PR #1 at `4a172c40`.
 - `lanmaster-cad` P2 changes were merged to `main` by PR #2 at `a6864229`.
 - PMD release uses staging and requires non-empty acceptance and geometry.
-- STEP output is explicitly AP214 in P2; AP242 qualification is a P3 format-matrix item.
+- STEP AP242 qualification is covered by P3 format-matrix evidence.
 
 changed files:
 - `README.md`
@@ -271,7 +283,7 @@ results:
   Gate P2 PASS.
 
 blockers:
-- none for Gate P2.
+- none for Gate P3.
 
 next ID:
-- P3-01: implement v1 to PMD converter and complete migration report
+- P4-01: scaffold FastAPI, migrations, OpenAPI and generated TS client
