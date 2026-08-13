@@ -32,6 +32,7 @@ REQUIRED_FILES = [
     "docs/discovery/p0-03-source-manifest.yml",
     "docs/discovery/p0-04-baseline-candidates.md",
     "docs/discovery/p0-04-source-cache-update.md",
+    "docs/discovery/p0-06-slo-gates-and-tolerances.md",
     "scripts/verify_skeleton.py",
 ]
 
@@ -142,6 +143,18 @@ def main() -> None:
     ):
         if phrase not in source_cache:
             fail(f"P0-04 source cache update missing required evidence: {phrase}")
+
+    p006 = read("docs/discovery/p0-06-slo-gates-and-tolerances.md")
+    for phrase in (
+        "p95 <= 300 ms",
+        "p50 <= 2 s, p95 <= 5 s",
+        "Release Gates",
+        "Format Read-Back Gates",
+        "Legacy/PMD Parity Tolerances",
+        "Known-defect handling",
+    ):
+        if phrase not in p006:
+            fail(f"P0-06 checklist missing required evidence: {phrase}")
 
     print("P0 scaffold verification passed")
 

@@ -11,6 +11,7 @@ completed IDs:
 - P0-04: partial source-cache update for wall-cabinet/open-frame pilots
 - P0-04: partial FRWAJ temporary export baseline candidate with known mass defect
 - P0-05: drafted ADR-0001 through ADR-0009 as proposed
+- P0-06: drafted proposed preview SLOs, release gates and parity tolerances
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -44,6 +45,7 @@ changed files:
 - `docs/discovery/p0-03-source-manifest.yml`
 - `docs/discovery/p0-04-baseline-candidates.md`
 - `docs/discovery/p0-04-source-cache-update.md`
+- `docs/discovery/p0-06-slo-gates-and-tolerances.md`
 - `scripts/verify_skeleton.py`
 - `../lanmaster-cad/sources/twt-cbwng/product.html`
 - `../lanmaster-cad/sources/twt-cbwng/source.json`
@@ -95,6 +97,7 @@ results:
 - PARTIAL: FRWAJ build/export to temp baseline passed; STEP/STP/IGES/IFC4/IFC4X3/GLB/DXF/PDF/PNG hashes recorded.
 - KNOWN DEFECT: FRWAJ mass remains implausible at about 743 kg; official page does not publish mass.
 - PASS: P0 scaffold verification passed after FRWAJ baseline-candidate update.
+- PASS: P0 scaffold verification passed after P0-06 checklist update.
 
 blockers:
 - Gate P0 blocker resolved on branch `studio-p0-source-cache`: selected CAD
@@ -105,4 +108,4 @@ blockers:
   and baseline; `TWT-FRWAJ-12U-GY` needs mass correction or known-defect approval.
 
 next ID:
-- P0-06, while P0-04 remains incomplete for final Gate P0 baseline
+- P0-07, while P0-04 remains incomplete for final Gate P0 baseline
