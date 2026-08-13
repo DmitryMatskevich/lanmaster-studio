@@ -1,6 +1,6 @@
 # LANMASTER Studio Status
 
-milestone: P1 PMD 2.0 and pmd-core
+milestone: P3 pilot migration and PMD stabilization
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -29,6 +29,19 @@ completed IDs:
 - P1-09: acceptance specification separated from assembly and geometry
 - P1-10: three structurally different PMD fixtures
 - Gate P1: passed after independent review, remediation and repeated review
+- P2-01: typed AssemblyIR and exporter-facing invariants with accepted CAD ADR
+- P2-02: deterministic compiler for assembly, placements and interfaces
+- P2-03: exact-B-Rep declarative backend including pinned SVG/DXF profiles
+- P2-04: pinned local STEP backend with pre-cache hash/unit/shape verification
+- P2-05: default-deny legacy backend with explicit registry and bounded builtin
+- P2-06: cloned component cache, content keys and affected-set invalidation
+- P2-07: stable GLB IDs/extras plus structural GLB 2.0 validation and read-back
+- P2-08: stable STEP/IFC IDs and deterministic IFC GUID/read-back contracts
+- P2-09: DXF2D/DXF3D IDs/layers/views and SHA-256 release manifest
+- P2-10: read-only acceptance runner and non-publishable preview contract
+- P2-11: explicit v1 adapter/dispatcher without changing old CLI routing
+- P2-12: `pmd validate/preview/release/compare` headless CLI workflow
+- Gate P2: passed after two independent reviews and remediation of all findings
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -38,6 +51,9 @@ decisions/ADR:
 - Pilot set starts with `TWT-CBB-42U-8x10-P1`, `TWT-CBWNG-12U-6x6-BK`,
   and `TWT-FRWAJ-12U-GY`; CBA is kept as documented fallback.
 - `lanmaster-cad` P0/P1 changes were merged to `main` by PR #1 at `4a172c40`.
+- `lanmaster-cad` P2 changes were merged to `main` by PR #2 at `a6864229`.
+- PMD release uses staging and requires non-empty acceptance and geometry.
+- STEP output is explicitly AP214 in P2; AP242 qualification is a P3 format-matrix item.
 
 changed files:
 - `README.md`
@@ -68,6 +84,7 @@ changed files:
 - `docs/discovery/p0-immutable-baseline-manifest.yml`
 - `docs/discovery/p0-adr-slo-decision-package.md`
 - `docs/discovery/p1-gate-review.md`
+- `docs/discovery/p2-gate-review.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `test-fixtures/source-formats/README.md`
@@ -143,6 +160,9 @@ test commands:
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_pmd_schema.py tests/test_pmd_models.py -q`
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest -q`
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest -q tests/test_pmd_schema.py tests/test_pmd_models.py tests/test_pmd_canonical.py tests/test_pmd_validation.py tests/test_pmd_expressions.py tests/test_pmd_patches.py tests/test_pmd_contracts.py tests/test_pmd_structural_fixtures.py`
+- `cd ../lanmaster-cad && .venv/bin/python -m pytest -q tests/test_pmd_ir.py tests/test_pmd_evaluation.py tests/test_pmd_compiler.py tests/test_pmd_declarative_backend.py tests/test_pmd_import_step_backend.py tests/test_pmd_legacy_backend.py tests/test_pmd_cache.py tests/test_pmd_exporters.py tests/test_pmd_verification.py tests/test_pmd_manifest.py tests/test_pmd_v1_adapter.py tests/test_pmd_workflow.py`
+- `cd ../lanmaster-cad && .venv/bin/python -m pytest -q`
+- `cd ../lanmaster-cad && .venv/bin/python -m lmcad.cli pmd release lmcad/pmd/examples/minimal_open_frame.json --out /tmp/pmd-p2-cli-smoke --profile baseline`
 
 results:
 - PASS: P0-01 scaffold verification passed
@@ -239,9 +259,19 @@ results:
 - PASS: independent Gate P1 review findings were fixed; repeated read-only
   review found no High/Medium findings and returned Gate P1 PASS.
 - PASS: Gate P1 evidence recorded in `docs/discovery/p1-gate-review.md`.
+- PASS: P2 focused suite: 75 passed with only existing ezdxf/pyparsing warnings.
+- PASS: full CAD regression after P2 remediation: 264 passed, 22 warnings,
+  6 subtests passed in 167.39s.
+- PASS: real PMD CLI release emitted STEP, IFC4, IFC4X3, GLB, DXF2D and report;
+  manifest was publishable and all six artifact hashes matched.
+- PASS: first independent P2 review found two High and four Medium defects;
+  cache preflight, release gates/staging, B-Rep compare, IFC GUID scope and
+  backend wiring were remediated with negative tests.
+- PASS: repeated independent review found no High/Medium findings and returned
+  Gate P2 PASS.
 
 blockers:
-- none for Gate P1.
+- none for Gate P2.
 
 next ID:
-- P2-01: define `AssemblyIR` and exporter-facing contracts
+- P3-01: implement v1 to PMD converter and complete migration report
