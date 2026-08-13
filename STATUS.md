@@ -1,6 +1,6 @@
 # LANMASTER Studio Status
 
-milestone: P0 Discovery, baseline and ADR
+milestone: P1 PMD 2.0 and pmd-core
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -18,6 +18,8 @@ completed IDs:
 - Gate P0: passed with CBWNG/FRWAJ accepted as legacy-only red baselines
 - P0 remediation: FRWAJ source-fact correction, controlled source-format
   fixtures, protected-main evidence and repeated Gate P0 review
+- P1-01: PMD core entities and JSON Schema 2020-12 started; schema, example and
+  negative fixtures added in `lanmaster-cad`
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -73,6 +75,13 @@ changed files:
 - `../lanmaster-cad/params/TWT-FRWAJ-12U-GY.yaml`
 - `../lanmaster-cad/ids/wall_cabinet.IFC4.ids`
 - `../lanmaster-cad/ids/wall_cabinet.IFC4X3.ids`
+- `../lanmaster-cad/lmcad/pmd/schema/pmd-2.0.schema.json`
+- `../lanmaster-cad/lmcad/pmd/examples/minimal_open_frame.json`
+- `../lanmaster-cad/lmcad/pmd/fixtures/negative/missing_assembly.json`
+- `../lanmaster-cad/lmcad/pmd/fixtures/negative/top_level_door.json`
+- `../lanmaster-cad/lmcad/pmd/fixtures/negative/unsafe_geometry_backend.json`
+- `../lanmaster-cad/tests/test_pmd_schema.py`
+- `../lanmaster-cad/requirements.lock`
 
 test commands:
 - `python3 scripts/verify_skeleton.py`
@@ -106,6 +115,8 @@ test commands:
 - `../lanmaster-cad/.venv/bin/python scripts/verify_source_fixtures.py`
 - `git remote -v`
 - `git branch --show-current`
+- `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_pmd_schema.py -q`
+- `cd ../lanmaster-cad && .venv/bin/python -m pytest -q`
 
 results:
 - PASS: P0-01 scaffold verification passed
@@ -182,9 +193,12 @@ results:
   until Gate P3 / PMD Stable.
 - PASS: full `lanmaster-cad` pytest suite passed after Gate P0 update:
   106 passed, 10 warnings, 6 subtests passed in 144.15s.
+- PASS: P1-01 PMD schema tests passed: 3 passed in 1.08s.
+- PASS: full `lanmaster-cad` pytest suite passed after P1-01:
+  109 passed, 10 warnings, 6 subtests passed in 153.55s.
 
 blockers:
 - none for Gate P0.
 
 next ID:
-- P1-01: PMD core entities and JSON Schema 2020-12
+- P1-02: Pydantic models and schema conformance suite
