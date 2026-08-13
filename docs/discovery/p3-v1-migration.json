@@ -1,0 +1,686 @@
+{
+  "ambiguities": [
+    "legacy cabinet-specific fields are preserved but cannot be assigned to component definitions without engineering review",
+    "the generated legacy-envelope geometry is a migration transport, not release-equivalent product geometry"
+  ],
+  "article": "TWT-CBB-42U-8x10-P1",
+  "converterVersion": "v1-to-pmd/2.0.0",
+  "coverageComplete": true,
+  "dispositions": [
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/article",
+      "status": "mapped",
+      "targetPath": "/model/article"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/bim/color_ral",
+      "status": "mapped",
+      "targetPath": "/materials/legacy-material/finish/colorRal"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/bim/datasheet_url",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/bim/datasheet_url"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/bim/density_kg_m3",
+      "status": "mapped",
+      "targetPath": "/materials/legacy-material/density/value"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/bim/front_clearance_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/bim/front_clearance_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/bim/ip_rating",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/bim/ip_rating"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/bim/manufacturer",
+      "status": "mapped",
+      "targetPath": "/model/manufacturer"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/bim/material",
+      "status": "mapped",
+      "targetPath": "/materials/legacy-material/name"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/bim/max_equipment_depth_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/bim/max_equipment_depth_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/bim/max_static_load_kg",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/bim/max_static_load_kg"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/bim/model_reference",
+      "status": "mapped",
+      "targetPath": "/model/series"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/bim/net_weight_kg",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/bim/net_weight_kg"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/bim/product_url",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/bim/product_url"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/bim/rear_clearance_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/bim/rear_clearance_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/door/frame_width_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/door/frame_width_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/door/handle",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/door/handle"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/door/handle_length_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/door/handle_length_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/door/handle_protrusion_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/door/handle_protrusion_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/door/handle_width_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/door/handle_width_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/door/handle_z_ratio",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/door/handle_z_ratio"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/door/opening",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/door/opening"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/door/opening_angle_deg",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/door/opening_angle_deg"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/door/perforation_ratio",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/door/perforation_ratio"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/door/rear",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/door/rear"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/door/rear_leaves",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/door/rear_leaves"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/door/thickness_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/door/thickness_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/door/type",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/door/type"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/family",
+      "status": "mapped",
+      "targetPath": "/assembly/properties/legacyFamily"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/adjustable_feet",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/adjustable_feet"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/cable_organizers",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/cable_organizers"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/floor_entry_depth_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/floor_entry_depth_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/floor_entry_width_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/floor_entry_width_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/foot_diameter_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/foot_diameter_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/latch_from_top_ratio",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/latch_from_top_ratio"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/latch_height_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/latch_height_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/latch_inset_end_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/latch_inset_end_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/latch_width_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/latch_width_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/organizer_depth_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/organizer_depth_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/organizer_thickness_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/organizer_thickness_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/organizer_width_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/organizer_width_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/roller_diameter_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/roller_diameter_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/rollers",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/rollers"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/roof_cap_height_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/roof_cap_height_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/roof_cap_taper_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/roof_cap_taper_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/roof_entry_depth_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/roof_entry_depth_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/roof_entry_width_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/roof_entry_width_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/roof_vent_slot_height_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/roof_vent_slot_height_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/roof_vent_slot_width_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/roof_vent_slot_width_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/roof_vent_slots",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/roof_vent_slots"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/side_latches",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/side_latches"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/spacer_height_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/spacer_height_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/spacer_thickness_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/spacer_thickness_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/spacer_width_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/spacer_width_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/fittings/spacers",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/fittings/spacers"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/frame/base_inset_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/frame/base_inset_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/frame/beam_height_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/frame/beam_height_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/frame/post_leg_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/frame/post_leg_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/frame/rail_flange_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/frame/rail_flange_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/frame/rear_gap_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/frame/rear_gap_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/geometry/base_height_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/geometry/base_height_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/geometry/bend_radius_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/geometry/bend_radius_mm"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/geometry/depth_mm",
+      "status": "mapped",
+      "targetPath": "/parameters/envelope.y"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/geometry/foot_clearance_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/geometry/foot_clearance_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/geometry/frame_thickness_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/geometry/frame_thickness_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/geometry/height_u",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/geometry/height_u"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/geometry/panel_thickness_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/geometry/panel_thickness_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/geometry/top_height_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/geometry/top_height_mm"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/geometry/width_mm",
+      "status": "mapped",
+      "targetPath": "/parameters/envelope.x"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/name",
+      "status": "mapped",
+      "targetPath": "/model/name"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/rails/depth_between_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/rails/depth_between_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/rails/front_offset_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/rails/front_offset_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/rails/hole_pitch_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/rails/hole_pitch_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/rails/hole_type",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/rails/hole_type"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/rails/thickness_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/rails/thickness_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/rails/width_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/rails/width_mm"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/schema_version",
+      "status": "mapped",
+      "targetPath": "/properties/migration/sourceSchema"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/verify/bounding_box_mm/0",
+      "status": "mapped",
+      "targetPath": "/parameters/envelope.x"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/verify/bounding_box_mm/1",
+      "status": "mapped",
+      "targetPath": "/parameters/envelope.y"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/verify/bounding_box_mm/2",
+      "status": "mapped",
+      "targetPath": "/parameters/envelope.z"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/lod_mass_factor",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/lod_mass_factor"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/mass_tolerance_pct",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/mass_tolerance_pct"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/max_glb_bytes",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/max_glb_bytes"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/max_glb_triangles",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/max_glb_triangles"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/min_clearance_mm",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/min_clearance_mm"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/rail_hole_count",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/rail_hole_count"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/0",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/0"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/1",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/1"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/10",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/10"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/11",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/11"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/12",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/12"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/13",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/13"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/14",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/14"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/15",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/15"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/16",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/16"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/17",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/17"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/18",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/18"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/19",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/19"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/2",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/2"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/20",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/20"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/21",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/21"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/3",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/3"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/4",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/4"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/5",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/5"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/6",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/6"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/7",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/7"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/8",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/8"
+    },
+    {
+      "reason": "preserved byte-accounted in the v1 snapshot; engineering semantics require pilot review",
+      "sourcePath": "/verify/required_components/9",
+      "status": "preserved-only",
+      "targetPath": "/properties/legacyV1Snapshot/verify/required_components/9"
+    },
+    {
+      "reason": "mapped to a typed PMD field",
+      "sourcePath": "/verify/tolerance_mm",
+      "status": "mapped",
+      "targetPath": "/acceptance/checks/*/tolerance"
+    }
+  ],
+  "losslessSnapshot": true,
+  "mappedLeafCount": 15,
+  "partialApproval": {
+    "approvalFile": "v1-migration-approval.yaml",
+    "approvedAt": "2026-08-13",
+    "approvedBy": "lanmaster-p3-domain-approver",
+    "decision": "allow-partial",
+    "expiresAt": "2027-08-13",
+    "preservedOnlyLeafCount": 93,
+    "productionReplacementAllowed": false,
+    "reportHash": "sha256:0495f728c6ceadf203e4522c2ecd21c990a43817e3ad79f7ea5c6cbde2e2b649",
+    "scope": "P3 transport conversion only; preserved-only v1 leaves require engineered PMD pilots and this conversion is not a catalog replacement.",
+    "signatureTrust": {
+      "algorithm": "rsa-pkcs1v15-sha256",
+      "keyId": "lanmaster-p3-domain-approver-2026",
+      "publicKeySha256": "sha256:0fc6f4bc5e7021f10f2e5c4a0fe02df75cb46a8a62566217b3ae3e8019f1bb54"
+    }
+  },
+  "preservedOnlyLeafCount": 93,
+  "semanticComplete": false,
+  "sourceBytesPreserved": true,
+  "sourceHash": "sha256:bdfccf61efdb2faabff407e9bcb571c6b61dc6dd198864f3299eb7e757781ba6",
+  "sourceLeafCount": 108,
+  "status": "partial",
+  "warnings": [
+    "93 source leaves require semantic migration"
+  ]
+}

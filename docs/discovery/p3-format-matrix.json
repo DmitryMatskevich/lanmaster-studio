@@ -1,0 +1,1201 @@
+{
+  "backendCoverage": [
+    "declarative",
+    "import-step",
+    "legacy-python"
+  ],
+  "inputMatrix": [
+    {
+      "caseId": "pdf-vector",
+      "expectedClassification": "vector",
+      "expectedFormat": "pdf",
+      "passed": true,
+      "report": {
+        "diagnostics": [],
+        "format": "pdf",
+        "metadata": {
+          "classification": "vector",
+          "pageCount": 2,
+          "pages": [
+            {
+              "classification": "vector",
+              "page": 1,
+              "rasterImages": 0,
+              "textCharacters": 120,
+              "vectorOperators": 28477
+            },
+            {
+              "classification": "vector",
+              "page": 2,
+              "rasterImages": 0,
+              "textCharacters": 240,
+              "vectorOperators": 22645
+            }
+          ],
+          "pdfVersion": "1.5",
+          "rasterImages": 0,
+          "textCharacters": 360,
+          "tools": {
+            "pdfimages": "pdfimages version 25.08.0",
+            "pdfinfo": "pdfinfo version 25.08.0",
+            "pdftotext": "pdftotext version 25.08.0"
+          },
+          "vectorOperators": 51122
+        },
+        "parser": "poppler",
+        "parserVersion": "pdfinfo version 25.08.0",
+        "sha256": "sha256:d2bc88c67c51b028b8d773cae636185c4c6dde72daa43d6a478801e837620272",
+        "signature": "pdf",
+        "sizeBytes": 2100993,
+        "source": "drawing_cba_f172.pdf",
+        "succeeded": true,
+        "units": "mm"
+      },
+      "requireUnits": true
+    },
+    {
+      "caseId": "pdf-raster",
+      "expectedClassification": "raster",
+      "expectedFormat": "pdf",
+      "passed": true,
+      "report": {
+        "diagnostics": [],
+        "format": "pdf",
+        "metadata": {
+          "classification": "raster",
+          "pageCount": 1,
+          "pages": [
+            {
+              "classification": "raster",
+              "page": 1,
+              "rasterImages": 1,
+              "textCharacters": 0,
+              "vectorOperators": 0
+            }
+          ],
+          "pdfVersion": "1.7",
+          "rasterImages": 1,
+          "textCharacters": 0,
+          "tools": {
+            "pdfimages": "pdfimages version 25.08.0",
+            "pdfinfo": "pdfinfo version 25.08.0",
+            "pdftotext": "pdftotext version 25.08.0"
+          },
+          "vectorOperators": 0
+        },
+        "parser": "poppler",
+        "parserVersion": "pdfinfo version 25.08.0",
+        "sha256": "sha256:e4efc7fe4c96715d8f210ea6a1a04d492569cb7cd43582530dd8a82b0852fbc6",
+        "signature": "pdf",
+        "sizeBytes": 113622,
+        "source": "previewdoc-413.pdf",
+        "succeeded": true,
+        "units": null
+      },
+      "requireUnits": false
+    },
+    {
+      "caseId": "svg-vector",
+      "expectedClassification": "vector",
+      "expectedFormat": "svg",
+      "passed": true,
+      "report": {
+        "diagnostics": [],
+        "format": "svg",
+        "metadata": {
+          "classification": "vector",
+          "elementCounts": {
+            "line": 1,
+            "rect": 1,
+            "svg": 1,
+            "title": 1
+          },
+          "externalImages": 0,
+          "height": 533.4,
+          "rasterImages": 0,
+          "vectorElements": 2,
+          "viewBox": [
+            0.0,
+            0.0,
+            520.0,
+            533.4
+          ],
+          "width": 520.0
+        },
+        "parser": "xml.etree",
+        "parserVersion": "1.3.0",
+        "sha256": "sha256:21e562060302e0237a28d9c06ae3f56d99da4cc1d04329be3c7350b123233ff9",
+        "signature": "svg",
+        "sizeBytes": 334,
+        "source": "minimal-panel.svg",
+        "succeeded": true,
+        "units": "mm"
+      },
+      "requireUnits": true
+    },
+    {
+      "caseId": "dxf",
+      "expectedClassification": null,
+      "expectedFormat": "dxf",
+      "passed": true,
+      "report": {
+        "diagnostics": [],
+        "format": "dxf",
+        "metadata": {
+          "dxfVersion": "AC1024",
+          "entityCount": 2,
+          "entityTypes": {
+            "LINE": 1,
+            "LWPOLYLINE": 1
+          },
+          "insertUnitsCode": 6,
+          "layers": [
+            "0",
+            "Defpoints"
+          ]
+        },
+        "parser": "ezdxf",
+        "parserVersion": "1.4.2",
+        "sha256": "sha256:31e81fce793d4e22c0f746d9a3d0441f5aa4ba05401ed081738df5320ce4bcae",
+        "signature": "dxf-ascii",
+        "sizeBytes": 15544,
+        "source": "minimal-panel.dxf",
+        "succeeded": true,
+        "units": "m"
+      },
+      "requireUnits": true
+    },
+    {
+      "caseId": "dwg-libredwg",
+      "expectedClassification": null,
+      "expectedFormat": "dwg",
+      "passed": true,
+      "report": {
+        "diagnostics": [],
+        "format": "dwg",
+        "metadata": {
+          "dwg2dxf": {
+            "available": true,
+            "returncode": 0,
+            "stderr": "Warning: Unstable Class object 504 TABLESTYLE (0xfff) 42/0\nWarning: Unstable Class object 505 MATERIAL (0x481) 45/0\nWarning: Unstable Class object 505 MATERIAL (0x481) 46/0\nWarning: Unstable Class object 505 MATERIAL (0x481) 47/0\nWarning: Unstable Class object 508 MLEADERSTYLE (0xfff) 68/0\nWarning: Unstable Class object 508 MLEADERSTYLE (0xfff) 75/0\nWarning: Object handle not found 628/0x274\nWarning: Unstable Class object 504 TABLESTYLE (0xfff) 42/87\nWarning: Unstable Class object 505 MATERIAL (0x481) 45/96\nWarning: Unstable Class object 505 MATERIAL (0x481) 46/97\nWarning: Unstable Class object 505 MATERIAL (0x481) 47/98\nWarning: Unstable Class object 508 MLEADERSTYLE (0xfff) 68/D8\nWarning: Unstable Class object 508 MLEADERSTYLE (0xfff) 75/E5\n"
+          },
+          "dwgread": {
+            "available": true,
+            "returncode": 0,
+            "stderr": "\nSUCCESS\n"
+          },
+          "dwgreadJsonKeys": [
+            "AuxHeader",
+            "CLASSES",
+            "FILEHEADER",
+            "HEADER",
+            "OBJECTS",
+            "SecondHeader",
+            "THUMBNAILIMAGE",
+            "Template",
+            "created_by"
+          ],
+          "dxf": {
+            "dxfVersion": "AC1015",
+            "entityCount": 1,
+            "entityTypes": {
+              "LINE": 1
+            },
+            "insertUnitsCode": 1,
+            "layers": [
+              "0",
+              "Defpoints"
+            ]
+          }
+        },
+        "parser": "libredwg",
+        "parserVersion": "dwgread 0.13.3",
+        "sha256": "sha256:358fc09c7c27737ba3b500eac122caee4c83c270f5ccb8a9f7f8f3d4b763d937",
+        "signature": "dwg-acad",
+        "sizeBytes": 174005,
+        "source": "libredwg-Line-2000.dwg",
+        "succeeded": true,
+        "units": "in"
+      },
+      "requireUnits": true
+    },
+    {
+      "caseId": "step",
+      "expectedClassification": null,
+      "expectedFormat": "step",
+      "passed": true,
+      "report": {
+        "diagnostics": [],
+        "format": "step",
+        "metadata": {
+          "bbox": {
+            "max": [
+              260.0,
+              332.0,
+              533.4
+            ],
+            "min": [
+              -260.0,
+              -332.0,
+              0.0
+            ],
+            "size": [
+              520.0,
+              664.0,
+              533.4
+            ]
+          },
+          "entityCount": 1785,
+          "part21": true,
+          "schema": [
+            "'AUTOMOTIVE_DESIGN { 1 0 10303 214 1 1 1 1 }'"
+          ],
+          "volume": 94675749.44
+        },
+        "parser": "build123d",
+        "parserVersion": "0.11.1",
+        "sha256": "sha256:6a4a4c84f06c722dbc6ff145cf1e4de799653186109407f238a0ccac3d052789",
+        "signature": "step-part21",
+        "sizeBytes": 82059,
+        "source": "frwaj-open-frame.step",
+        "succeeded": true,
+        "units": "mm"
+      },
+      "requireUnits": true
+    }
+  ],
+  "outputMatrix": [
+    {
+      "article": "TWT-CBB-42U-8x10-P1",
+      "artifactIntegrityErrors": [],
+      "artifacts": [
+        {
+          "bytes": 6878424,
+          "format": "DXF2D",
+          "passed": true,
+          "path": "TWT-CBB-42U-8x10-P1.dxf",
+          "readback": {
+            "shapeCount": 114,
+            "views": [
+              "FRONT",
+              "SIDE",
+              "TOP"
+            ]
+          },
+          "sha256": "sha256:4d30baa9015627e96e39dedb7d45dfc83a0ea348c4aa273adf5996fa1a49ad60"
+        },
+        {
+          "bytes": 1437230,
+          "format": "DXF3D",
+          "passed": true,
+          "path": "TWT-CBB-42U-8x10-P1.3D.dxf",
+          "readback": {
+            "shapeCount": 114
+          },
+          "sha256": "sha256:0116f4ff52aecf7e68711c63cd8f88db1903106c0c2d283683141da1be7c6786"
+        },
+        {
+          "bytes": 631060,
+          "format": "GLB",
+          "passed": true,
+          "path": "TWT-CBB-42U-8x10-P1.glb",
+          "readback": {
+            "bboxMatches": true,
+            "expectedBboxM": [
+              0.8000000002000001,
+              2.0550000000999997,
+              1.0
+            ],
+            "external": {
+              "gltfValidator": {
+                "errors": 0,
+                "hints": 0,
+                "infos": 0,
+                "passed": true,
+                "warnings": 0
+              },
+              "passed": true,
+              "three": {
+                "animations": 0,
+                "bboxMax": [
+                  0.4,
+                  2.0549999999999997,
+                  0.5000000000000003
+                ],
+                "bboxMin": [
+                  -0.4,
+                  -1.1015494072452725e-16,
+                  -0.49999999999999994
+                ],
+                "bboxSize": [
+                  0.8,
+                  2.0549999999999997,
+                  1.0000000000000002
+                ],
+                "cameras": 0,
+                "materialCount": 1,
+                "meshCount": 892,
+                "passed": true,
+                "scenes": 1,
+                "triangleCount": 5752
+              }
+            },
+            "materialMap": {
+              "floor-cabinet:base_front": "steel-black",
+              "floor-cabinet:base_left": "steel-black",
+              "floor-cabinet:base_rear": "steel-black",
+              "floor-cabinet:base_right": "steel-black",
+              "floor-cabinet:beam_bottom_front": "steel-black",
+              "floor-cabinet:beam_bottom_rear": "steel-black",
+              "floor-cabinet:beam_bottom_side_left": "steel-black",
+              "floor-cabinet:beam_bottom_side_right": "steel-black",
+              "floor-cabinet:beam_mid_side_left": "steel-black",
+              "floor-cabinet:beam_mid_side_right": "steel-black",
+              "floor-cabinet:beam_top_front": "steel-black",
+              "floor-cabinet:beam_top_rear": "steel-black",
+              "floor-cabinet:beam_top_side_left": "steel-black",
+              "floor-cabinet:beam_top_side_right": "steel-black",
+              "floor-cabinet:bottom_panel_front": "steel-black",
+              "floor-cabinet:bottom_panel_left": "steel-black",
+              "floor-cabinet:bottom_panel_rear": "steel-black",
+              "floor-cabinet:bottom_panel_right": "steel-black",
+              "floor-cabinet:door_field": "steel-black",
+              "floor-cabinet:door_frame_bottom": "steel-black",
+              "floor-cabinet:door_frame_left": "steel-black",
+              "floor-cabinet:door_frame_right": "steel-black",
+              "floor-cabinet:door_frame_top": "steel-black",
+              "floor-cabinet:door_rear_left_field": "steel-black",
+              "floor-cabinet:door_rear_left_frame_bottom": "steel-black",
+              "floor-cabinet:door_rear_left_frame_left": "steel-black",
+              "floor-cabinet:door_rear_left_frame_right": "steel-black",
+              "floor-cabinet:door_rear_left_frame_top": "steel-black",
+              "floor-cabinet:door_rear_right_field": "steel-black",
+              "floor-cabinet:door_rear_right_frame_bottom": "steel-black",
+              "floor-cabinet:door_rear_right_frame_left": "steel-black",
+              "floor-cabinet:door_rear_right_frame_right": "steel-black",
+              "floor-cabinet:door_rear_right_frame_top": "steel-black",
+              "floor-cabinet:foot_front_left": "steel-black",
+              "floor-cabinet:foot_front_left_stem": "steel-black",
+              "floor-cabinet:foot_front_right": "steel-black",
+              "floor-cabinet:foot_front_right_stem": "steel-black",
+              "floor-cabinet:foot_rear_left": "steel-black",
+              "floor-cabinet:foot_rear_left_stem": "steel-black",
+              "floor-cabinet:foot_rear_right": "steel-black",
+              "floor-cabinet:foot_rear_right_stem": "steel-black",
+              "floor-cabinet:handle_front": "steel-black",
+              "floor-cabinet:handle_front_lock": "steel-black",
+              "floor-cabinet:handle_rear": "steel-black",
+              "floor-cabinet:handle_rear_lock": "steel-black",
+              "floor-cabinet:latch_left_front": "steel-black",
+              "floor-cabinet:latch_left_rear": "steel-black",
+              "floor-cabinet:latch_right_front": "steel-black",
+              "floor-cabinet:latch_right_rear": "steel-black",
+              "floor-cabinet:organizer_left": "steel-black",
+              "floor-cabinet:organizer_left_wall0": "steel-black",
+              "floor-cabinet:organizer_left_wall1": "steel-black",
+              "floor-cabinet:organizer_right": "steel-black",
+              "floor-cabinet:organizer_right_wall0": "steel-black",
+              "floor-cabinet:organizer_right_wall1": "steel-black",
+              "floor-cabinet:post_front_left_x": "steel-black",
+              "floor-cabinet:post_front_left_y": "steel-black",
+              "floor-cabinet:post_front_right_x": "steel-black",
+              "floor-cabinet:post_front_right_y": "steel-black",
+              "floor-cabinet:post_rear_left_x": "steel-black",
+              "floor-cabinet:post_rear_left_y": "steel-black",
+              "floor-cabinet:post_rear_right_x": "steel-black",
+              "floor-cabinet:post_rear_right_y": "steel-black",
+              "floor-cabinet:rail_front_left": "steel-black",
+              "floor-cabinet:rail_front_left_flange_in": "steel-black",
+              "floor-cabinet:rail_front_left_flange_out": "steel-black",
+              "floor-cabinet:rail_front_right": "steel-black",
+              "floor-cabinet:rail_front_right_flange_in": "steel-black",
+              "floor-cabinet:rail_front_right_flange_out": "steel-black",
+              "floor-cabinet:rail_rear_left": "steel-black",
+              "floor-cabinet:rail_rear_left_flange_in": "steel-black",
+              "floor-cabinet:rail_rear_left_flange_out": "steel-black",
+              "floor-cabinet:rail_rear_right": "steel-black",
+              "floor-cabinet:rail_rear_right_flange_in": "steel-black",
+              "floor-cabinet:rail_rear_right_flange_out": "steel-black",
+              "floor-cabinet:roller_front_left": "steel-black",
+              "floor-cabinet:roller_front_left_bracket": "steel-black",
+              "floor-cabinet:roller_front_left_fork_xminus": "steel-black",
+              "floor-cabinet:roller_front_left_fork_xplus": "steel-black",
+              "floor-cabinet:roller_front_right": "steel-black",
+              "floor-cabinet:roller_front_right_bracket": "steel-black",
+              "floor-cabinet:roller_front_right_fork_xminus": "steel-black",
+              "floor-cabinet:roller_front_right_fork_xplus": "steel-black",
+              "floor-cabinet:roller_rear_left": "steel-black",
+              "floor-cabinet:roller_rear_left_bracket": "steel-black",
+              "floor-cabinet:roller_rear_left_fork_xminus": "steel-black",
+              "floor-cabinet:roller_rear_left_fork_xplus": "steel-black",
+              "floor-cabinet:roller_rear_right": "steel-black",
+              "floor-cabinet:roller_rear_right_bracket": "steel-black",
+              "floor-cabinet:roller_rear_right_fork_xminus": "steel-black",
+              "floor-cabinet:roller_rear_right_fork_xplus": "steel-black",
+              "floor-cabinet:roof_cap": "steel-black",
+              "floor-cabinet:roof_front": "steel-black",
+              "floor-cabinet:roof_left": "steel-black",
+              "floor-cabinet:roof_rear": "steel-black",
+              "floor-cabinet:roof_right": "steel-black",
+              "floor-cabinet:side_panel_left": "steel-black",
+              "floor-cabinet:side_panel_right": "steel-black",
+              "floor-cabinet:spacer_front_left_bottom": "steel-black",
+              "floor-cabinet:spacer_front_left_mid": "steel-black",
+              "floor-cabinet:spacer_front_left_top": "steel-black",
+              "floor-cabinet:spacer_front_right_bottom": "steel-black",
+              "floor-cabinet:spacer_front_right_mid": "steel-black",
+              "floor-cabinet:spacer_front_right_top": "steel-black",
+              "floor-cabinet:spacer_rear_left_bottom": "steel-black",
+              "floor-cabinet:spacer_rear_left_mid": "steel-black",
+              "floor-cabinet:spacer_rear_left_top": "steel-black",
+              "floor-cabinet:spacer_rear_right_bottom": "steel-black",
+              "floor-cabinet:spacer_rear_right_mid": "steel-black",
+              "floor-cabinet:spacer_rear_right_top": "steel-black",
+              "floor-cabinet:top_shroud_front": "steel-black",
+              "floor-cabinet:top_shroud_left": "steel-black",
+              "floor-cabinet:top_shroud_rear": "steel-black",
+              "floor-cabinet:top_shroud_right": "steel-black"
+            },
+            "materialProperties": {
+              "steel-black": {
+                "alphaMode": "OPAQUE",
+                "baseColorFactor": [
+                  0.011645,
+                  0.012335,
+                  0.011645,
+                  1.0
+                ],
+                "doubleSided": true
+              }
+            },
+            "shapeCount": 114
+          },
+          "sha256": "sha256:588c978fbad320f3846ac23d1bbe86baaf019a7748c61f9ad1be941f4636d60a"
+        },
+        {
+          "bytes": 514239,
+          "format": "IFC4",
+          "passed": true,
+          "path": "TWT-CBB-42U-8x10-P1.IFC4.ifc",
+          "readback": {
+            "componentCount": 1,
+            "materialMap": {
+              "floor-cabinet": [
+                "steel-black"
+              ]
+            },
+            "schema": "IFC4"
+          },
+          "sha256": "sha256:852de4ce1c77644b581377d2aed78f49352064b6e39dd33c06c6426bfa0e0133"
+        },
+        {
+          "bytes": 514474,
+          "format": "IFC4X3",
+          "passed": true,
+          "path": "TWT-CBB-42U-8x10-P1.IFC4X3.ifc",
+          "readback": {
+            "componentCount": 1,
+            "materialMap": {
+              "floor-cabinet": [
+                "steel-black"
+              ]
+            },
+            "schema": "IFC4X3"
+          },
+          "sha256": "sha256:49b31758285143160d0dda6d5c6ab0a94593fa2329abebb675b351f7aae57d32"
+        },
+        {
+          "bytes": 1460,
+          "format": "REPORT",
+          "passed": true,
+          "path": "TWT-CBB-42U-8x10-P1.verification.json",
+          "readback": {
+            "passed": true
+          },
+          "sha256": "sha256:c08863b2a0fb90d310c449255f465f818f03daf3eaeaf421c4a73dd2dca3cb17"
+        },
+        {
+          "bytes": 3031178,
+          "format": "STEP",
+          "passed": true,
+          "path": "TWT-CBB-42U-8x10-P1.step",
+          "readback": {
+            "applicationProtocol": "AP242",
+            "shapeCount": 114
+          },
+          "sha256": "sha256:c65dcfc4ed558a636bce90f997eabe6e3c25d04291b3e57a975a7179a024045d"
+        }
+      ],
+      "passed": true,
+      "pilot": "TWT-CBB-42U-8x10-P1.pmd.yaml",
+      "publishable": true,
+      "sourceMaterialErrors": [],
+      "sourcePinErrors": []
+    },
+    {
+      "article": "TWT-CBWNG-12U-6x6-BK",
+      "artifactIntegrityErrors": [],
+      "artifacts": [
+        {
+          "bytes": 213792,
+          "format": "DXF2D",
+          "passed": true,
+          "path": "TWT-CBWNG-12U-6x6-BK.dxf",
+          "readback": {
+            "shapeCount": 13,
+            "views": [
+              "FRONT",
+              "SIDE",
+              "TOP"
+            ]
+          },
+          "sha256": "sha256:69c8a861524a1638b195375c44a1c65eee48e1c6b7db31cc88434306d1f49ab4"
+        },
+        {
+          "bytes": 77224,
+          "format": "DXF3D",
+          "passed": true,
+          "path": "TWT-CBWNG-12U-6x6-BK.3D.dxf",
+          "readback": {
+            "shapeCount": 13
+          },
+          "sha256": "sha256:9fd97126ee9109faa29593f3d876fe12d818bd51e1e4255ec308d7209e282e96"
+        },
+        {
+          "bytes": 46156,
+          "format": "GLB",
+          "passed": true,
+          "path": "TWT-CBWNG-12U-6x6-BK.glb",
+          "readback": {
+            "bboxMatches": true,
+            "expectedBboxM": [
+              0.55,
+              0.658,
+              0.6
+            ],
+            "external": {
+              "gltfValidator": {
+                "errors": 0,
+                "hints": 0,
+                "infos": 0,
+                "passed": true,
+                "warnings": 0
+              },
+              "passed": true,
+              "three": {
+                "animations": 0,
+                "bboxMax": [
+                  0.275,
+                  0.32899999999999996,
+                  0.3
+                ],
+                "bboxMin": [
+                  -0.275,
+                  -0.329,
+                  -0.30000000000000004
+                ],
+                "bboxSize": [
+                  0.55,
+                  0.6579999999999999,
+                  0.6000000000000001
+                ],
+                "cameras": 0,
+                "materialCount": 2,
+                "meshCount": 78,
+                "passed": true,
+                "scenes": 1,
+                "triangleCount": 156
+              }
+            },
+            "materialMap": {
+              "bottom:body": "steel-black",
+              "door-frame-bottom:body": "steel-black",
+              "door-frame-left:body": "steel-black",
+              "door-frame-right:body": "steel-black",
+              "door-frame-top:body": "steel-black",
+              "door-glass:body": "door-glass",
+              "rear-panel:body": "steel-black",
+              "roof:body": "steel-black",
+              "side-left:body": "steel-black",
+              "side-right:body": "steel-black",
+              "swing-handle:body": "steel-black",
+              "wall-mount-lower:body": "steel-black",
+              "wall-mount-upper:body": "steel-black"
+            },
+            "materialProperties": {
+              "door-glass": {
+                "alphaMode": "BLEND",
+                "baseColorFactor": [
+                  0.214041,
+                  0.154872,
+                  0.078288,
+                  0.35
+                ],
+                "doubleSided": true
+              },
+              "steel-black": {
+                "alphaMode": "OPAQUE",
+                "baseColorFactor": [
+                  0.016754,
+                  0.021252,
+                  0.024254,
+                  1.0
+                ],
+                "doubleSided": true
+              }
+            },
+            "shapeCount": 13
+          },
+          "sha256": "sha256:5f9a5ae72aecc92e8d2dc8f210465bbbbd79a70e42434432058ed6c78a9d0087"
+        },
+        {
+          "bytes": 18520,
+          "format": "IFC4",
+          "passed": true,
+          "path": "TWT-CBWNG-12U-6x6-BK.IFC4.ifc",
+          "readback": {
+            "componentCount": 14,
+            "materialMap": {
+              "bottom": [
+                "steel-black"
+              ],
+              "door-frame-bottom": [
+                "steel-black"
+              ],
+              "door-frame-left": [
+                "steel-black"
+              ],
+              "door-frame-right": [
+                "steel-black"
+              ],
+              "door-frame-top": [
+                "steel-black"
+              ],
+              "door-glass": [
+                "door-glass"
+              ],
+              "rear-panel": [
+                "steel-black"
+              ],
+              "roof": [
+                "steel-black"
+              ],
+              "side-left": [
+                "steel-black"
+              ],
+              "side-right": [
+                "steel-black"
+              ],
+              "swing-handle": [
+                "steel-black"
+              ],
+              "wall-mount-lower": [
+                "steel-black"
+              ],
+              "wall-mount-upper": [
+                "steel-black"
+              ]
+            },
+            "schema": "IFC4"
+          },
+          "sha256": "sha256:dab5c96cb9f70994b134f12d834357ae9530e530b52d6d54064b5631ba5574d6"
+        },
+        {
+          "bytes": 18527,
+          "format": "IFC4X3",
+          "passed": true,
+          "path": "TWT-CBWNG-12U-6x6-BK.IFC4X3.ifc",
+          "readback": {
+            "componentCount": 14,
+            "materialMap": {
+              "bottom": [
+                "steel-black"
+              ],
+              "door-frame-bottom": [
+                "steel-black"
+              ],
+              "door-frame-left": [
+                "steel-black"
+              ],
+              "door-frame-right": [
+                "steel-black"
+              ],
+              "door-frame-top": [
+                "steel-black"
+              ],
+              "door-glass": [
+                "door-glass"
+              ],
+              "rear-panel": [
+                "steel-black"
+              ],
+              "roof": [
+                "steel-black"
+              ],
+              "side-left": [
+                "steel-black"
+              ],
+              "side-right": [
+                "steel-black"
+              ],
+              "swing-handle": [
+                "steel-black"
+              ],
+              "wall-mount-lower": [
+                "steel-black"
+              ],
+              "wall-mount-upper": [
+                "steel-black"
+              ]
+            },
+            "schema": "IFC4X3"
+          },
+          "sha256": "sha256:5e2bb67097124088e96fe4efa89f3cfcc00efb4fedbf72f729abc4f69ad933d8"
+        },
+        {
+          "bytes": 1701,
+          "format": "REPORT",
+          "passed": true,
+          "path": "TWT-CBWNG-12U-6x6-BK.verification.json",
+          "readback": {
+            "passed": true
+          },
+          "sha256": "sha256:84dd759e6e53a2e23ba172f63f1f82607d1bb5d1f8e3d0ce34b77537a61d8bb9"
+        },
+        {
+          "bytes": 214234,
+          "format": "STEP",
+          "passed": true,
+          "path": "TWT-CBWNG-12U-6x6-BK.step",
+          "readback": {
+            "applicationProtocol": "AP242",
+            "shapeCount": 13
+          },
+          "sha256": "sha256:63d2813b321d06416124bdd71b33bd2a53f1d60e82f18ab0369ebdb7a0cbfca5"
+        }
+      ],
+      "passed": true,
+      "pilot": "TWT-CBWNG-12U-6x6-BK.pmd.yaml",
+      "publishable": true,
+      "sourceMaterialErrors": [],
+      "sourcePinErrors": []
+    },
+    {
+      "article": "TWT-FRWAJ-12U-GY",
+      "artifactIntegrityErrors": [],
+      "artifacts": [
+        {
+          "bytes": 187171,
+          "format": "DXF2D",
+          "passed": true,
+          "path": "TWT-FRWAJ-12U-GY.dxf",
+          "readback": {
+            "shapeCount": 12,
+            "views": [
+              "FRONT",
+              "SIDE",
+              "TOP"
+            ]
+          },
+          "sha256": "sha256:43556e6d2805b40d38d099f2b8dd7c573ffb8e30fc6c3823ee43a3d8f315f362"
+        },
+        {
+          "bytes": 73990,
+          "format": "DXF3D",
+          "passed": true,
+          "path": "TWT-FRWAJ-12U-GY.3D.dxf",
+          "readback": {
+            "shapeCount": 12
+          },
+          "sha256": "sha256:c32006ad3406b4308ba9364c3f91d1273d7df24e2b9333863e6219f2551332f6"
+        },
+        {
+          "bytes": 41376,
+          "format": "GLB",
+          "passed": true,
+          "path": "TWT-FRWAJ-12U-GY.glb",
+          "readback": {
+            "bboxMatches": true,
+            "expectedBboxM": [
+              0.52,
+              0.5334,
+              0.664
+            ],
+            "external": {
+              "gltfValidator": {
+                "errors": 0,
+                "hints": 0,
+                "infos": 0,
+                "passed": true,
+                "warnings": 0
+              },
+              "passed": true,
+              "three": {
+                "animations": 0,
+                "bboxMax": [
+                  0.26,
+                  0.2667,
+                  0.332
+                ],
+                "bboxMin": [
+                  -0.26,
+                  -0.26670000000000005,
+                  -0.3320000000000001
+                ],
+                "bboxSize": [
+                  0.52,
+                  0.5334000000000001,
+                  0.6640000000000001
+                ],
+                "cameras": 0,
+                "materialCount": 1,
+                "meshCount": 72,
+                "passed": true,
+                "scenes": 1,
+                "triangleCount": 144
+              }
+            },
+            "materialMap": {
+              "beam-front-bottom:body": "steel-grey",
+              "beam-front-top:body": "steel-grey",
+              "beam-rear-bottom:body": "steel-grey",
+              "beam-rear-top:body": "steel-grey",
+              "depth-left-bottom:body": "steel-grey",
+              "depth-left-top:body": "steel-grey",
+              "depth-right-bottom:body": "steel-grey",
+              "depth-right-top:body": "steel-grey",
+              "post-front-left:body": "steel-grey",
+              "post-front-right:body": "steel-grey",
+              "post-rear-left:body": "steel-grey",
+              "post-rear-right:body": "steel-grey"
+            },
+            "materialProperties": {
+              "steel-grey": {
+                "alphaMode": "OPAQUE",
+                "baseColorFactor": [
+                  0.679293,
+                  0.679293,
+                  0.679293,
+                  1.0
+                ],
+                "doubleSided": true
+              }
+            },
+            "shapeCount": 12
+          },
+          "sha256": "sha256:653e8a4ddfecebe9b805cd86be538868db039c51895d9ac6d4e7adef78ee2bb5"
+        },
+        {
+          "bytes": 17060,
+          "format": "IFC4",
+          "passed": true,
+          "path": "TWT-FRWAJ-12U-GY.IFC4.ifc",
+          "readback": {
+            "componentCount": 13,
+            "materialMap": {
+              "beam-front-bottom": [
+                "steel-grey"
+              ],
+              "beam-front-top": [
+                "steel-grey"
+              ],
+              "beam-rear-bottom": [
+                "steel-grey"
+              ],
+              "beam-rear-top": [
+                "steel-grey"
+              ],
+              "depth-left-bottom": [
+                "steel-grey"
+              ],
+              "depth-left-top": [
+                "steel-grey"
+              ],
+              "depth-right-bottom": [
+                "steel-grey"
+              ],
+              "depth-right-top": [
+                "steel-grey"
+              ],
+              "post-front-left": [
+                "steel-grey"
+              ],
+              "post-front-right": [
+                "steel-grey"
+              ],
+              "post-rear-left": [
+                "steel-grey"
+              ],
+              "post-rear-right": [
+                "steel-grey"
+              ]
+            },
+            "schema": "IFC4"
+          },
+          "sha256": "sha256:1629cf95d0bfd96b8223445cb2b83632e05eff25d5b12531f93ae3a6afa55b8b"
+        },
+        {
+          "bytes": 17067,
+          "format": "IFC4X3",
+          "passed": true,
+          "path": "TWT-FRWAJ-12U-GY.IFC4X3.ifc",
+          "readback": {
+            "componentCount": 13,
+            "materialMap": {
+              "beam-front-bottom": [
+                "steel-grey"
+              ],
+              "beam-front-top": [
+                "steel-grey"
+              ],
+              "beam-rear-bottom": [
+                "steel-grey"
+              ],
+              "beam-rear-top": [
+                "steel-grey"
+              ],
+              "depth-left-bottom": [
+                "steel-grey"
+              ],
+              "depth-left-top": [
+                "steel-grey"
+              ],
+              "depth-right-bottom": [
+                "steel-grey"
+              ],
+              "depth-right-top": [
+                "steel-grey"
+              ],
+              "post-front-left": [
+                "steel-grey"
+              ],
+              "post-front-right": [
+                "steel-grey"
+              ],
+              "post-rear-left": [
+                "steel-grey"
+              ],
+              "post-rear-right": [
+                "steel-grey"
+              ]
+            },
+            "schema": "IFC4X3"
+          },
+          "sha256": "sha256:a721010f8859d2592ce47ecad1e85afcacb90f6710bbc57bb4dd8d5713fb5a71"
+        },
+        {
+          "bytes": 1727,
+          "format": "REPORT",
+          "passed": true,
+          "path": "TWT-FRWAJ-12U-GY.verification.json",
+          "readback": {
+            "passed": true
+          },
+          "sha256": "sha256:8b9bc377a4d73358f9f180dd0efedaf61c7f50bbb6352157883fcf71255f47b4"
+        },
+        {
+          "bytes": 197763,
+          "format": "STEP",
+          "passed": true,
+          "path": "TWT-FRWAJ-12U-GY.step",
+          "readback": {
+            "applicationProtocol": "AP242",
+            "shapeCount": 12
+          },
+          "sha256": "sha256:7064752523072682143c3caff9a067959638b116ccb2f685b7673ad90ae9d05a"
+        }
+      ],
+      "passed": true,
+      "pilot": "TWT-FRWAJ-12U-GY.pmd.yaml",
+      "publishable": true,
+      "sourceMaterialErrors": [],
+      "sourcePinErrors": []
+    },
+    {
+      "article": "TWT-PDVMT1-6x18-32A",
+      "artifactIntegrityErrors": [],
+      "artifacts": [
+        {
+          "bytes": 3686465,
+          "format": "DXF2D",
+          "passed": true,
+          "path": "TWT-PDVMT1-6x18-32A.dxf",
+          "readback": {
+            "shapeCount": 1,
+            "views": [
+              "FRONT",
+              "SIDE",
+              "TOP"
+            ]
+          },
+          "sha256": "sha256:4d74bacb85c54cab9849e5febdfb414b575ee237b43bc38c6433b1c49644020c"
+        },
+        {
+          "bytes": 739867,
+          "format": "DXF3D",
+          "passed": true,
+          "path": "TWT-PDVMT1-6x18-32A.3D.dxf",
+          "readback": {
+            "shapeCount": 1
+          },
+          "sha256": "sha256:b5ea580c5877a9b0911b79bdd0b83ddaf8a1c21efc53b86004aa7eef7eb95c9d"
+        },
+        {
+          "bytes": 818960,
+          "format": "GLB",
+          "passed": true,
+          "path": "TWT-PDVMT1-6x18-32A.glb",
+          "readback": {
+            "bboxMatches": true,
+            "expectedBboxM": [
+              0.065,
+              1.3,
+              0.056
+            ],
+            "external": {
+              "gltfValidator": {
+                "errors": 0,
+                "hints": 0,
+                "infos": 0,
+                "passed": true,
+                "warnings": 0
+              },
+              "passed": true,
+              "three": {
+                "animations": 0,
+                "bboxMax": [
+                  0.0325,
+                  1.2999999999999998,
+                  0.02800000000000028
+                ],
+                "bboxMin": [
+                  -0.0325,
+                  0,
+                  -0.027999999999999997
+                ],
+                "bboxSize": [
+                  0.065,
+                  1.2999999999999998,
+                  0.05600000000000028
+                ],
+                "cameras": 0,
+                "materialCount": 1,
+                "meshCount": 1431,
+                "passed": true,
+                "scenes": 1,
+                "triangleCount": 3020
+              }
+            },
+            "materialMap": {
+              "monitored-pdu:imported": "steel-black"
+            },
+            "materialProperties": {
+              "steel-black": {
+                "alphaMode": "OPAQUE",
+                "baseColorFactor": [
+                  0.011645,
+                  0.012335,
+                  0.011645,
+                  1.0
+                ],
+                "doubleSided": true
+              }
+            },
+            "shapeCount": 1
+          },
+          "sha256": "sha256:f0eb1d0a8fc061c20180aa3701d8ef7d21199c10b8deac5f011381068cc04e0c"
+        },
+        {
+          "bytes": 344743,
+          "format": "IFC4",
+          "passed": true,
+          "path": "TWT-PDVMT1-6x18-32A.IFC4.ifc",
+          "readback": {
+            "componentCount": 1,
+            "materialMap": {
+              "monitored-pdu": [
+                "steel-black"
+              ]
+            },
+            "schema": "IFC4"
+          },
+          "sha256": "sha256:03aab844be67f5930286b6adda7050f596a810ed08adea67b0dfcaf693b89cff"
+        },
+        {
+          "bytes": 344752,
+          "format": "IFC4X3",
+          "passed": true,
+          "path": "TWT-PDVMT1-6x18-32A.IFC4X3.ifc",
+          "readback": {
+            "componentCount": 1,
+            "materialMap": {
+              "monitored-pdu": [
+                "steel-black"
+              ]
+            },
+            "schema": "IFC4X3"
+          },
+          "sha256": "sha256:3b2eb79217c8c4a52806f3b2a16118e6352e303b2a66855f1c2ac5a3e35237de"
+        },
+        {
+          "bytes": 1434,
+          "format": "REPORT",
+          "passed": true,
+          "path": "TWT-PDVMT1-6x18-32A.verification.json",
+          "readback": {
+            "passed": true
+          },
+          "sha256": "sha256:e8e099748bcca92bdf54ae7e0c0e47852cc61fd140acf0cdfc9faddf3bd9512d"
+        },
+        {
+          "bytes": 4095620,
+          "format": "STEP",
+          "passed": true,
+          "path": "TWT-PDVMT1-6x18-32A.step",
+          "readback": {
+            "applicationProtocol": "AP242",
+            "shapeCount": 1
+          },
+          "sha256": "sha256:d3309e5b3a59334cb929d188722ca8f400568ff83100e14e70729078ad27030e"
+        }
+      ],
+      "passed": true,
+      "pilot": "TWT-PDVMT1-6x18-32A.pmd.yaml",
+      "publishable": true,
+      "sourceMaterialErrors": [],
+      "sourcePinErrors": []
+    }
+  ],
+  "passed": true,
+  "schema": "p3-format-matrix-1",
+  "stableContract": {
+    "approvalPublicKeySha256": "sha256:0fc6f4bc5e7021f10f2e5c4a0fe02df75cb46a8a62566217b3ae3e8019f1bb54",
+    "behavior": {
+      "compiler": {
+        "minimal_floor_cabinet.json": "sha256:b8ff57cfb5fee8f552ecc358fdbcb4c2a81dba33e2bc1d53bd2b18ed678e95ca",
+        "minimal_open_frame.json": "sha256:8f515718d96812c6952a678b58587880123ab6b33b1af30f74c3bca460af3365",
+        "minimal_wall_cabinet.json": "sha256:ae41f32176784d24f869cd4dbe139500ced15c1d23d8e78716e8881592f32f14"
+      },
+      "exporters": {
+        "example": "minimal_open_frame.json",
+        "sha256": "sha256:0e48c486909add859ee802d86def5de724fc34593853a57dc01f18f6f34b7494"
+      },
+      "migration": {
+        "fixture": "TWT-CBB-42U-8x10-P1.yaml",
+        "sha256": "sha256:d41f8d5a22b8c5fff31a844873798e1f336aa2d05484ce88a16693cbb6accad5"
+      }
+    },
+    "compatibilityExamples": {
+      "minimal_floor_cabinet.json": "sha256:0808ceba5274d213825b12db023b505c159c65e46f28c6a3e6f0650687645586",
+      "minimal_open_frame.json": "sha256:fef1da5193f733fe3c2d7e8399bcaa1d0d6c36b33004bbf2bd795810dcf8f1f1",
+      "minimal_wall_cabinet.json": "sha256:92de163427393f1202cf72bb8d3dbbd0585dc09a96d55192f71ef39bfde5ddc8"
+    },
+    "compilerVersion": "pmd-compiler/2.0.0",
+    "converterVersion": "v1-to-pmd/2.0.0",
+    "modelSchemaHash": "sha256:3eeb019418af31908c66bda50ebe0dfcff627e962fbbb01d6878198235b67c81",
+    "policy": "breaking changes require a new major schema version",
+    "schemaHash": "sha256:bb4bb50f3c1de0f6f3c28854ed611c1f9510d65c8f16f070a0b328cbc7195af6",
+    "schemaVersion": "2.0.0",
+    "stable": true
+  }
+}

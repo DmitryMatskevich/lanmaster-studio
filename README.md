@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: P3-01 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: P4-01 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
@@ -19,8 +19,8 @@ The initial repository contains:
 - ADR directory for architecture decisions owned by Studio.
 - `STATUS.md` as the compact continuation log for Codex work.
 
-API, frontend, editor, and RAG implementation are intentionally absent until gates
-P1, P2, and P3 are complete.
+API, frontend, editor, and RAG implementation may now start from P4 because
+Gate P3 / PMD Stable has passed.
 
 ## Local Verification
 
