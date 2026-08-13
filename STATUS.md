@@ -51,6 +51,8 @@ test commands:
 - `shasum -a 256 sources/twt-cbwng/product.html sources/twt-frwaj-xu-gy/product.html`
 - `cd ../lanmaster-cad && python3 -m json.tool sources/twt-cbwng/source.json`
 - `cd ../lanmaster-cad && python3 -m json.tool sources/twt-frwaj-xu-gy/source.json`
+- `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_rfa_extract.py -q`
+- `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_golden.py tests/test_drawing_intake.py tests/test_change_report.py tests/test_revit_convert.py tests/test_rfa_extract.py -q`
 
 results:
 - PASS: P0-01 scaffold verification passed
@@ -60,6 +62,8 @@ results:
   131.86s. Failure:
   `tests/test_rfa_extract.py::test_compare_with_card_uses_generated_parts`
   expected generated part count 100, current result is 108.
+- RESOLVED: RFA comparison report now includes `base` prefix inventory;
+  focused RFA tests pass.
 - PASS: source hashes recorded for cached CBB and CBA official PDFs/text files
 - PASS: P0 scaffold verification passed with P0-03 source manifest
 - PARTIAL: CBB existing release artifact set recorded as baseline candidate;
@@ -69,11 +73,13 @@ results:
   `TWT-FRWAJ-12U-GY`; hashes recorded.
 - PASS: source metadata JSON validates for both cached product pages.
 - PASS: P0 scaffold verification passed with source-cache update.
+- PASS: selected CAD compatibility suite now passes: 49 passed, 10 warnings in
+  130.15s on `lanmaster-cad` branch `studio-p0-source-cache`.
+- PASS: P0 scaffold verification passed after recording compatibility fix.
 
 blockers:
-- Gate P0 blocker: selected existing CAD compatibility suite is not green on
-  current `lanmaster-cad` main. Needs regression fix or explicit known-defect
-  baseline approval before Gate P0.
+- Gate P0 blocker resolved on branch `studio-p0-source-cache`: selected CAD
+  compatibility suite is green after `784803de`.
 - Gate P0 blocker: selected wall cabinet `TWT-CBWNG-12U-6x6-BK` and open frame
   `TWT-FRWAJ-12U-GY` now have cached official product pages, but still need
   drawing/table PDFs where available; `TWT-CBWNG-12U-6x6-BK` needs a v1 card;
