@@ -15,6 +15,8 @@ completed IDs:
 - P0-06: drafted proposed preview SLOs, release gates and parity tolerances
 - P0-07: scoped local toolchain smoke for PDF/HTML pilot sources and generated
   pilot artifacts
+- Gate P0: reviewed; blocked by P0-04 immutable baseline and known-defect
+  approval/correction evidence
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -50,6 +52,7 @@ changed files:
 - `docs/discovery/p0-04-source-cache-update.md`
 - `docs/discovery/p0-06-slo-gates-and-tolerances.md`
 - `docs/discovery/p0-07-toolchain-smoke.md`
+- `docs/discovery/p0-gate-review.md`
 - `scripts/verify_skeleton.py`
 - `../lanmaster-cad/sources/twt-cbwng/product.html`
 - `../lanmaster-cad/sources/twt-cbwng/source.json`
@@ -131,6 +134,8 @@ results:
   IFC request attachment under `var/requests/inbox/LMREQ-2026-000015`; it is
   not an official selected-pilot source fixture.
 - PASS: P0 scaffold verification passed after P0-07 scope update.
+- BLOCKED: Gate P0 review recorded; P0 is not passed because immutable baseline
+  storage and domain/QA known-defect approval or corrections are still missing.
 
 blockers:
 - Gate P0 blocker resolved on branch `studio-p0-source-cache`: selected CAD
@@ -141,5 +146,5 @@ blockers:
   known-defect approval/correction.
 
 next ID:
-- Gate P0 review remains blocked by incomplete P0-04 known-defect and immutable
-  baseline evidence
+- P0 remediation: resolve immutable baseline storage and CBWNG/FRWAJ known-defect
+  approval/correction before starting P1

@@ -34,6 +34,7 @@ REQUIRED_FILES = [
     "docs/discovery/p0-04-source-cache-update.md",
     "docs/discovery/p0-06-slo-gates-and-tolerances.md",
     "docs/discovery/p0-07-toolchain-smoke.md",
+    "docs/discovery/p0-gate-review.md",
     "scripts/verify_skeleton.py",
 ]
 
@@ -175,6 +176,18 @@ def main() -> None:
     ):
         if phrase not in p007:
             fail(f"P0-07 smoke report missing required evidence: {phrase}")
+
+    gate = read("docs/discovery/p0-gate-review.md")
+    for phrase in (
+        "Status: blocked.",
+        "Gate P0 is not passed.",
+        "49 passed, 10 warnings in 122.67s",
+        "current output is 542 x 354 x 658 mm",
+        "legacy mass is implausible at about 743 kg",
+        "API, frontend, editor and RAG remain out of scope",
+    ):
+        if phrase not in gate:
+            fail(f"P0 gate review missing required evidence: {phrase}")
 
     print("P0 scaffold verification passed")
 
