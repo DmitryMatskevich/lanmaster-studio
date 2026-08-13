@@ -1,6 +1,6 @@
 # ADR-0003: Object Storage Lifecycle
 
-Status: proposed
+Status: accepted
 
 ## Context
 

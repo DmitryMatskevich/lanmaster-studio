@@ -1,6 +1,6 @@
 # ADR-0006: Partial Preview Cache
 
-Status: proposed
+Status: accepted
 
 ## Context
 

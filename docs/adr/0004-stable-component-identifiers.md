@@ -1,6 +1,6 @@
 # ADR-0004: Stable Component Identifiers
 
-Status: proposed
+Status: accepted
 
 ## Context
 

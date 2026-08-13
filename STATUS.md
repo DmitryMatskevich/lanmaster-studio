@@ -15,8 +15,7 @@ completed IDs:
 - P0-06: drafted proposed preview SLOs, release gates and parity tolerances
 - P0-07: scoped local toolchain smoke for PDF/HTML pilot sources and generated
   pilot artifacts
-- Gate P0: reviewed; blocked by P0-04 immutable baseline and known-defect
-  approval/correction evidence
+- Gate P0: passed with CBWNG/FRWAJ accepted as legacy-only red baselines
 - P0 remediation: FRWAJ source-fact correction, controlled source-format
   fixtures, protected-main evidence and repeated Gate P0 review
 
@@ -56,6 +55,8 @@ changed files:
 - `docs/discovery/p0-07-toolchain-smoke.md`
 - `docs/discovery/p0-gate-review.md`
 - `docs/discovery/p0-protected-main-evidence.md`
+- `docs/discovery/p0-immutable-baseline-manifest.yml`
+- `docs/discovery/p0-adr-slo-decision-package.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `test-fixtures/source-formats/README.md`
@@ -164,22 +165,25 @@ results:
 - PASS: focused CAD regression after FRWAJ source-fact correction:
   37 passed, 10 warnings in 120.65s.
 - PASS: P0 scaffold verification passed after P0 remediation evidence update.
+- PASS: GitHub remote created at
+  `https://github.com/DmitryMatskevich/lanmaster-studio`.
+- PASS: repository made public by explicit command approval so branch protection
+  can be enabled on this account.
+- PASS: protected main read-back: strict status check `Repository skeleton`,
+  one approving review, code-owner reviews, stale review dismissal, admin
+  enforcement, no force pushes/deletions, conversation resolution required.
+- PASS: ADR-0001 through ADR-0009 accepted by user instruction on 2026-08-13.
+- PASS: P0-06 SLO/release/parity package accepted by user instruction on
+  2026-08-13; known defects remain non-release baseline evidence only.
+- PASS: immutable baseline manifest recorded at
+  `docs/discovery/p0-immutable-baseline-manifest.yml`.
+- PASS: Gate P0 passed for P1 entry; API/frontend/editor/RAG remain blocked
+  until Gate P3 / PMD Stable.
+- PASS: full `lanmaster-cad` pytest suite passed after Gate P0 update:
+  106 passed, 10 warnings, 6 subtests passed in 144.15s.
 
 blockers:
-- Gate P0 blocker resolved on branch `studio-p0-source-cache`: selected CAD
-  compatibility suite is green after `784803de`.
-- Gate P0 blocker: selected wall cabinet `TWT-CBWNG-12U-6x6-BK` and open frame
-  `TWT-FRWAJ-12U-GY` now have cached official product pages and baseline
-  candidates, but still need drawing/table PDFs where available and explicit
-  known-defect approval/correction.
-- Gate P0 blocker: FRWAJ mass is now source-corrected as unknown, but IDS policy
-  still requires NetWeight for IFC outputs.
-- Gate P0 blocker: `TWT-CBWNG-12U-6x6-BK` is unsupported by legacy v1 wall
-  geometry; no better documented real wall-cabinet pilot was found locally.
-- Gate P0 blocker: protected-main remote branch settings are unverified because
-  no remote is configured.
+- none for Gate P0.
 
 next ID:
-- P0 remediation remains blocked by FRWAJ NetWeight/IDS policy, CBWNG legacy
-  unsupported-wall-cabinet decision or replacement, protected-main external
-  evidence and ADR/SLO owner approvals
+- P1-01: PMD core entities and JSON Schema 2020-12

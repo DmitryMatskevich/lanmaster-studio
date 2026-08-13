@@ -1,6 +1,6 @@
 # P0-06 SLOs, Release Gates And Parity Tolerances
 
-Status: proposed pending domain/QA owner approval.
+Status: accepted by user instruction on 2026-08-13.
 
 Acceptance criterion: define measurable preview SLOs, mandatory release gates and
 legacy/PMD parity tolerances before PMD schema and compiler work begin.
@@ -32,8 +32,9 @@ Mandatory gates before publication:
 1. PMD/card source revision is immutable and identified by hash.
 2. Compiler/legacy generator version and dependency lock hash are recorded.
 3. Geometry build succeeds without using client state.
-4. Verification report passes required checks or explicitly records accepted
-   known defects.
+4. Verification report passes required checks for publication. Known defects may
+   be recorded for baseline/parity evidence, but they do not make a failed
+   artifact publishable.
 5. STEP/STP, IFC4, IFC4X3, GLB, 2D DXF, 3D DXF, drawing PDF and manifest are
    generated when the product profile requires them.
 6. Output files are independently re-opened or parsed where local tooling exists.
@@ -79,8 +80,8 @@ Initial tolerances for pilot semantic parity:
 Known-defect handling:
 
 - A known defect must name the source of uncertainty and the artifact affected.
-- Known defects do not become pass criteria; they are excluded only by explicit
-  domain/QA approval.
+- Known defects do not become pass criteria. They may be accepted only as scoped
+  legacy-baseline deviations and do not weaken IDS, release or publication gates.
 - Existing v1 defects are recorded before PMD parity comparison and cannot be
   counted as PMD regressions.
 
@@ -94,5 +95,6 @@ Known-defect handling:
 
 ## Result
 
-P0-06 is drafted as an engineering proposal. Gate P0 still requires owner review
-and final approval, plus completion of P0-04 pilot baselines.
+P0-06 is accepted for P1 entry by user instruction on 2026-08-13. Release gates
+remain mandatory; known defects accepted during P0 classify legacy baseline
+deviations only and do not authorize publication of failed artifacts.

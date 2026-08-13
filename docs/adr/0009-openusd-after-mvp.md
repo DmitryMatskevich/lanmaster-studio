@@ -1,6 +1,6 @@
 # ADR-0009: OpenUSD After MVP
 
-Status: proposed
+Status: accepted
 
 ## Context
 

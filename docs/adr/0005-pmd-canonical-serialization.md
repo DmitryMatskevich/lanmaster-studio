@@ -1,6 +1,6 @@
 # ADR-0005: PMD Canonical Serialization
 
-Status: proposed
+Status: accepted
 
 ## Context
 

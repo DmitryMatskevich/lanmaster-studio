@@ -1,6 +1,6 @@
 # ADR-0001: Repository Boundary And SDK Delivery
 
-Status: proposed
+Status: accepted
 
 ## Context
 

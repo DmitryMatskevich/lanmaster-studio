@@ -1,6 +1,6 @@
 # ADR-0002: Job Queue
 
-Status: proposed
+Status: accepted
 
 ## Context
 

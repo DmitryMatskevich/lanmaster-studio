@@ -1,6 +1,6 @@
 # ADR-0007: LLM Provider And Data Retention
 
-Status: proposed
+Status: accepted
 
 ## Context
 

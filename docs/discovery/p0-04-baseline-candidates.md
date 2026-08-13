@@ -1,12 +1,20 @@
-# P0-04 Baseline Candidates
+# P0-04 Legacy Baseline
 
 Acceptance criterion for full P0-04: immutable legacy baseline for every selected
 pilot, including commit SHA, source hashes, CLI command/stdout/stderr/duration,
 release artifacts, component inventory, metrics, renders, verification results
 and known defects.
 
-This file records evidence found locally without rebuilding or overwriting
-artifacts.
+Immutable baseline manifest:
+
+- `docs/discovery/p0-immutable-baseline-manifest.yml`
+- artifact root: `/private/tmp/lanmaster-studio-p0-immutable-baseline`
+
+Known-defect policy:
+
+- CBWNG and FRWAJ defects are accepted only for legacy baseline evidence.
+- IDS, verify, release, publication and future PMD parity gates are not weakened.
+- Failed artifacts remain non-publishable.
 
 ## CAD State
 
@@ -190,7 +198,7 @@ No complete passing baseline candidate is accepted yet for:
 
 ## P0-04 Result
 
-P0-04 is not complete. CBB, FRWAJ and CBWNG evidence are recorded as baseline
-candidates. Full baseline capture still needs CBB recapture under the immutable
-baseline root and explicit handling of CBWNG/FRWAJ known defects or policy
-exceptions.
+P0-04 is complete for Gate P0. CBB has a passing immutable local baseline.
+CBWNG and FRWAJ have immutable local red baselines with accepted legacy-only
+known defects recorded in `docs/discovery/p0-immutable-baseline-manifest.yml`.
+The known defects do not authorize release publication.

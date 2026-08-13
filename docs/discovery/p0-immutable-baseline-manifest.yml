@@ -1,0 +1,90 @@
+manifestVersion: 1
+roadmapId: P0-04
+status: immutable-local-baseline-recorded
+evidenceDate: "2026-08-13"
+artifactRoot: "/private/tmp/lanmaster-studio-p0-immutable-baseline"
+scope: "Fresh P0 legacy baseline artifacts and known-defect evidence. Generated artifacts are stored outside git; this manifest records commands, results and content hashes."
+policy:
+  knownDefectsApplyTo: "legacy-baseline-evidence-only"
+  releaseGatesWeakened: false
+  idsGatesWeakened: false
+  note: "CBWNG and FRWAJ known defects are accepted for P0 legacy-baseline classification only. They do not authorize publication/release and do not relax IDS, verify, PMD parity or future release gates."
+pilots:
+  - article: TWT-CBB-42U-8x10-P1
+    role: mandatory-floor-cabinet
+    command: "cd ../lanmaster-cad && .venv/bin/python -m lmcad.cli export params/TWT-CBB-42U-8x10-P1.yaml --out /private/tmp/lanmaster-studio-p0-immutable-baseline --lod 300"
+    exitCode: 0
+    result: pass
+    verify: pass
+    ids:
+      IFC4: pass
+      IFC4X3: pass
+    artifacts:
+      manifest: "69cb66f11d5b8d9dd076ce68096c8b4f163296e23999b3ec40a368e94af3b64c"
+      step: "6ed347c6fab95b48ada4b11cfbd150926915da328ae5bfead461fee6b722d5ef"
+      stp: "aeeae9ded8544dae89bed699dd6d110a68de7950bebad38743c13b1ffd0cf717"
+      ifc4: "9ebf24abffa896e6530986fc0847c021ed91ba75f5a2cf0fd89e6a6515670969"
+      ifc4x3: "6a83a0dffea49054813310ce5d8a4c02bbe473e4f4b653914390d3ddea73d80e"
+      glb: "28bac785934b32d18e54d7162b3a279ec562c8adf2caabda917ea334287861ce"
+      dxf2d: "4515230d2440ac894ded9b2652cecf0f2255e5417bd8c219a6855dc2f127be1d"
+      dxf3d: "0d4ead94160741979cba291b5ea505b3191cd9dff2f700a16f7fd5bc79bc1d61"
+      iges: "e502af80a3423d42b7283498fcff7d57658bd4d85ea864e09fbfa4f447a6dca1"
+      drawingPdf: "12e2fd7667318c1459947b0d1ac9d1cc028b4fa2c2ddccc5c092ae4274978b53"
+  - article: TWT-CBWNG-12U-6x6-BK
+    role: mandatory-wall-cabinet
+    command: "cd ../lanmaster-cad && .venv/bin/python -m lmcad.cli export params/TWT-CBWNG-12U-6x6-BK.yaml --out /private/tmp/lanmaster-studio-p0-immutable-baseline --lod 300 --no-strict"
+    exitCode: 1
+    result: known-defect-baseline
+    verify: fail
+    ids:
+      IFC4: pass
+      IFC4X3: pass
+    acceptedKnownDefect:
+      id: "P0-KD-CBWNG-LEGACY-WALL-GEOMETRY"
+      approvedBy: "user instruction 2026-08-13"
+      scope: "legacy baseline only"
+      reason: "Current v1 wall_cabinet route uses generic_accessory and models a door kit, not the full wall cabinet body."
+      failingChecks:
+        - "bbox X expected 550.0 mm, actual 542.0 mm"
+        - "bbox Y expected 600.0 mm, actual 354.0 mm"
+      releaseImpact: "Publication/release remains blocked until legacy geometry is corrected or a PMD implementation passes gates."
+    artifacts:
+      manifest: "2e7fd6aba84cdb402636f059afa48768ca12aebefa7dd16c839b71c25f93110b"
+      step: "e1c61e23dce13a040b06f5b4e414efa68fd57e1bccec5e9785481d3dd4ae7b77"
+      stp: "9ea730f2c8c9c9f1af8dd0add3029b0f20a5f104d81c70b39d12dd54eecf0df6"
+      ifc4: "d5dbd7ff973121e919eb7e3cc4b8b6b75441c255cf8850943906e85ebaaf382e"
+      ifc4x3: "4432b626c557592a581764aae2dea712a470fb36325abf8c7c67f8f8004a2d31"
+      glb: "22d9cad7ed9ab655cbe234adacab790e27ce16c0a498c16cfe8c3d71964eec0c"
+      dxf2d: "2e1d42ff8106eb0c369f62ab853f3060e07b5efaa4ff6d2fb1094806a4e757f1"
+      dxf3d: "603252373185fd15625b376301d6bc91a14c209c2d1bfd573d8e72b2ee628f4c"
+      iges: "12d8365e4b8b3664d23f58aa8b655318ce5b8cff8096dff690ffde0bc252f3df"
+      drawingPdf: "81fbf80426017e079c42cdc93123f062841aa3ee948d9b10de3dc5417db03734"
+  - article: TWT-FRWAJ-12U-GY
+    role: mandatory-open-frame
+    command: "cd ../lanmaster-cad && .venv/bin/python -m lmcad.cli export params/TWT-FRWAJ-12U-GY.yaml --out /private/tmp/lanmaster-studio-p0-immutable-baseline --lod 300"
+    exitCode: 1
+    result: known-defect-baseline
+    verify: pass
+    ids:
+      IFC4: fail
+      IFC4X3: fail
+    acceptedKnownDefect:
+      id: "P0-KD-FRWAJ-MISSING-NETWEIGHT"
+      approvedBy: "user instruction 2026-08-13"
+      scope: "legacy baseline only"
+      reason: "Official product page does not publish item mass; the previous 743 kg card value was removed as untrusted."
+      failingChecks:
+        - "IFC4 IDS fails because NetWeight is absent"
+        - "IFC4X3 IDS fails because NetWeight is absent"
+      releaseImpact: "Publication/release remains blocked until NetWeight is obtained or the product profile formally changes in a later approved milestone."
+    artifacts:
+      manifest: "45d76a0e603c2b307f514298c382305e44a047e0c30a435dc48337f0eaf59883"
+      step: "6a4a4c84f06c722dbc6ff145cf1e4de799653186109407f238a0ccac3d052789"
+      stp: "19f4bca21cf456b9fd7e0069672407a3fe9c6e21bd003e96c242ad8291fb59d5"
+      ifc4: "9ba44a5df57149d91c7150c7c29f364d67dc8f69bcab85ccdb0a36e5eb631777"
+      ifc4x3: "1a8352bfa0a1df2f33dbde00f4e037b81746350c34f493ff8f44f7e466bc7d01"
+      glb: "19af29b7418a84bbdfd45781746aa7aa19ba83fa150dbb7331d3da40dd879ecb"
+      dxf2d: "55f610cbce44ab0aad93a6cf4f79d87c6b1c95d4b887e7b3ea65eae2fcee2f91"
+      dxf3d: "bf9dfea3f0086d18460f743d0da59e3334e821ac3f7dc71dd375194d805aac6e"
+      iges: "be670758c8b7dccd8a289eaaa41d7feb404e31150fff03af0381d626e72b64d2"
+      drawingPdf: "833af5f6f1860b6b2e2baea5eb2f97b80c997d90a5bd9539736d16673d75544c"
