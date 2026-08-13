@@ -9,6 +9,7 @@ completed IDs:
 - P0-03: selected pilot candidates and recorded source hashes/gaps
 - P0-04: partial only; recorded existing CBB baseline candidate evidence
 - P0-04: partial source-cache update for wall-cabinet/open-frame pilots
+- P0-05: drafted ADR-0001 through ADR-0009 as proposed
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -29,6 +30,15 @@ changed files:
 - `.github/CODEOWNERS`
 - `.github/ISSUE_TEMPLATE/roadmap_task.yml`
 - `docs/adr/README.md`
+- `docs/adr/0001-repository-boundary-and-sdk-delivery.md`
+- `docs/adr/0002-job-queue.md`
+- `docs/adr/0003-object-storage-lifecycle.md`
+- `docs/adr/0004-stable-component-identifiers.md`
+- `docs/adr/0005-pmd-canonical-serialization.md`
+- `docs/adr/0006-partial-preview-cache.md`
+- `docs/adr/0007-llm-provider-and-data-retention.md`
+- `docs/adr/0008-release-gates.md`
+- `docs/adr/0009-openusd-after-mvp.md`
 - `docs/discovery/p0-02-cad-inventory.md`
 - `docs/discovery/p0-03-source-manifest.yml`
 - `docs/discovery/p0-04-baseline-candidates.md`
@@ -53,6 +63,7 @@ test commands:
 - `cd ../lanmaster-cad && python3 -m json.tool sources/twt-frwaj-xu-gy/source.json`
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_rfa_extract.py -q`
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_golden.py tests/test_drawing_intake.py tests/test_change_report.py tests/test_revit_convert.py tests/test_rfa_extract.py -q`
+- `python3 scripts/verify_skeleton.py`
 
 results:
 - PASS: P0-01 scaffold verification passed
@@ -76,6 +87,7 @@ results:
 - PASS: selected CAD compatibility suite now passes: 49 passed, 10 warnings in
   130.15s on `lanmaster-cad` branch `studio-p0-source-cache`.
 - PASS: P0 scaffold verification passed after recording compatibility fix.
+- PASS: P0 scaffold verification passed after P0-05 ADR update.
 
 blockers:
 - Gate P0 blocker resolved on branch `studio-p0-source-cache`: selected CAD
@@ -86,5 +98,4 @@ blockers:
   `TWT-FRWAJ-12U-GY` needs mass correction or known-defect approval.
 
 next ID:
-- P0-04 remains active; full baseline capture is blocked until source gaps and
-  compatibility failure are resolved
+- P0-06, while P0-04 remains incomplete for final Gate P0 baseline

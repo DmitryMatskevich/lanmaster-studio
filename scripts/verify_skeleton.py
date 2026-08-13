@@ -19,6 +19,15 @@ REQUIRED_FILES = [
     ".github/CODEOWNERS",
     ".github/ISSUE_TEMPLATE/roadmap_task.yml",
     "docs/adr/README.md",
+    "docs/adr/0001-repository-boundary-and-sdk-delivery.md",
+    "docs/adr/0002-job-queue.md",
+    "docs/adr/0003-object-storage-lifecycle.md",
+    "docs/adr/0004-stable-component-identifiers.md",
+    "docs/adr/0005-pmd-canonical-serialization.md",
+    "docs/adr/0006-partial-preview-cache.md",
+    "docs/adr/0007-llm-provider-and-data-retention.md",
+    "docs/adr/0008-release-gates.md",
+    "docs/adr/0009-openusd-after-mvp.md",
     "docs/discovery/p0-02-cad-inventory.md",
     "docs/discovery/p0-03-source-manifest.yml",
     "docs/discovery/p0-04-baseline-candidates.md",
@@ -71,6 +80,25 @@ def main() -> None:
     codeowners = read(".github/CODEOWNERS")
     if not re.search(r"^\*\s+@", codeowners, flags=re.MULTILINE):
         fail("CODEOWNERS must define a default owner")
+
+    adr_index = read("docs/adr/README.md")
+    for number in range(1, 10):
+        adr_id = f"ADR-{number:04d}"
+        if adr_id not in adr_index:
+            fail(f"ADR index missing {adr_id}")
+        adr_text = read(f"docs/adr/{number:04d}-" + {
+            1: "repository-boundary-and-sdk-delivery.md",
+            2: "job-queue.md",
+            3: "object-storage-lifecycle.md",
+            4: "stable-component-identifiers.md",
+            5: "pmd-canonical-serialization.md",
+            6: "partial-preview-cache.md",
+            7: "llm-provider-and-data-retention.md",
+            8: "release-gates.md",
+            9: "openusd-after-mvp.md",
+        }[number])
+        if "Status: proposed" not in adr_text or "## Decision" not in adr_text:
+            fail(f"{adr_id} must include proposed status and decision")
 
     inventory = read("docs/discovery/p0-02-cad-inventory.md")
     for phrase in (
