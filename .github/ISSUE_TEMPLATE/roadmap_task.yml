@@ -1,0 +1,33 @@
+name: Roadmap Task
+description: Track a LANMASTER Studio roadmap ID.
+title: "[Roadmap] "
+labels: ["roadmap:P0"]
+body:
+  - type: input
+    id: roadmap_id
+    attributes:
+      label: Roadmap ID
+      placeholder: P0-02
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Concrete evidence required to close the roadmap ID.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+      description: Commands, artifacts, reports, or review evidence.
+    validations:
+      required: true
+  - type: textarea
+    id: blockers
+    attributes:
+      label: Blockers
+      description: External dependencies or scope decisions.
+    validations:
+      required: false

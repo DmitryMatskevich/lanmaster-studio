@@ -1,0 +1,28 @@
+labels:
+  - name: roadmap:P0
+    color: "0E8A16"
+    description: Discovery, baseline and ADR work
+  - name: roadmap:P1
+    color: "1D76DB"
+    description: PMD 2.0 and pmd-core work
+  - name: roadmap:P2
+    color: "5319E7"
+    description: Compiler and CAD integration work
+  - name: roadmap:P3
+    color: "FBCA04"
+    description: Pilot migration and PMD stabilization work
+  - name: type:adr
+    color: "BFDADC"
+    description: Architecture decision record
+  - name: type:test
+    color: "C2E0C6"
+    description: Automated or manual verification work
+  - name: risk:legacy-regression
+    color: "D93F0B"
+    description: Change can affect existing lanmaster-cad behavior
+  - name: gate
+    color: "0052CC"
+    description: Milestone gate evidence or blocker
+  - name: blocker
+    color: "B60205"
+    description: External or unresolved blocker

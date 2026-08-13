@@ -1,0 +1,5 @@
+# Update named owners when the remote repository and team slugs are created.
+* @lanmaster-studio/tech-leads
+
+/docs/adr/ @lanmaster-studio/tech-leads
+/.github/ @lanmaster-studio/tech-leads
