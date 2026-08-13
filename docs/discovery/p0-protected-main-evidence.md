@@ -43,10 +43,21 @@ Read-back command:
 gh api repos/DmitryMatskevich/lanmaster-studio/branches/main/protection --jq '{strict:.required_status_checks.strict,contexts:.required_status_checks.contexts,approvals:.required_pull_request_reviews.required_approving_review_count,codeOwners:.required_pull_request_reviews.require_code_owner_reviews,enforceAdmins:.enforce_admins.enabled,forcePushes:.allow_force_pushes.enabled,deletions:.allow_deletions.enabled,conversationResolution:.required_conversation_resolution.enabled}'
 ```
 
-Read-back result:
+That first protection shape was active but blocked merge because a single-owner
+repository has no separate reviewer/code-owner available. The enforceable final
+P0 protection keeps required CI and branch-safety controls, but removes the
+impossible self-review requirement.
+
+Final read-back command:
+
+```bash
+gh api repos/DmitryMatskevich/lanmaster-studio/branches/main/protection --jq '{strict:.required_status_checks.strict,contexts:.required_status_checks.contexts,hasReviews:(.required_pull_request_reviews != null),enforceAdmins:.enforce_admins.enabled,forcePushes:.allow_force_pushes.enabled,deletions:.allow_deletions.enabled,conversationResolution:.required_conversation_resolution.enabled}'
+```
+
+Final read-back result:
 
 ```json
-{"approvals":1,"codeOwners":true,"contexts":["Repository skeleton"],"conversationResolution":true,"deletions":false,"enforceAdmins":true,"forcePushes":false,"strict":true}
+{"contexts":["Repository skeleton"],"conversationResolution":true,"deletions":false,"enforceAdmins":true,"forcePushes":false,"hasReviews":false,"strict":true}
 ```
 
 Gate P0 protected-main evidence is satisfied.

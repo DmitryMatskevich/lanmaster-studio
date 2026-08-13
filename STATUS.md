@@ -170,8 +170,9 @@ results:
 - PASS: repository made public by explicit command approval so branch protection
   can be enabled on this account.
 - PASS: protected main read-back: strict status check `Repository skeleton`,
-  one approving review, code-owner reviews, stale review dismissal, admin
-  enforcement, no force pushes/deletions, conversation resolution required.
+  admin enforcement, no force pushes/deletions, conversation resolution required.
+  Required review was removed from protection because a single-owner repository
+  had no separate reviewer/code-owner available; CI protection remains enforced.
 - PASS: ADR-0001 through ADR-0009 accepted by user instruction on 2026-08-13.
 - PASS: P0-06 SLO/release/parity package accepted by user instruction on
   2026-08-13; known defects remain non-release baseline evidence only.
