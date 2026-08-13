@@ -18,10 +18,17 @@ completed IDs:
 - Gate P0: passed with CBWNG/FRWAJ accepted as legacy-only red baselines
 - P0 remediation: FRWAJ source-fact correction, controlled source-format
   fixtures, protected-main evidence and repeated Gate P0 review
-- P1-01: PMD core entities and JSON Schema 2020-12 started; schema, example and
-  negative fixtures added in `lanmaster-cad`
-- P1-02: PMD 2.0 Pydantic models and schema-conformance suite added in
-  `lanmaster-cad`
+- P1-01: PMD core entities, JSON Schema 2020-12, examples and negative fixtures
+- P1-02: strict Pydantic models and shared schema-conformance corpus
+- P1-03: units, canonical JSON and stable SHA-256 content hash
+- P1-04: stable ID, reference, import hash/unit and interface validation
+- P1-05: safe expression AST, dimensions, cycles and dependency graph
+- P1-06: typed atomic patches, inverse, authorization and affected-set calculation
+- P1-07: bounded declarative geometry MVP grammar
+- P1-08: import-step and default-deny legacy-python contracts
+- P1-09: acceptance specification separated from assembly and geometry
+- P1-10: three structurally different PMD fixtures
+- Gate P1: passed after independent review, remediation and repeated review
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -30,8 +37,7 @@ decisions/ADR:
   to CI and ownership configuration files.
 - Pilot set starts with `TWT-CBB-42U-8x10-P1`, `TWT-CBWNG-12U-6x6-BK`,
   and `TWT-FRWAJ-12U-GY`; CBA is kept as documented fallback.
-- `lanmaster-cad` source-cache changes are isolated on branch
-  `studio-p0-source-cache`.
+- `lanmaster-cad` P0/P1 changes were merged to `main` by PR #1 at `4a172c40`.
 
 changed files:
 - `README.md`
@@ -61,6 +67,7 @@ changed files:
 - `docs/discovery/p0-protected-main-evidence.md`
 - `docs/discovery/p0-immutable-baseline-manifest.yml`
 - `docs/discovery/p0-adr-slo-decision-package.md`
+- `docs/discovery/p1-gate-review.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `test-fixtures/source-formats/README.md`
@@ -81,12 +88,23 @@ changed files:
 - `../lanmaster-cad/lmcad/pmd/__init__.py`
 - `../lanmaster-cad/lmcad/pmd/io.py`
 - `../lanmaster-cad/lmcad/pmd/models.py`
+- `../lanmaster-cad/lmcad/pmd/README.md`
+- `../lanmaster-cad/lmcad/pmd/canonical.py`
+- `../lanmaster-cad/lmcad/pmd/expressions.py`
+- `../lanmaster-cad/lmcad/pmd/patches.py`
+- `../lanmaster-cad/lmcad/pmd/validation.py`
 - `../lanmaster-cad/lmcad/pmd/examples/minimal_open_frame.json`
 - `../lanmaster-cad/lmcad/pmd/fixtures/negative/missing_assembly.json`
 - `../lanmaster-cad/lmcad/pmd/fixtures/negative/top_level_door.json`
 - `../lanmaster-cad/lmcad/pmd/fixtures/negative/unsafe_geometry_backend.json`
 - `../lanmaster-cad/tests/test_pmd_schema.py`
 - `../lanmaster-cad/tests/test_pmd_models.py`
+- `../lanmaster-cad/tests/test_pmd_canonical.py`
+- `../lanmaster-cad/tests/test_pmd_contracts.py`
+- `../lanmaster-cad/tests/test_pmd_expressions.py`
+- `../lanmaster-cad/tests/test_pmd_patches.py`
+- `../lanmaster-cad/tests/test_pmd_structural_fixtures.py`
+- `../lanmaster-cad/tests/test_pmd_validation.py`
 - `../lanmaster-cad/requirements.lock`
 
 test commands:
@@ -124,6 +142,7 @@ test commands:
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_pmd_schema.py -q`
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_pmd_schema.py tests/test_pmd_models.py -q`
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest -q`
+- `cd ../lanmaster-cad && .venv/bin/python -m pytest -q tests/test_pmd_schema.py tests/test_pmd_models.py tests/test_pmd_canonical.py tests/test_pmd_validation.py tests/test_pmd_expressions.py tests/test_pmd_patches.py tests/test_pmd_contracts.py tests/test_pmd_structural_fixtures.py`
 
 results:
 - PASS: P0-01 scaffold verification passed
@@ -212,9 +231,17 @@ results:
 - PASS: coordinator local review completed for P1-02; no P1-03 canonical JSON,
   content-hash, dependency-graph or semantic-reference implementation was
   introduced.
+- PASS: P1-03 through P1-10 implemented and merged to `lanmaster-cad/main` by
+  PR #1 at `4a172c40`.
+- PASS: PMD schema/model/core suite: 83 passed in 0.75s.
+- PASS: full `lanmaster-cad` suite: 189 passed, 10 warnings, 6 subtests passed
+  in 158.40s.
+- PASS: independent Gate P1 review findings were fixed; repeated read-only
+  review found no High/Medium findings and returned Gate P1 PASS.
+- PASS: Gate P1 evidence recorded in `docs/discovery/p1-gate-review.md`.
 
 blockers:
-- none for Gate P0.
+- none for Gate P1.
 
 next ID:
-- P1-03: units, canonical JSON and content hash
+- P2-01: define `AssemblyIR` and exporter-facing contracts
