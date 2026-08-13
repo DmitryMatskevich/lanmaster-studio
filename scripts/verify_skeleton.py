@@ -19,6 +19,7 @@ REQUIRED_FILES = [
     ".github/CODEOWNERS",
     ".github/ISSUE_TEMPLATE/roadmap_task.yml",
     "docs/adr/README.md",
+    "docs/discovery/p0-02-cad-inventory.md",
     "scripts/verify_skeleton.py",
 ]
 
@@ -68,7 +69,17 @@ def main() -> None:
     if not re.search(r"^\*\s+@", codeowners, flags=re.MULTILINE):
         fail("CODEOWNERS must define a default owner")
 
-    print("P0-01 scaffold verification passed")
+    inventory = read("docs/discovery/p0-02-cad-inventory.md")
+    for phrase in (
+        "Family Routing",
+        "CLI Contracts",
+        "Existing Compatibility Tests",
+        "1876",
+    ):
+        if phrase not in inventory:
+            fail(f"P0-02 inventory missing required evidence: {phrase}")
+
+    print("P0 scaffold verification passed")
 
 
 if __name__ == "__main__":
