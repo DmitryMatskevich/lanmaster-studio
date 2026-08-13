@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: P0-01 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: P3-01 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
