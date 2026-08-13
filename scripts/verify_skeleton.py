@@ -117,8 +117,10 @@ def main() -> None:
         "TWT-CBB-42U-8x10-P1",
         "TWT-CBWNG-12U-6x6-BK",
         "TWT-FRWAJ-12U-GY",
-        "sha256:",
+        "currentCard: \"../lanmaster-cad/params/TWT-CBWNG-12U-6x6-BK.yaml\"",
         "sourceAuditRequired:",
+        "- none",
+        "sha256:",
     ):
         if phrase not in manifest:
             fail(f"P0-03 source manifest missing required evidence: {phrase}")
@@ -166,6 +168,9 @@ def main() -> None:
         "STEPControl_Reader.ReadFile",
         "IfcOpenShell opened schema `IFC4X3`",
         "No real SVG source fixture",
+        "Status: scoped pass for P0",
+        "Pilot source matrix for P0 is scoped to official PDF/HTML/JSON cache evidence.",
+        "source-CAD intake is explicitly deferred to P3/P6",
         "PDF table text extraction did not recover usable text",
     ):
         if phrase not in p007:

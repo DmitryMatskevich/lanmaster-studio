@@ -13,7 +13,8 @@ completed IDs:
 - P0-04: failed CBWNG legacy baseline candidate with known geometry limitation
 - P0-05: drafted ADR-0001 through ADR-0009 as proposed
 - P0-06: drafted proposed preview SLOs, release gates and parity tolerances
-- P0-07: partial local toolchain smoke for PDFs and generated pilot artifacts
+- P0-07: scoped local toolchain smoke for PDF/HTML pilot sources and generated
+  pilot artifacts
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -84,6 +85,8 @@ test commands:
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_rfa_extract.py -q`
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_golden.py tests/test_drawing_intake.py tests/test_change_report.py tests/test_revit_convert.py tests/test_rfa_extract.py -q`
 - `python3 scripts/verify_skeleton.py`
+- `find ../lanmaster-cad/sources -type f \( -iname '*.svg' -o -iname '*.dwg' -o -iname '*.dxf' -o -iname '*.step' -o -iname '*.stp' -o -iname '*.ifc' -o -iname '*.glb' \) -print`
+- `find ../lanmaster-cad -path '*/.git' -prune -o -path '*/.venv' -prune -o -path '*/out' -prune -o -path '*/tmp' -prune -o -type f \( -iname '*.svg' -o -iname '*.dwg' -o -iname '*.dxf' -o -iname '*.step' -o -iname '*.stp' -o -iname '*.ifc' -o -iname '*.glb' \) -print`
 
 results:
 - PASS: P0-01 scaffold verification passed
@@ -120,6 +123,14 @@ results:
 - PASS: P0 scaffold verification passed after CBWNG baseline-candidate update.
 - PASS: selected CAD compatibility suite still passes after CBWNG card/IDS update:
   49 passed, 10 warnings in 122.67s.
+- PASS: P0-07 pilot source matrix scoped to official PDF/HTML/JSON cache
+  evidence; source-CAD intake remains P3/P6 because no selected pilot has
+  official SVG/DWG/DXF/STEP source fixtures.
+- PASS: `../lanmaster-cad/sources` search found no source-CAD files.
+- NOTE: broader CAD search excluding `.git`, `.venv`, `out` and `tmp` found one
+  IFC request attachment under `var/requests/inbox/LMREQ-2026-000015`; it is
+  not an official selected-pilot source fixture.
+- PASS: P0 scaffold verification passed after P0-07 scope update.
 
 blockers:
 - Gate P0 blocker resolved on branch `studio-p0-source-cache`: selected CAD
@@ -128,8 +139,7 @@ blockers:
   `TWT-FRWAJ-12U-GY` now have cached official product pages and baseline
   candidates, but still need drawing/table PDFs where available and explicit
   known-defect approval/correction.
-- Gate P0 blocker: P0-07 is only partial until real SVG/DWG/source-CAD fixtures
-  are found or the pilot source matrix is explicitly scoped without them.
 
 next ID:
-- Gate P0 review remains blocked by incomplete P0-04/P0-07 evidence
+- Gate P0 review remains blocked by incomplete P0-04 known-defect and immutable
+  baseline evidence

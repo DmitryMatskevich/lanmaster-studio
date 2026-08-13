@@ -34,10 +34,10 @@ pilots:
 
   - article: TWT-CBWNG-12U-6x6-BK
     role: mandatory-wall-cabinet
-    decision: selected-for-source-audit
+    decision: selected
     reason: "Current LANMASTER wall cabinet series Next; differs from floor cabinet by wall mounting, fixed rear rails, glass door and cabinet depth variants."
-    currentCard: null
-    currentFamily: null
+    currentCard: "../lanmaster-cad/params/TWT-CBWNG-12U-6x6-BK.yaml"
+    currentFamily: wall_cabinet
     officialLinks:
       - url: "https://lanmaster.ru/twt-cbwng/"
         trust: official-product-page
@@ -48,9 +48,9 @@ pilots:
       - path: "../lanmaster-cad/sources/twt-cbwng/source.json"
         trust: source-metadata
     gaps:
-      - "No v1 card exists locally for this article."
       - "No drawing/table PDF link was visible on the product page during P0 source audit."
       - "Product page provides dimensions, mass, wall mounting and rail facts; engineering drawing remains preferred before P0 gate."
+      - "Current v1 card is source-backed but legacy geometry fails official bbox because the route models a door kit, not a full wall cabinet."
 
   - article: TWT-FRWAJ-12U-GY
     role: mandatory-open-frame
@@ -93,7 +93,8 @@ readiness:
   selectedCount: 3
   readyForP0Baseline:
     - TWT-CBB-42U-8x10-P1
-  sourceAuditRequired:
     - TWT-CBWNG-12U-6x6-BK
     - TWT-FRWAJ-12U-GY
-  gateImpact: "P0-03 has selected pilots and cached official product-page evidence. Gate P0 cannot pass until drawing/mass gaps are resolved or accepted as known defects/replacements."
+  sourceAuditRequired:
+    - none
+  gateImpact: "P0-03 has selected pilots and cached official PDF/HTML evidence. Gate P0 cannot pass until baseline immutability and known-defect approval/correction are resolved."

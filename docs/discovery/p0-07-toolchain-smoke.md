@@ -1,7 +1,9 @@
 # P0-07 Local Toolchain Smoke
 
-Status: partial. Real pilot PDF sources and generated pilot artifacts were
-checked. Real SVG/DXF/DWG/STEP source files are not present in `lanmaster-cad/sources`.
+Status: scoped pass for P0. Real pilot PDF/HTML sources and generated pilot
+artifacts were checked. Real SVG/DXF/DWG/STEP source files are not present in
+`lanmaster-cad/sources`, so source-CAD intake is explicitly deferred to P3/P6
+unless a pilot replacement brings those formats into the official source set.
 
 Evidence date: 2026-08-13.
 
@@ -23,9 +25,32 @@ Evidence date: 2026-08-13.
 | Format | Real Files In `lanmaster-cad/sources` | P0-07 Result |
 |---|---:|---|
 | PDF | present | smoke checked on CBB source PDFs |
-| SVG | 0 | gap |
-| DWG | 0 | gap, tool present only |
-| DXF/STEP/STP/IFC/GLB source files | 0 | gap for source-intake; generated artifacts smoke checked |
+| SVG | 0 | out of P0 pilot-source scope |
+| DWG | 0 | out of P0 pilot-source scope, tool present only |
+| DXF/STEP/STP/IFC/GLB source files | 0 | out of P0 source-intake scope; generated artifacts smoke checked |
+
+Scope decision:
+
+- Pilot source matrix for P0 is scoped to official PDF/HTML/JSON cache evidence.
+- Generated STEP/STP/IFC/GLB/DXF release artifacts are output fixtures, not
+  source-side CAD fixtures.
+- `P3-02` remains responsible for headless intake of PDF/SVG/DXF/DWG/STEP once
+  real source fixtures exist; `P6-03` and `P6-04` remain production ingestion
+  tasks.
+
+Search evidence:
+
+```bash
+find /Users/dmitrij/Documents/3d_lanmaster/lanmaster-cad/sources -type f \( -iname '*.svg' -o -iname '*.dwg' -o -iname '*.dxf' -o -iname '*.step' -o -iname '*.stp' -o -iname '*.ifc' -o -iname '*.glb' \) -print
+find /Users/dmitrij/Documents/3d_lanmaster/lanmaster-cad -path '*/.git' -prune -o -path '*/.venv' -prune -o -path '*/out' -prune -o -path '*/tmp' -prune -o -type f \( -iname '*.svg' -o -iname '*.dwg' -o -iname '*.dxf' -o -iname '*.step' -o -iname '*.stp' -o -iname '*.ifc' -o -iname '*.glb' \) -print
+```
+
+Result:
+
+- `lanmaster-cad/sources`: no matching source-CAD files.
+- `lanmaster-cad` excluding `.git`, `.venv`, `out` and `tmp`: one IFC request
+  attachment exists under `var/requests/inbox/LMREQ-2026-000015/attachments`;
+  it is not an official selected-pilot source fixture.
 
 ## PDF Smoke
 
@@ -95,6 +120,8 @@ Results:
 
 ## Result
 
-P0-07 is partially satisfied for local tool availability and output-format parser
-smoke. It is not a full source-intake pass because real SVG/DWG/CAD source files
-for selected pilots are missing.
+P0-07 is satisfied for the scoped P0 pilot-source matrix: local tool versions are
+known, official PDF/HTML source availability is recorded, missing source-CAD
+formats are backed by file-search evidence, and generated output artifacts have
+parser-smoke coverage. Full source-CAD intake remains a later P3/P6 deliverable
+because no selected pilot currently has official SVG/DWG/DXF/STEP source files.
