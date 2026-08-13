@@ -9,6 +9,7 @@ completed IDs:
 - P0-03: selected pilot candidates and recorded source hashes/gaps
 - P0-04: partial only; recorded existing CBB baseline candidate evidence
 - P0-04: partial source-cache update for wall-cabinet/open-frame pilots
+- P0-04: partial FRWAJ temporary export baseline candidate with known mass defect
 - P0-05: drafted ADR-0001 through ADR-0009 as proposed
 
 decisions/ADR:
@@ -56,6 +57,9 @@ test commands:
 - `cd ../lanmaster-cad && shasum -a 256 sources/twt-cbb-800/* sources/twt-cba/*`
 - `find lanmaster-models/TWT-CBB-42U-8x10-P1 ...`
 - `shasum -a 256 lanmaster-models/TWT-CBB-42U-8x10-P1/TWT-CBB-42U-8x10-P1.* lanmaster-models/TWT-CBB-42U-8x10-P1/src/*`
+- `cd ../lanmaster-cad && .venv/bin/python -m lmcad.cli build params/TWT-FRWAJ-12U-GY.yaml --out /private/tmp/lanmaster-studio-p0-baseline --lod 300`
+- `cd ../lanmaster-cad && .venv/bin/python -m lmcad.cli export params/TWT-FRWAJ-12U-GY.yaml --out /private/tmp/lanmaster-studio-p0-baseline --lod 300`
+- `shasum -a 256 /private/tmp/lanmaster-studio-p0-baseline/TWT-FRWAJ-12U-GY/TWT-FRWAJ-12U-GY.* /private/tmp/lanmaster-studio-p0-baseline/TWT-FRWAJ-12U-GY/views/*`
 - `curl -sSL https://lanmaster.ru/twt-cbwng/ -o sources/twt-cbwng/product.html`
 - `curl -sSL https://lanmaster.ru/twt-frwaj-xu-gy/ -o sources/twt-frwaj-xu-gy/product.html`
 - `shasum -a 256 sources/twt-cbwng/product.html sources/twt-frwaj-xu-gy/product.html`
@@ -88,14 +92,17 @@ results:
   130.15s on `lanmaster-cad` branch `studio-p0-source-cache`.
 - PASS: P0 scaffold verification passed after recording compatibility fix.
 - PASS: P0 scaffold verification passed after P0-05 ADR update.
+- PARTIAL: FRWAJ build/export to temp baseline passed; STEP/STP/IGES/IFC4/IFC4X3/GLB/DXF/PDF/PNG hashes recorded.
+- KNOWN DEFECT: FRWAJ mass remains implausible at about 743 kg; official page does not publish mass.
+- PASS: P0 scaffold verification passed after FRWAJ baseline-candidate update.
 
 blockers:
 - Gate P0 blocker resolved on branch `studio-p0-source-cache`: selected CAD
   compatibility suite is green after `784803de`.
 - Gate P0 blocker: selected wall cabinet `TWT-CBWNG-12U-6x6-BK` and open frame
   `TWT-FRWAJ-12U-GY` now have cached official product pages, but still need
-  drawing/table PDFs where available; `TWT-CBWNG-12U-6x6-BK` needs a v1 card;
-  `TWT-FRWAJ-12U-GY` needs mass correction or known-defect approval.
+  drawing/table PDFs where available; `TWT-CBWNG-12U-6x6-BK` needs a v1 card
+  and baseline; `TWT-FRWAJ-12U-GY` needs mass correction or known-defect approval.
 
 next ID:
 - P0-06, while P0-04 remains incomplete for final Gate P0 baseline

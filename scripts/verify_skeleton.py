@@ -128,6 +128,7 @@ def main() -> None:
         "P0-04 is not complete",
         "TWT-CBWNG-12U-6x6-BK",
         "TWT-FRWAJ-12U-GY",
+        "87c301be02d6bd6e7cb4d09710fca3fa3ed4dc3591975607ccb9fc67bd717b49",
     ):
         if phrase not in baseline:
             fail(f"P0-04 baseline note missing required evidence: {phrase}")

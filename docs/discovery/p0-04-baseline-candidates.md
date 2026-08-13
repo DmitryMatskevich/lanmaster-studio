@@ -75,13 +75,56 @@ Known defects/open evidence:
 
 ## Remaining Pilots
 
+### TWT-FRWAJ-12U-GY
+
+Status: temporary baseline candidate with known defect.
+
+Command:
+
+```bash
+cd /Users/dmitrij/Documents/3d_lanmaster/lanmaster-cad
+.venv/bin/python -m lmcad.cli export params/TWT-FRWAJ-12U-GY.yaml --out /private/tmp/lanmaster-studio-p0-baseline --lod 300
+```
+
+Result:
+
+- exit code: 0
+- duration observed by command runner: 9.464 s
+- output root: `/private/tmp/lanmaster-studio-p0-baseline/TWT-FRWAJ-12U-GY`
+- verify: passed
+- IDS: IFC4 passed, IFC4X3 passed
+- GLB: 5 nodes, 60 triangles, 18,708 bytes
+- BRep bodies: 5 valid bodies
+- known defect: mass is not trusted. Current card and calculated geometry both
+  report about 743 kg, which is implausible for a 12U open wall frame; official
+  product page does not publish item mass.
+
+Artifact hashes:
+
+| Artifact | SHA-256 |
+|---|---|
+| `TWT-FRWAJ-12U-GY.manifest.json` | `87c301be02d6bd6e7cb4d09710fca3fa3ed4dc3591975607ccb9fc67bd717b49` |
+| `TWT-FRWAJ-12U-GY.step` | `6a4a4c84f06c722dbc6ff145cf1e4de799653186109407f238a0ccac3d052789` |
+| `TWT-FRWAJ-12U-GY.stp` | `19f4bca21cf456b9fd7e0069672407a3fe9c6e21bd003e96c242ad8291fb59d5` |
+| `TWT-FRWAJ-12U-GY.IFC4.ifc` | `c6feb876dbf2453b9a24a70086f187f17eaa1292209bb494f265d01e11c68202` |
+| `TWT-FRWAJ-12U-GY.IFC4X3.ifc` | `af6e140ef1e896d7a59b9a29ca4318452023442b9e9bfb35a221c58eb9602940` |
+| `TWT-FRWAJ-12U-GY.glb` | `19af29b7418a84bbdfd45781746aa7aa19ba83fa150dbb7331d3da40dd879ecb` |
+| `TWT-FRWAJ-12U-GY.dxf` | `2aef601ea84dbb0b216dfc733f27ab99ddf1e334e290c0e053a45517157f5396` |
+| `TWT-FRWAJ-12U-GY.3D.dxf` | `57e16ce00f5c20e1f4344781505fed6eccd5ea476ffda383b9368bd4cf31d59f` |
+| `TWT-FRWAJ-12U-GY.igs` | `13e90c58521d1f89b81545a57affef5c7485b43d1ce30330bfdd7903d3e0f20c` |
+| `views/TWT-FRWAJ-12U-GY.drawing.pdf` | `550f51ccf210271157df8b2e9c4e1dbbe124382e872c941ead8e6a8f25f29cdc` |
+
+This is not final P0-04 completion because artifacts are in temp storage and the
+mass defect must be explicitly accepted or corrected.
+
+### Still Missing
+
 No complete baseline candidate is accepted yet for:
 
 - `TWT-CBWNG-12U-6x6-BK`: official product-page HTML is cached, but no local v1 card or drawing/table PDF exists yet.
-- `TWT-FRWAJ-12U-GY`: official product-page HTML is cached and local v1 card exists, but drawing/table PDF is missing and the current mass value needs correction or approval.
 
 ## P0-04 Result
 
-P0-04 is not complete. The CBB evidence is recorded as a baseline candidate.
-Full baseline capture should wait until P0-03 source gaps are resolved and the
-current CAD compatibility failure is either fixed or approved as a known defect.
+P0-04 is not complete. CBB and FRWAJ evidence are recorded as baseline
+candidates. Full baseline capture still needs immutable artifact storage,
+wall-cabinet card/baseline work and explicit handling of known defects.
