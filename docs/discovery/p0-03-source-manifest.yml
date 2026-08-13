@@ -71,7 +71,7 @@ pilots:
       - "Current card has no datasheet_url."
       - "No drawing/table PDF link was visible on the product page during P0 source audit."
       - "Product page provides depth range, load, rail count, material and color but not item mass."
-      - "Mass in current v1 card appears implausible for a 12U open wall frame and must be treated as unapproved until corrected or explicitly accepted as a known defect."
+      - "Source-fact correction recorded on CAD branch: current v1 card sets net_weight_kg to null because official source does not publish item mass."
 
 additionalCandidates:
   - article: TWT-CBA-42U-8x10-00
@@ -97,4 +97,4 @@ readiness:
     - TWT-FRWAJ-12U-GY
   sourceAuditRequired:
     - none
-  gateImpact: "P0-03 has selected pilots and cached official PDF/HTML evidence. Gate P0 cannot pass until baseline immutability and known-defect approval/correction are resolved."
+  gateImpact: "P0-03 has selected pilots and cached official PDF/HTML evidence. Gate P0 cannot pass until baseline immutability, CBWNG unsupported-legacy handling and FRWAJ NetWeight policy/approval are resolved."

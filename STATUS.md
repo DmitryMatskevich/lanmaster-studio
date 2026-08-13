@@ -17,6 +17,8 @@ completed IDs:
   pilot artifacts
 - Gate P0: reviewed; blocked by P0-04 immutable baseline and known-defect
   approval/correction evidence
+- P0 remediation: FRWAJ source-fact correction, controlled source-format
+  fixtures, protected-main evidence and repeated Gate P0 review
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -53,12 +55,21 @@ changed files:
 - `docs/discovery/p0-06-slo-gates-and-tolerances.md`
 - `docs/discovery/p0-07-toolchain-smoke.md`
 - `docs/discovery/p0-gate-review.md`
+- `docs/discovery/p0-protected-main-evidence.md`
 - `scripts/verify_skeleton.py`
+- `scripts/verify_source_fixtures.py`
+- `test-fixtures/source-formats/README.md`
+- `test-fixtures/source-formats/manifest.yml`
+- `test-fixtures/source-formats/minimal-panel.svg`
+- `test-fixtures/source-formats/minimal-panel.dxf`
+- `test-fixtures/source-formats/minimal-panel.dwg`
+- `test-fixtures/source-formats/frwaj-open-frame.step`
 - `../lanmaster-cad/sources/twt-cbwng/product.html`
 - `../lanmaster-cad/sources/twt-cbwng/source.json`
 - `../lanmaster-cad/sources/twt-frwaj-xu-gy/product.html`
 - `../lanmaster-cad/sources/twt-frwaj-xu-gy/source.json`
 - `../lanmaster-cad/params/TWT-CBWNG-12U-6x6-BK.yaml`
+- `../lanmaster-cad/params/TWT-FRWAJ-12U-GY.yaml`
 - `../lanmaster-cad/ids/wall_cabinet.IFC4.ids`
 - `../lanmaster-cad/ids/wall_cabinet.IFC4X3.ids`
 
@@ -90,6 +101,10 @@ test commands:
 - `python3 scripts/verify_skeleton.py`
 - `find ../lanmaster-cad/sources -type f \( -iname '*.svg' -o -iname '*.dwg' -o -iname '*.dxf' -o -iname '*.step' -o -iname '*.stp' -o -iname '*.ifc' -o -iname '*.glb' \) -print`
 - `find ../lanmaster-cad -path '*/.git' -prune -o -path '*/.venv' -prune -o -path '*/out' -prune -o -path '*/tmp' -prune -o -type f \( -iname '*.svg' -o -iname '*.dwg' -o -iname '*.dxf' -o -iname '*.step' -o -iname '*.stp' -o -iname '*.ifc' -o -iname '*.glb' \) -print`
+- `cd ../lanmaster-cad && .venv/bin/python -m lmcad.cli export params/TWT-FRWAJ-12U-GY.yaml --out /private/tmp/lanmaster-studio-p0-immutable-baseline --lod 300`
+- `../lanmaster-cad/.venv/bin/python scripts/verify_source_fixtures.py`
+- `git remote -v`
+- `git branch --show-current`
 
 results:
 - PASS: P0-01 scaffold verification passed
@@ -136,6 +151,19 @@ results:
 - PASS: P0 scaffold verification passed after P0-07 scope update.
 - BLOCKED: Gate P0 review recorded; P0 is not passed because immutable baseline
   storage and domain/QA known-defect approval or corrections are still missing.
+- BLOCKED: both `$run-agents` workers failed before doing work because their
+  execution host `/Users/dmitrij/.local/bin/codex-code-mode-host` was missing.
+- PARTIAL: FRWAJ source fact corrected in CAD card: `net_weight_kg` is now null
+  because official source metadata does not publish item mass.
+- BLOCKED: corrected FRWAJ export verifies geometry but exits 1 because IFC4 and
+  IFC4X3 IDS fail without NetWeight.
+- PASS: controlled SVG/DXF/DWG/STEP source-format fixtures verify with
+  `../lanmaster-cad/.venv/bin/python scripts/verify_source_fixtures.py`.
+- BLOCKED: protected-main evidence is local only; `git remote -v` produced no
+  configured remote, so branch protection cannot be verified.
+- PASS: focused CAD regression after FRWAJ source-fact correction:
+  37 passed, 10 warnings in 120.65s.
+- PASS: P0 scaffold verification passed after P0 remediation evidence update.
 
 blockers:
 - Gate P0 blocker resolved on branch `studio-p0-source-cache`: selected CAD
@@ -144,7 +172,14 @@ blockers:
   `TWT-FRWAJ-12U-GY` now have cached official product pages and baseline
   candidates, but still need drawing/table PDFs where available and explicit
   known-defect approval/correction.
+- Gate P0 blocker: FRWAJ mass is now source-corrected as unknown, but IDS policy
+  still requires NetWeight for IFC outputs.
+- Gate P0 blocker: `TWT-CBWNG-12U-6x6-BK` is unsupported by legacy v1 wall
+  geometry; no better documented real wall-cabinet pilot was found locally.
+- Gate P0 blocker: protected-main remote branch settings are unverified because
+  no remote is configured.
 
 next ID:
-- P0 remediation: resolve immutable baseline storage and CBWNG/FRWAJ known-defect
-  approval/correction before starting P1
+- P0 remediation remains blocked by FRWAJ NetWeight/IDS policy, CBWNG legacy
+  unsupported-wall-cabinet decision or replacement, protected-main external
+  evidence and ADR/SLO owner approvals

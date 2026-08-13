@@ -1,0 +1,23 @@
+manifestVersion: 1
+fixtureSet: source-format-smoke
+scope: "Controlled parser fixtures, not official product evidence."
+fixtures:
+  - path: minimal-panel.svg
+    format: SVG
+    origin: hand-authored deterministic vector fixture
+    purpose: SVG parser/render smoke
+  - path: minimal-panel.dxf
+    format: DXF
+    origin: hand-authored deterministic AC1024 fixture
+    purpose: DXF reader smoke
+  - path: minimal-panel.dwg
+    format: DWG
+    origin: "Copied from lanmaster-cad/tmp/libredwg-smoke/smoke.dwg"
+    purpose: DWG reader smoke
+  - path: frwaj-open-frame.step
+    format: STEP
+    origin: "Copied from FRWAJ generated baseline candidate after source-fact correction"
+    purpose: STEP reader smoke
+constraints:
+  - "Do not use these fixtures as source facts for LANMASTER product geometry."
+  - "Official selected-pilot sources remain those listed in docs/discovery/p0-03-source-manifest.yml."

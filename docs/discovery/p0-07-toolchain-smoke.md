@@ -1,9 +1,11 @@
 # P0-07 Local Toolchain Smoke
 
-Status: scoped pass for P0. Real pilot PDF/HTML sources and generated pilot
-artifacts were checked. Real SVG/DXF/DWG/STEP source files are not present in
-`lanmaster-cad/sources`, so source-CAD intake is explicitly deferred to P3/P6
-unless a pilot replacement brings those formats into the official source set.
+Status: scoped pass for P0. Real pilot PDF/HTML sources, generated pilot
+artifacts and controlled source-format fixtures were checked. Real
+manufacturer-published SVG/DXF/DWG/STEP source files are not present in
+`lanmaster-cad/sources`, so production source-CAD intake remains deferred to
+P3/P6 unless a pilot replacement brings those formats into the official source
+set.
 
 Evidence date: 2026-08-13.
 
@@ -37,6 +39,32 @@ Scope decision:
 - `P3-02` remains responsible for headless intake of PDF/SVG/DXF/DWG/STEP once
   real source fixtures exist; `P6-03` and `P6-04` remain production ingestion
   tasks.
+
+## Controlled Source-Format Fixtures
+
+Fixture root:
+
+`test-fixtures/source-formats`
+
+These are parser-smoke fixtures only. They are not official product evidence and
+must not be used as source facts for LANMASTER geometry.
+
+| Format | Fixture | Evidence |
+|---|---|---|
+| SVG | `minimal-panel.svg` | XML/SVG parse and rectangle geometry check |
+| DXF | `minimal-panel.dxf` | ezdxf modelspace entity check |
+| DWG | `minimal-panel.dwg` | LibreDWG `dwgread` returns `SUCCESS`; warnings are tolerated as fixture/tool limitations |
+| STEP | `frwaj-open-frame.step` | OCP `STEPControl_Reader.ReadFile` returns `IFSelect_RetDone` |
+
+Command:
+
+```bash
+../lanmaster-cad/.venv/bin/python scripts/verify_source_fixtures.py
+```
+
+Result:
+
+- `Source fixture verification passed`
 
 Search evidence:
 
@@ -121,7 +149,8 @@ Results:
 ## Result
 
 P0-07 is satisfied for the scoped P0 pilot-source matrix: local tool versions are
-known, official PDF/HTML source availability is recorded, missing source-CAD
-formats are backed by file-search evidence, and generated output artifacts have
-parser-smoke coverage. Full source-CAD intake remains a later P3/P6 deliverable
-because no selected pilot currently has official SVG/DWG/DXF/STEP source files.
+known, official PDF/HTML source availability is recorded, missing official
+source-CAD formats are backed by file-search evidence, controlled SVG/DXF/DWG/STEP
+fixtures parse, and generated output artifacts have parser-smoke coverage. Full
+production source-CAD intake remains a later P3/P6 deliverable because no
+selected pilot currently has official SVG/DWG/DXF/STEP source files.

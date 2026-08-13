@@ -77,45 +77,50 @@ Known defects/open evidence:
 
 ### TWT-FRWAJ-12U-GY
 
-Status: temporary baseline candidate with known defect.
+Status: immutable local baseline candidate with unresolved IDS NetWeight policy.
 
 Command:
 
 ```bash
 cd /Users/dmitrij/Documents/3d_lanmaster/lanmaster-cad
 .venv/bin/python -m lmcad.cli export params/TWT-FRWAJ-12U-GY.yaml --out /private/tmp/lanmaster-studio-p0-baseline --lod 300
+.venv/bin/python -m lmcad.cli export params/TWT-FRWAJ-12U-GY.yaml --out /private/tmp/lanmaster-studio-p0-immutable-baseline --lod 300
 ```
 
 Result:
 
-- exit code: 0
-- duration observed by command runner: 9.464 s
-- output root: `/private/tmp/lanmaster-studio-p0-baseline/TWT-FRWAJ-12U-GY`
+- source-fact correction: `../lanmaster-cad/params/TWT-FRWAJ-12U-GY.yaml`
+  now sets `net_weight_kg: null` because official source metadata does not
+  publish item mass.
+- corrected export exit code: 1
+- corrected output root: `/private/tmp/lanmaster-studio-p0-immutable-baseline/TWT-FRWAJ-12U-GY`
 - verify: passed
-- IDS: IFC4 passed, IFC4X3 passed
+- IDS: IFC4 failed, IFC4X3 failed because NetWeight is absent after removing the
+  untrusted mass value.
 - GLB: 5 nodes, 60 triangles, 18,708 bytes
 - BRep bodies: 5 valid bodies
-- known defect: mass is not trusted. Current card and calculated geometry both
-  report about 743 kg, which is implausible for a 12U open wall frame; official
-  product page does not publish item mass.
+- known fact: official source does not publish item mass; the previous 743 kg
+  card value is not used as a source fact.
 
 Artifact hashes:
 
 | Artifact | SHA-256 |
 |---|---|
-| `TWT-FRWAJ-12U-GY.manifest.json` | `87c301be02d6bd6e7cb4d09710fca3fa3ed4dc3591975607ccb9fc67bd717b49` |
+| `TWT-FRWAJ-12U-GY.manifest.json` | `45d76a0e603c2b307f514298c382305e44a047e0c30a435dc48337f0eaf59883` |
 | `TWT-FRWAJ-12U-GY.step` | `6a4a4c84f06c722dbc6ff145cf1e4de799653186109407f238a0ccac3d052789` |
 | `TWT-FRWAJ-12U-GY.stp` | `19f4bca21cf456b9fd7e0069672407a3fe9c6e21bd003e96c242ad8291fb59d5` |
-| `TWT-FRWAJ-12U-GY.IFC4.ifc` | `c6feb876dbf2453b9a24a70086f187f17eaa1292209bb494f265d01e11c68202` |
-| `TWT-FRWAJ-12U-GY.IFC4X3.ifc` | `af6e140ef1e896d7a59b9a29ca4318452023442b9e9bfb35a221c58eb9602940` |
+| `TWT-FRWAJ-12U-GY.IFC4.ifc` | `a8fef6f9cd35139976131f3147bc127f5557dbd30555177e7d71a1dc823cb611` |
+| `TWT-FRWAJ-12U-GY.IFC4X3.ifc` | `3831454ee4404ce428b5c9c8416af4ca3c5fe528c24fb4f1a43802ba66ee7305` |
 | `TWT-FRWAJ-12U-GY.glb` | `19af29b7418a84bbdfd45781746aa7aa19ba83fa150dbb7331d3da40dd879ecb` |
-| `TWT-FRWAJ-12U-GY.dxf` | `2aef601ea84dbb0b216dfc733f27ab99ddf1e334e290c0e053a45517157f5396` |
-| `TWT-FRWAJ-12U-GY.3D.dxf` | `57e16ce00f5c20e1f4344781505fed6eccd5ea476ffda383b9368bd4cf31d59f` |
-| `TWT-FRWAJ-12U-GY.igs` | `13e90c58521d1f89b81545a57affef5c7485b43d1ce30330bfdd7903d3e0f20c` |
-| `views/TWT-FRWAJ-12U-GY.drawing.pdf` | `550f51ccf210271157df8b2e9c4e1dbbe124382e872c941ead8e6a8f25f29cdc` |
+| `TWT-FRWAJ-12U-GY.dxf` | `90a28cacee41dfd7efcc0e5ae2464c22fb9cfef7d8105afcff147bf078b4beb2` |
+| `TWT-FRWAJ-12U-GY.3D.dxf` | `dfbf1673f752496025339305f929a8e32f485f84198299a96b9a374714f45830` |
+| `TWT-FRWAJ-12U-GY.igs` | `03024d2f8a3fa3da67f4ffcaef89a27c40a332575dc84ccff439312a22416f88` |
+| `views/TWT-FRWAJ-12U-GY.drawing.pdf` | `87d6f8ed595b4c997aef2fa40a8d59b59a56d627f256f12c5f660aa3b5928b14` |
 
-This is not final P0-04 completion because artifacts are in temp storage and the
-mass defect must be explicitly accepted or corrected.
+This is not final P0-04 completion because the corrected source fact creates an
+IDS policy blocker: either NetWeight must be obtained/approved for this article,
+or the IDS/profile policy must explicitly allow missing mass for open-frame
+fixtures before Gate P0.
 
 ### Still Missing
 
@@ -186,5 +191,6 @@ No complete passing baseline candidate is accepted yet for:
 ## P0-04 Result
 
 P0-04 is not complete. CBB, FRWAJ and CBWNG evidence are recorded as baseline
-candidates. Full baseline capture still needs immutable artifact storage and
-explicit handling of known defects.
+candidates. Full baseline capture still needs CBB recapture under the immutable
+baseline root and explicit handling of CBWNG/FRWAJ known defects or policy
+exceptions.

@@ -35,7 +35,18 @@ REQUIRED_FILES = [
     "docs/discovery/p0-06-slo-gates-and-tolerances.md",
     "docs/discovery/p0-07-toolchain-smoke.md",
     "docs/discovery/p0-gate-review.md",
+    "docs/discovery/p0-protected-main-evidence.md",
+    "scripts/verify_source_fixtures.py",
+    "test-fixtures/source-formats/README.md",
+    "test-fixtures/source-formats/manifest.yml",
+    "test-fixtures/source-formats/minimal-panel.svg",
+    "test-fixtures/source-formats/minimal-panel.dxf",
     "scripts/verify_skeleton.py",
+]
+
+REQUIRED_BINARY_FILES = [
+    "test-fixtures/source-formats/minimal-panel.dwg",
+    "test-fixtures/source-formats/frwaj-open-frame.step",
 ]
 
 REQUIRED_LABELS = [
@@ -66,6 +77,12 @@ def read(relative: str) -> str:
 def main() -> None:
     for relative in REQUIRED_FILES:
         read(relative)
+    for relative in REQUIRED_BINARY_FILES:
+        path = ROOT / relative
+        if not path.is_file():
+            fail(f"missing required file: {relative}")
+        if path.stat().st_size <= 0:
+            fail(f"empty required file: {relative}")
 
     status = read("STATUS.md")
     if "P0-01" not in status or "next ID:" not in status:
@@ -119,6 +136,7 @@ def main() -> None:
         "TWT-CBWNG-12U-6x6-BK",
         "TWT-FRWAJ-12U-GY",
         "currentCard: \"../lanmaster-cad/params/TWT-CBWNG-12U-6x6-BK.yaml\"",
+        "Source-fact correction recorded",
         "sourceAuditRequired:",
         "- none",
         "sha256:",
@@ -133,9 +151,10 @@ def main() -> None:
         "P0-04 is not complete",
         "TWT-CBWNG-12U-6x6-BK",
         "TWT-FRWAJ-12U-GY",
-        "87c301be02d6bd6e7cb4d09710fca3fa3ed4dc3591975607ccb9fc67bd717b49",
+        "45d76a0e603c2b307f514298c382305e44a047e0c30a435dc48337f0eaf59883",
         "fb3d9659be6930e817b698b22195ec049ed25d86cee44c3c2e9f333254d41e23",
         "current legacy output bbox: 542 x 354 x 658 mm",
+        "IDS policy blocker",
     ):
         if phrase not in baseline:
             fail(f"P0-04 baseline note missing required evidence: {phrase}")
@@ -171,11 +190,23 @@ def main() -> None:
         "No real SVG source fixture",
         "Status: scoped pass for P0",
         "Pilot source matrix for P0 is scoped to official PDF/HTML/JSON cache evidence.",
-        "source-CAD intake is explicitly deferred to P3/P6",
+        "production source-CAD intake remains deferred",
+        "Controlled Source-Format Fixtures",
+        "Source fixture verification passed",
         "PDF table text extraction did not recover usable text",
     ):
         if phrase not in p007:
             fail(f"P0-07 smoke report missing required evidence: {phrase}")
+
+    protected = read("docs/discovery/p0-protected-main-evidence.md")
+    for phrase in (
+        "Status: external blocker.",
+        "git remote -v` produced no configured remote",
+        "CI skeleton targets main",
+        "CODEOWNERS",
+    ):
+        if phrase not in protected:
+            fail(f"P0 protected-main evidence missing required evidence: {phrase}")
 
     gate = read("docs/discovery/p0-gate-review.md")
     for phrase in (
@@ -183,7 +214,8 @@ def main() -> None:
         "Gate P0 is not passed.",
         "49 passed, 10 warnings in 122.67s",
         "current output is 542 x 354 x 658 mm",
-        "legacy mass is implausible at about 743 kg",
+        "corrected export fails IDS",
+        "Protected-main cannot be verified locally",
         "API, frontend, editor and RAG remain out of scope",
     ):
         if phrase not in gate:

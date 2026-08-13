@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520mm" height="533.4mm" viewBox="0 0 520 533.4">
+  <title>Minimal source-format panel fixture</title>
+  <rect x="25" y="25" width="470" height="483.4" fill="none" stroke="#111111" stroke-width="2"/>
+  <line x1="260" y1="25" x2="260" y2="508.4" stroke="#111111" stroke-width="1"/>
+</svg>

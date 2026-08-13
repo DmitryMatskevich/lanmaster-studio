@@ -14,7 +14,8 @@ Evidence date: 2026-08-13.
 | Legacy baseline is reproducible for pilots | `docs/discovery/p0-04-baseline-candidates.md` | blocked |
 | ADR 1-9 are recorded | `docs/adr/0001` through `0009` | proposed, needs owner decision |
 | Preview SLOs, release gates and parity tolerances are recorded | `docs/discovery/p0-06-slo-gates-and-tolerances.md` | proposed, needs owner/QA decision |
-| Local toolchain smoke covers available real pilot sources | `docs/discovery/p0-07-toolchain-smoke.md` | scoped pass |
+| Local toolchain smoke covers available real pilot sources and controlled source-format fixtures | `docs/discovery/p0-07-toolchain-smoke.md` | scoped pass |
+| Protected main evidence is recorded | `docs/discovery/p0-protected-main-evidence.md` | external blocker |
 | Existing `lanmaster-cad` remains compatible | selected legacy suite: 49 passed, 10 warnings in 122.67s | pass |
 
 ## Blocking Evidence
@@ -24,13 +25,16 @@ Evidence date: 2026-08-13.
 - `TWT-CBWNG-12U-6x6-BK`: source-backed card exists, but legacy v1 build/export
   fails official bbox; current output is 542 x 354 x 658 mm against the official
   550 x 600 x 658 mm.
-- `TWT-FRWAJ-12U-GY`: temporary export baseline candidate exists, but the current
-  legacy mass is implausible at about 743 kg and the official page does not
-  publish mass.
+- `TWT-FRWAJ-12U-GY`: source-fact correction removed the untrusted 743 kg card
+  mass because the official page does not publish item mass. Geometry verify
+  passes, but corrected export fails IDS until NetWeight is obtained/approved or
+  the IDS policy explicitly allows missing mass for open-frame fixtures.
 - Baseline artifacts are stored as existing release outputs or temporary
   artifacts, not as an immutable gate-controlled baseline set.
 - ADR and SLO/tolerance documents are proposed; owner/domain/QA approval is not
   recorded.
+- Protected-main cannot be verified locally because no `lanmaster-studio` remote
+  is configured.
 
 ## Decision
 
