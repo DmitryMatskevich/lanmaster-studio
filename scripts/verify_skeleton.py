@@ -36,6 +36,8 @@ REQUIRED_FILES = [
     "docs/discovery/p0-07-toolchain-smoke.md",
     "docs/discovery/p0-gate-review.md",
     "docs/discovery/p0-protected-main-evidence.md",
+    "docs/discovery/p0-immutable-baseline-manifest.yml",
+    "docs/discovery/p0-adr-slo-decision-package.md",
     "scripts/verify_source_fixtures.py",
     "test-fixtures/source-formats/README.md",
     "test-fixtures/source-formats/manifest.yml",
@@ -117,8 +119,8 @@ def main() -> None:
             8: "release-gates.md",
             9: "openusd-after-mvp.md",
         }[number])
-        if "Status: proposed" not in adr_text or "## Decision" not in adr_text:
-            fail(f"{adr_id} must include proposed status and decision")
+        if "Status: accepted" not in adr_text or "## Decision" not in adr_text:
+            fail(f"{adr_id} must include accepted status and decision")
 
     inventory = read("docs/discovery/p0-02-cad-inventory.md")
     for phrase in (
@@ -148,16 +150,37 @@ def main() -> None:
     for phrase in (
         "16c6b49e3b1c63f6be5e0c6f7fac37d8a7b276d6",
         "existing baseline candidate only",
-        "P0-04 is not complete",
+        "P0-04 is complete for Gate P0",
         "TWT-CBWNG-12U-6x6-BK",
         "TWT-FRWAJ-12U-GY",
         "45d76a0e603c2b307f514298c382305e44a047e0c30a435dc48337f0eaf59883",
         "fb3d9659be6930e817b698b22195ec049ed25d86cee44c3c2e9f333254d41e23",
         "current legacy output bbox: 542 x 354 x 658 mm",
         "IDS policy blocker",
+        "known defects do not authorize release publication",
     ):
         if phrase not in baseline:
             fail(f"P0-04 baseline note missing required evidence: {phrase}")
+
+    immutable = read("docs/discovery/p0-immutable-baseline-manifest.yml")
+    for phrase in (
+        "releaseGatesWeakened: false",
+        "idsGatesWeakened: false",
+        "P0-KD-CBWNG-LEGACY-WALL-GEOMETRY",
+        "P0-KD-FRWAJ-MISSING-NETWEIGHT",
+        "69cb66f11d5b8d9dd076ce68096c8b4f163296e23999b3ec40a368e94af3b64c",
+    ):
+        if phrase not in immutable:
+            fail(f"P0 immutable baseline manifest missing required evidence: {phrase}")
+
+    decisions = read("docs/discovery/p0-adr-slo-decision-package.md")
+    for phrase in (
+        "Status: accepted by user instruction on 2026-08-13.",
+        "ADR-0001 through ADR-0009 are accepted",
+        "does not weaken IDS, release gates",
+    ):
+        if phrase not in decisions:
+            fail(f"P0 ADR/SLO decision package missing required evidence: {phrase}")
 
     source_cache = read("docs/discovery/p0-04-source-cache-update.md")
     for phrase in (
@@ -176,7 +199,9 @@ def main() -> None:
         "Release Gates",
         "Format Read-Back Gates",
         "Legacy/PMD Parity Tolerances",
+        "Status: accepted by user instruction on 2026-08-13.",
         "Known-defect handling",
+        "known defects accepted during P0 classify legacy baseline",
     ):
         if phrase not in p006:
             fail(f"P0-06 checklist missing required evidence: {phrase}")
@@ -200,22 +225,22 @@ def main() -> None:
 
     protected = read("docs/discovery/p0-protected-main-evidence.md")
     for phrase in (
-        "Status: external blocker.",
-        "git remote -v` produced no configured remote",
-        "CI skeleton targets main",
-        "CODEOWNERS",
+        "Status: protected main configured.",
+        "DmitryMatskevich/lanmaster-studio",
+        "\"contexts\":[\"Repository skeleton\"]",
+        "\"enforceAdmins\":true",
     ):
         if phrase not in protected:
             fail(f"P0 protected-main evidence missing required evidence: {phrase}")
 
     gate = read("docs/discovery/p0-gate-review.md")
     for phrase in (
-        "Status: blocked.",
-        "Gate P0 is not passed.",
+        "Status: passed.",
+        "Gate P0 is passed for entering P1.",
         "49 passed, 10 warnings in 122.67s",
         "current output is 542 x 354 x 658 mm",
-        "corrected export fails IDS",
-        "Protected-main cannot be verified locally",
+        "accepted only as legacy baseline evidence",
+        "Failed artifacts remain non-publishable",
         "API, frontend, editor and RAG remain out of scope",
     ):
         if phrase not in gate:

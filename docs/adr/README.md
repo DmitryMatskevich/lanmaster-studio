@@ -3,7 +3,7 @@
 ADR files owned by `lanmaster-studio` live here. Decisions owned by
 `lanmaster-cad` should be recorded in that repository instead.
 
-Initial P0 ADR set:
+Initial P0 ADR set. Status: accepted by user instruction on 2026-08-13.
 
 - [ADR-0001](0001-repository-boundary-and-sdk-delivery.md): repository boundary and SDK delivery
 - [ADR-0002](0002-job-queue.md): job queue choice

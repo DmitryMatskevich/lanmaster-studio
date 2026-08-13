@@ -1,6 +1,6 @@
 # ADR-0008: Release Gates
 
-Status: proposed
+Status: accepted
 
 ## Context
 
