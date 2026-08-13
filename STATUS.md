@@ -118,6 +118,8 @@ results:
 - PARTIAL: CBWNG card added on `lanmaster-cad` branch `studio-p0-source-cache` at `9607ef51`.
 - KNOWN DEFECT: CBWNG legacy build/export fails official bbox X/Y because current v1 route models a door kit, not a full wall cabinet.
 - PASS: P0 scaffold verification passed after CBWNG baseline-candidate update.
+- PASS: selected CAD compatibility suite still passes after CBWNG card/IDS update:
+  49 passed, 10 warnings in 122.67s.
 
 blockers:
 - Gate P0 blocker resolved on branch `studio-p0-source-cache`: selected CAD
