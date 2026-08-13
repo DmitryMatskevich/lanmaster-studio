@@ -1,0 +1,88 @@
+manifestVersion: 1
+roadmapId: P0-03
+evidenceDate: "2026-08-13"
+scope: "Pilot article selection and official source readiness before immutable baseline."
+
+pilots:
+  - article: TWT-CBB-42U-8x10-P1
+    role: mandatory-floor-cabinet
+    decision: selected
+    reason: "Complex documented floor cabinet: frame, doors, roof/bottom entries, rails, organizers and fittings."
+    currentCard: "../lanmaster-cad/params/TWT-CBB-42U-8x10-P1.yaml"
+    currentFamily: floor_cabinet
+    officialLinks:
+      - url: "https://lanmaster.ru/twt-cbb-800/"
+        trust: official-product-page
+      - url: "https://lanmaster.ru/previewdoc/?f=400"
+        trust: official-table-pdf
+      - url: "https://lanmaster.ru/previewdoc/?f=404"
+        trust: official-drawing-pdf
+      - url: "https://lanmaster.ru/previewdoc/?f=383"
+        trust: official-assembly-pdf
+    localSources:
+      - path: "../lanmaster-cad/sources/twt-cbb-800/table_cbb_f400.pdf"
+        sha256: "97885a5c92b0ba0aa22623c40d391c4547b538764a7ea6ba13baa33a3ef8c43f"
+        trust: official-cached-pdf
+      - path: "../lanmaster-cad/sources/twt-cbb-800/drawing_cbb800_f404.pdf"
+        sha256: "e6f54cda980f2f2ab62491526818b7310fb7d0511a394bfa21139dc74d96668a"
+        trust: official-cached-pdf
+      - path: "../lanmaster-cad/sources/twt-cbb-800/assembly_cbb_f383.pdf"
+        sha256: "217cd954288fe48598e6599eca8349e1ebebe4499456d38f2d51384b970e64c4"
+        trust: official-cached-pdf
+    gaps:
+      - "Need immutable baseline artifacts and known-defect report in P0-04."
+
+  - article: TWT-CBWNG-12U-6x6-BK
+    role: mandatory-wall-cabinet
+    decision: selected-for-source-audit
+    reason: "Current LANMASTER wall cabinet series Next; differs from floor cabinet by wall mounting, fixed rear rails, glass door and cabinet depth variants."
+    currentCard: null
+    currentFamily: null
+    officialLinks:
+      - url: "https://lanmaster.ru/twt-cbwng/"
+        trust: official-product-page
+    localSources: []
+    gaps:
+      - "No v1 card exists locally for this article."
+      - "No local cached drawing/table PDF found yet."
+      - "Need official drawing/table PDF or factory confirmation before P0 gate; otherwise choose another wall cabinet."
+
+  - article: TWT-FRWAJ-12U-GY
+    role: mandatory-open-frame
+    decision: selected
+    reason: "Open adjustable wall frame proves PMD does not require cabinet panels, roof, bottom or doors."
+    currentCard: "../lanmaster-cad/params/TWT-FRWAJ-12U-GY.yaml"
+    currentFamily: open_rack
+    officialLinks:
+      - url: "https://lanmaster.ru/twt-frwaj-xu-gy/"
+        trust: official-product-page
+    localSources: []
+    gaps:
+      - "Current card has no datasheet_url."
+      - "Local source cache has no FRWAJ PDF/drawing."
+      - "Mass in current v1 card appears implausible for a 12U open wall frame and must be treated as unapproved until source audit."
+
+additionalCandidates:
+  - article: TWT-CBA-42U-8x10-00
+    role: fallback-floor-cabinet-series
+    decision: fallback
+    reason: "Local official CBA drawing/table/certificate cache exists if CBB source readiness is insufficient."
+    currentCard: "../lanmaster-cad/params/TWT-CBA-42U-8x10-00.yaml"
+    localSources:
+      - path: "../lanmaster-cad/sources/twt-cba/table_cba_f171.pdf"
+        sha256: "8d7fc70a59db26082394bc807a246b5a38f2b9d562f074dc388ae038a58ca376"
+      - path: "../lanmaster-cad/sources/twt-cba/table_cba_f171.txt"
+        sha256: "0dc2a3a15bfa7f488085d1b602a416a568895c7d97497e26c4cc2f4b3e58b879"
+      - path: "../lanmaster-cad/sources/twt-cba/drawing_cba_f172.pdf"
+        sha256: "d2bc88c67c51b028b8d773cae636185c4c6dde72daa43d6a478801e837620272"
+      - path: "../lanmaster-cad/sources/twt-cba/drawing_cba_f172.txt"
+        sha256: "86195577017865625e5acc3732a8501bfc8e8bc6e153185568ee1a92920a13af"
+
+readiness:
+  selectedCount: 3
+  readyForP0Baseline:
+    - TWT-CBB-42U-8x10-P1
+  sourceAuditRequired:
+    - TWT-CBWNG-12U-6x6-BK
+    - TWT-FRWAJ-12U-GY
+  gateImpact: "P0-03 has selected pilots and recorded source gaps. Gate P0 cannot pass until the wall cabinet and open frame source gaps are resolved or replacements are selected."

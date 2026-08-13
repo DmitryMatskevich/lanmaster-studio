@@ -20,6 +20,7 @@ REQUIRED_FILES = [
     ".github/ISSUE_TEMPLATE/roadmap_task.yml",
     "docs/adr/README.md",
     "docs/discovery/p0-02-cad-inventory.md",
+    "docs/discovery/p0-03-source-manifest.yml",
     "scripts/verify_skeleton.py",
 ]
 
@@ -78,6 +79,17 @@ def main() -> None:
     ):
         if phrase not in inventory:
             fail(f"P0-02 inventory missing required evidence: {phrase}")
+
+    manifest = read("docs/discovery/p0-03-source-manifest.yml")
+    for phrase in (
+        "TWT-CBB-42U-8x10-P1",
+        "TWT-CBWNG-12U-6x6-BK",
+        "TWT-FRWAJ-12U-GY",
+        "sha256:",
+        "sourceAuditRequired:",
+    ):
+        if phrase not in manifest:
+            fail(f"P0-03 source manifest missing required evidence: {phrase}")
 
     print("P0 scaffold verification passed")
 
