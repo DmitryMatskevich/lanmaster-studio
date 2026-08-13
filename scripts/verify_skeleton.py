@@ -33,6 +33,7 @@ REQUIRED_FILES = [
     "docs/discovery/p0-04-baseline-candidates.md",
     "docs/discovery/p0-04-source-cache-update.md",
     "docs/discovery/p0-06-slo-gates-and-tolerances.md",
+    "docs/discovery/p0-07-toolchain-smoke.md",
     "scripts/verify_skeleton.py",
 ]
 
@@ -155,6 +156,18 @@ def main() -> None:
     ):
         if phrase not in p006:
             fail(f"P0-06 checklist missing required evidence: {phrase}")
+
+    p007 = read("docs/discovery/p0-07-toolchain-smoke.md")
+    for phrase in (
+        "Poppler `pdfinfo`",
+        "LibreDWG `dwgread`",
+        "STEPControl_Reader.ReadFile",
+        "IfcOpenShell opened schema `IFC4X3`",
+        "No real SVG source fixture",
+        "PDF table text extraction did not recover usable text",
+    ):
+        if phrase not in p007:
+            fail(f"P0-07 smoke report missing required evidence: {phrase}")
 
     print("P0 scaffold verification passed")
 

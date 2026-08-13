@@ -12,6 +12,7 @@ completed IDs:
 - P0-04: partial FRWAJ temporary export baseline candidate with known mass defect
 - P0-05: drafted ADR-0001 through ADR-0009 as proposed
 - P0-06: drafted proposed preview SLOs, release gates and parity tolerances
+- P0-07: partial local toolchain smoke for PDFs and generated pilot artifacts
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -46,6 +47,7 @@ changed files:
 - `docs/discovery/p0-04-baseline-candidates.md`
 - `docs/discovery/p0-04-source-cache-update.md`
 - `docs/discovery/p0-06-slo-gates-and-tolerances.md`
+- `docs/discovery/p0-07-toolchain-smoke.md`
 - `scripts/verify_skeleton.py`
 - `../lanmaster-cad/sources/twt-cbwng/product.html`
 - `../lanmaster-cad/sources/twt-cbwng/source.json`
@@ -54,6 +56,11 @@ changed files:
 
 test commands:
 - `python3 scripts/verify_skeleton.py`
+- `cd ../lanmaster-cad && pdfinfo sources/twt-cbb-800/drawing_cbb800_f404.pdf`
+- `cd ../lanmaster-cad && pdftotext sources/twt-cbb-800/table_cbb_f400.pdf -`
+- `cd ../lanmaster-cad && .venv/bin/python - <<'PY' ... STEP/DXF/IFC/GLB parser smoke ...`
+- `cd ../lanmaster-cad && pdfinfo -v`
+- `cd ../lanmaster-cad && dwgread --version`
 - `cd ../lanmaster-cad && .venv/bin/python - <<'PY' ...`
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_golden.py tests/test_drawing_intake.py tests/test_change_report.py tests/test_revit_convert.py tests/test_rfa_extract.py -q`
 - `cd ../lanmaster-cad && shasum -a 256 sources/twt-cbb-800/* sources/twt-cba/*`
@@ -98,6 +105,9 @@ results:
 - KNOWN DEFECT: FRWAJ mass remains implausible at about 743 kg; official page does not publish mass.
 - PASS: P0 scaffold verification passed after FRWAJ baseline-candidate update.
 - PASS: P0 scaffold verification passed after P0-06 checklist update.
+- PARTIAL: P0-07 toolchain smoke passed for PDF metadata and generated STEP/DXF/IFC/GLB pilot artifacts.
+- GAP: no real SVG/DWG/source-CAD files exist in current pilot source cache; PDF table text extraction was empty.
+- PASS: P0 scaffold verification passed after P0-07 smoke report update.
 
 blockers:
 - Gate P0 blocker resolved on branch `studio-p0-source-cache`: selected CAD
@@ -106,6 +116,8 @@ blockers:
   `TWT-FRWAJ-12U-GY` now have cached official product pages, but still need
   drawing/table PDFs where available; `TWT-CBWNG-12U-6x6-BK` needs a v1 card
   and baseline; `TWT-FRWAJ-12U-GY` needs mass correction or known-defect approval.
+- Gate P0 blocker: P0-07 is only partial until real SVG/DWG/source-CAD fixtures
+  are found or the pilot source matrix is explicitly scoped without them.
 
 next ID:
-- P0-07, while P0-04 remains incomplete for final Gate P0 baseline
+- Gate P0 review remains blocked by incomplete P0-04/P0-07 evidence
