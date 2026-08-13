@@ -41,11 +41,16 @@ pilots:
     officialLinks:
       - url: "https://lanmaster.ru/twt-cbwng/"
         trust: official-product-page
-    localSources: []
+    localSources:
+      - path: "../lanmaster-cad/sources/twt-cbwng/product.html"
+        sha256: "cbcc415940421a6cfcd62e699e7d1edd291140fc73d8237b6fd1629b298f5564"
+        trust: official-product-page-html
+      - path: "../lanmaster-cad/sources/twt-cbwng/source.json"
+        trust: source-metadata
     gaps:
       - "No v1 card exists locally for this article."
-      - "No local cached drawing/table PDF found yet."
-      - "Need official drawing/table PDF or factory confirmation before P0 gate; otherwise choose another wall cabinet."
+      - "No drawing/table PDF link was visible on the product page during P0 source audit."
+      - "Product page provides dimensions, mass, wall mounting and rail facts; engineering drawing remains preferred before P0 gate."
 
   - article: TWT-FRWAJ-12U-GY
     role: mandatory-open-frame
@@ -56,11 +61,17 @@ pilots:
     officialLinks:
       - url: "https://lanmaster.ru/twt-frwaj-xu-gy/"
         trust: official-product-page
-    localSources: []
+    localSources:
+      - path: "../lanmaster-cad/sources/twt-frwaj-xu-gy/product.html"
+        sha256: "11add4a3c98cfb4ca3ab9f47ce6882ec2042c518d5f17b54051f3128766637d6"
+        trust: official-product-page-html
+      - path: "../lanmaster-cad/sources/twt-frwaj-xu-gy/source.json"
+        trust: source-metadata
     gaps:
       - "Current card has no datasheet_url."
-      - "Local source cache has no FRWAJ PDF/drawing."
-      - "Mass in current v1 card appears implausible for a 12U open wall frame and must be treated as unapproved until source audit."
+      - "No drawing/table PDF link was visible on the product page during P0 source audit."
+      - "Product page provides depth range, load, rail count, material and color but not item mass."
+      - "Mass in current v1 card appears implausible for a 12U open wall frame and must be treated as unapproved until corrected or explicitly accepted as a known defect."
 
 additionalCandidates:
   - article: TWT-CBA-42U-8x10-00
@@ -85,4 +96,4 @@ readiness:
   sourceAuditRequired:
     - TWT-CBWNG-12U-6x6-BK
     - TWT-FRWAJ-12U-GY
-  gateImpact: "P0-03 has selected pilots and recorded source gaps. Gate P0 cannot pass until the wall cabinet and open frame source gaps are resolved or replacements are selected."
+  gateImpact: "P0-03 has selected pilots and cached official product-page evidence. Gate P0 cannot pass until drawing/mass gaps are resolved or accepted as known defects/replacements."

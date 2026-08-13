@@ -75,10 +75,10 @@ Known defects/open evidence:
 
 ## Remaining Pilots
 
-No baseline candidate is accepted yet for:
+No complete baseline candidate is accepted yet for:
 
-- `TWT-CBWNG-12U-6x6-BK`: no local v1 card or cached official drawing/table source.
-- `TWT-FRWAJ-12U-GY`: local v1 card exists, but cached official drawing/table source is missing and the current mass value needs source audit.
+- `TWT-CBWNG-12U-6x6-BK`: official product-page HTML is cached, but no local v1 card or drawing/table PDF exists yet.
+- `TWT-FRWAJ-12U-GY`: official product-page HTML is cached and local v1 card exists, but drawing/table PDF is missing and the current mass value needs correction or approval.
 
 ## P0-04 Result
 

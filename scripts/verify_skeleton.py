@@ -22,6 +22,7 @@ REQUIRED_FILES = [
     "docs/discovery/p0-02-cad-inventory.md",
     "docs/discovery/p0-03-source-manifest.yml",
     "docs/discovery/p0-04-baseline-candidates.md",
+    "docs/discovery/p0-04-source-cache-update.md",
     "scripts/verify_skeleton.py",
 ]
 
@@ -102,6 +103,16 @@ def main() -> None:
     ):
         if phrase not in baseline:
             fail(f"P0-04 baseline note missing required evidence: {phrase}")
+
+    source_cache = read("docs/discovery/p0-04-source-cache-update.md")
+    for phrase in (
+        "cbcc415940421a6cfcd62e699e7d1edd291140fc73d8237b6fd1629b298f5564",
+        "11add4a3c98cfb4ca3ab9f47ce6882ec2042c518d5f17b54051f3128766637d6",
+        "studio-p0-source-cache",
+        "Remaining Gaps",
+    ):
+        if phrase not in source_cache:
+            fail(f"P0-04 source cache update missing required evidence: {phrase}")
 
     print("P0 scaffold verification passed")
 
