@@ -21,6 +21,7 @@ REQUIRED_FILES = [
     "docs/adr/README.md",
     "docs/discovery/p0-02-cad-inventory.md",
     "docs/discovery/p0-03-source-manifest.yml",
+    "docs/discovery/p0-04-baseline-candidates.md",
     "scripts/verify_skeleton.py",
 ]
 
@@ -90,6 +91,17 @@ def main() -> None:
     ):
         if phrase not in manifest:
             fail(f"P0-03 source manifest missing required evidence: {phrase}")
+
+    baseline = read("docs/discovery/p0-04-baseline-candidates.md")
+    for phrase in (
+        "16c6b49e3b1c63f6be5e0c6f7fac37d8a7b276d6",
+        "existing baseline candidate only",
+        "P0-04 is not complete",
+        "TWT-CBWNG-12U-6x6-BK",
+        "TWT-FRWAJ-12U-GY",
+    ):
+        if phrase not in baseline:
+            fail(f"P0-04 baseline note missing required evidence: {phrase}")
 
     print("P0 scaffold verification passed")
 

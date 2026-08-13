@@ -7,6 +7,7 @@ completed IDs:
 - P0-02: inventoried current CAD generators, exporters, family routing and
   compatibility tests without editing `lanmaster-cad`
 - P0-03: selected pilot candidates and recorded source hashes/gaps
+- P0-04: partial only; recorded existing CBB baseline candidate evidence
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -27,6 +28,7 @@ changed files:
 - `docs/adr/README.md`
 - `docs/discovery/p0-02-cad-inventory.md`
 - `docs/discovery/p0-03-source-manifest.yml`
+- `docs/discovery/p0-04-baseline-candidates.md`
 - `scripts/verify_skeleton.py`
 
 test commands:
@@ -34,6 +36,8 @@ test commands:
 - `cd ../lanmaster-cad && .venv/bin/python - <<'PY' ...`
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest tests/test_golden.py tests/test_drawing_intake.py tests/test_change_report.py tests/test_revit_convert.py tests/test_rfa_extract.py -q`
 - `cd ../lanmaster-cad && shasum -a 256 sources/twt-cbb-800/* sources/twt-cba/*`
+- `find lanmaster-models/TWT-CBB-42U-8x10-P1 ...`
+- `shasum -a 256 lanmaster-models/TWT-CBB-42U-8x10-P1/TWT-CBB-42U-8x10-P1.* lanmaster-models/TWT-CBB-42U-8x10-P1/src/*`
 
 results:
 - PASS: P0-01 scaffold verification passed
@@ -45,6 +49,9 @@ results:
   expected generated part count 100, current result is 108.
 - PASS: source hashes recorded for cached CBB and CBA official PDFs/text files
 - PASS: P0 scaffold verification passed with P0-03 source manifest
+- PARTIAL: CBB existing release artifact set recorded as baseline candidate;
+  manifest timestamp is 2026-08-10 14:04:27 +0300, before current CAD commit.
+- PASS: P0 scaffold verification passed with P0-04 baseline-candidate note
 
 blockers:
 - Gate P0 blocker: selected existing CAD compatibility suite is not green on
@@ -55,4 +62,5 @@ blockers:
   replacements before P0 baseline.
 
 next ID:
-- P0-04
+- P0-04 remains active; full baseline capture is blocked until source gaps and
+  compatibility failure are resolved
