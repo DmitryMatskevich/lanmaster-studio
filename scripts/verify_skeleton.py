@@ -131,6 +131,8 @@ def main() -> None:
         "TWT-CBWNG-12U-6x6-BK",
         "TWT-FRWAJ-12U-GY",
         "87c301be02d6bd6e7cb4d09710fca3fa3ed4dc3591975607ccb9fc67bd717b49",
+        "fb3d9659be6930e817b698b22195ec049ed25d86cee44c3c2e9f333254d41e23",
+        "current legacy output bbox: 542 x 354 x 658 mm",
     ):
         if phrase not in baseline:
             fail(f"P0-04 baseline note missing required evidence: {phrase}")

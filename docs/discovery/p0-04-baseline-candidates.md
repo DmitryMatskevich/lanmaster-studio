@@ -119,12 +119,72 @@ mass defect must be explicitly accepted or corrected.
 
 ### Still Missing
 
-No complete baseline candidate is accepted yet for:
+### TWT-CBWNG-12U-6x6-BK
 
-- `TWT-CBWNG-12U-6x6-BK`: official product-page HTML is cached, but no local v1 card or drawing/table PDF exists yet.
+Status: failed legacy baseline candidate with known geometry limitation.
+
+CAD branch/commit:
+
+- branch: `studio-p0-source-cache`
+- card commit: `9607ef51`
+
+Commands:
+
+```bash
+cd /Users/dmitrij/Documents/3d_lanmaster/lanmaster-cad
+.venv/bin/python -m lmcad.cli build params/TWT-CBWNG-12U-6x6-BK.yaml --out /private/tmp/lanmaster-studio-p0-baseline --lod 300
+.venv/bin/python -m lmcad.cli export params/TWT-CBWNG-12U-6x6-BK.yaml --out /private/tmp/lanmaster-studio-p0-baseline --lod 300 --no-strict
+```
+
+Result:
+
+- build exit code: 1
+- export exit code: 1 because `all_passed=false`
+- export duration observed by command runner: 10.102 s
+- output root: `/private/tmp/lanmaster-studio-p0-baseline/TWT-CBWNG-12U-6x6-BK`
+- verify: failed
+- failed checks: bbox X and Y
+- official expected bbox: 550 x 600 x 658 mm
+- current legacy output bbox: 542 x 354 x 658 mm
+- IDS: IFC4 passed, IFC4X3 passed
+- GLB: 10 nodes, 608 triangles, 47,872 bytes
+
+Known limitation:
+
+- Current v1 `wall_cabinet` route uses `generic_accessory` and models a door kit,
+  not a complete wall cabinet body with rear panel, wall mounting, rails, cable
+  entries and side panels.
+- The official bbox is preserved in the card. The card is not tuned to make the
+  legacy approximation pass.
+
+Artifact hashes:
+
+| Artifact | SHA-256 |
+|---|---|
+| `TWT-CBWNG-12U-6x6-BK.manifest.json` | `fb3d9659be6930e817b698b22195ec049ed25d86cee44c3c2e9f333254d41e23` |
+| `TWT-CBWNG-12U-6x6-BK.step` | `e1c61e23dce13a040b06f5b4e414efa68fd57e1bccec5e9785481d3dd4ae7b77` |
+| `TWT-CBWNG-12U-6x6-BK.stp` | `9ea730f2c8c9c9f1af8dd0add3029b0f20a5f104d81c70b39d12dd54eecf0df6` |
+| `TWT-CBWNG-12U-6x6-BK.IFC4.ifc` | `73e65680cb5b3afa0c5826ef8cfccbbb9197cc484c0555ef8c6a445f46b992b5` |
+| `TWT-CBWNG-12U-6x6-BK.IFC4X3.ifc` | `2b84b60216fab6355221980c61c4f78a941ac29b6e5094cff70b6d10edeca76a` |
+| `TWT-CBWNG-12U-6x6-BK.glb` | `22d9cad7ed9ab655cbe234adacab790e27ce16c0a498c16cfe8c3d71964eec0c` |
+| `TWT-CBWNG-12U-6x6-BK.dxf` | `93e1b7f5a2c8bfb4508f4a031c0519d920ff63811f191e0b35580ea0453d7519` |
+| `TWT-CBWNG-12U-6x6-BK.3D.dxf` | `b201e0b5f483060984945ac12e913b1316610917ddf6204d0f22000ffb74f019` |
+| `TWT-CBWNG-12U-6x6-BK.igs` | `088a8616d15c40a7a1d2a8f2ac6f043388b0083267f2f677ee60979d0a4a55a8` |
+| `views/TWT-CBWNG-12U-6x6-BK.drawing.pdf` | `e1765fb087630ed3c984be0499150bdc1fe50f9c8a09a8c80754a91030f0f866` |
+
+This is not a passing baseline, but it is useful negative evidence for P3: PMD
+must represent the wall-cabinet construction instead of inheriting the generic
+door-kit shortcut.
+
+### Still Missing
+
+No complete passing baseline candidate is accepted yet for:
+
+- `TWT-CBWNG-12U-6x6-BK`: official product-page HTML and v1 card exist, but
+  legacy geometry fails official bbox and no drawing/table PDF is available.
 
 ## P0-04 Result
 
-P0-04 is not complete. CBB and FRWAJ evidence are recorded as baseline
-candidates. Full baseline capture still needs immutable artifact storage,
-wall-cabinet card/baseline work and explicit handling of known defects.
+P0-04 is not complete. CBB, FRWAJ and CBWNG evidence are recorded as baseline
+candidates. Full baseline capture still needs immutable artifact storage and
+explicit handling of known defects.

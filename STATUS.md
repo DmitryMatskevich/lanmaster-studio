@@ -10,6 +10,7 @@ completed IDs:
 - P0-04: partial only; recorded existing CBB baseline candidate evidence
 - P0-04: partial source-cache update for wall-cabinet/open-frame pilots
 - P0-04: partial FRWAJ temporary export baseline candidate with known mass defect
+- P0-04: failed CBWNG legacy baseline candidate with known geometry limitation
 - P0-05: drafted ADR-0001 through ADR-0009 as proposed
 - P0-06: drafted proposed preview SLOs, release gates and parity tolerances
 - P0-07: partial local toolchain smoke for PDFs and generated pilot artifacts
@@ -53,6 +54,9 @@ changed files:
 - `../lanmaster-cad/sources/twt-cbwng/source.json`
 - `../lanmaster-cad/sources/twt-frwaj-xu-gy/product.html`
 - `../lanmaster-cad/sources/twt-frwaj-xu-gy/source.json`
+- `../lanmaster-cad/params/TWT-CBWNG-12U-6x6-BK.yaml`
+- `../lanmaster-cad/ids/wall_cabinet.IFC4.ids`
+- `../lanmaster-cad/ids/wall_cabinet.IFC4X3.ids`
 
 test commands:
 - `python3 scripts/verify_skeleton.py`
@@ -68,6 +72,9 @@ test commands:
 - `shasum -a 256 lanmaster-models/TWT-CBB-42U-8x10-P1/TWT-CBB-42U-8x10-P1.* lanmaster-models/TWT-CBB-42U-8x10-P1/src/*`
 - `cd ../lanmaster-cad && .venv/bin/python -m lmcad.cli build params/TWT-FRWAJ-12U-GY.yaml --out /private/tmp/lanmaster-studio-p0-baseline --lod 300`
 - `cd ../lanmaster-cad && .venv/bin/python -m lmcad.cli export params/TWT-FRWAJ-12U-GY.yaml --out /private/tmp/lanmaster-studio-p0-baseline --lod 300`
+- `cd ../lanmaster-cad && .venv/bin/python -m lmcad.cli build params/TWT-CBWNG-12U-6x6-BK.yaml --out /private/tmp/lanmaster-studio-p0-baseline --lod 300`
+- `cd ../lanmaster-cad && .venv/bin/python -m lmcad.cli export params/TWT-CBWNG-12U-6x6-BK.yaml --out /private/tmp/lanmaster-studio-p0-baseline --lod 300 --no-strict`
+- `shasum -a 256 /private/tmp/lanmaster-studio-p0-baseline/TWT-CBWNG-12U-6x6-BK/TWT-CBWNG-12U-6x6-BK.* /private/tmp/lanmaster-studio-p0-baseline/TWT-CBWNG-12U-6x6-BK/views/*`
 - `shasum -a 256 /private/tmp/lanmaster-studio-p0-baseline/TWT-FRWAJ-12U-GY/TWT-FRWAJ-12U-GY.* /private/tmp/lanmaster-studio-p0-baseline/TWT-FRWAJ-12U-GY/views/*`
 - `curl -sSL https://lanmaster.ru/twt-cbwng/ -o sources/twt-cbwng/product.html`
 - `curl -sSL https://lanmaster.ru/twt-frwaj-xu-gy/ -o sources/twt-frwaj-xu-gy/product.html`
@@ -108,14 +115,17 @@ results:
 - PARTIAL: P0-07 toolchain smoke passed for PDF metadata and generated STEP/DXF/IFC/GLB pilot artifacts.
 - GAP: no real SVG/DWG/source-CAD files exist in current pilot source cache; PDF table text extraction was empty.
 - PASS: P0 scaffold verification passed after P0-07 smoke report update.
+- PARTIAL: CBWNG card added on `lanmaster-cad` branch `studio-p0-source-cache` at `9607ef51`.
+- KNOWN DEFECT: CBWNG legacy build/export fails official bbox X/Y because current v1 route models a door kit, not a full wall cabinet.
+- PASS: P0 scaffold verification passed after CBWNG baseline-candidate update.
 
 blockers:
 - Gate P0 blocker resolved on branch `studio-p0-source-cache`: selected CAD
   compatibility suite is green after `784803de`.
 - Gate P0 blocker: selected wall cabinet `TWT-CBWNG-12U-6x6-BK` and open frame
-  `TWT-FRWAJ-12U-GY` now have cached official product pages, but still need
-  drawing/table PDFs where available; `TWT-CBWNG-12U-6x6-BK` needs a v1 card
-  and baseline; `TWT-FRWAJ-12U-GY` needs mass correction or known-defect approval.
+  `TWT-FRWAJ-12U-GY` now have cached official product pages and baseline
+  candidates, but still need drawing/table PDFs where available and explicit
+  known-defect approval/correction.
 - Gate P0 blocker: P0-07 is only partial until real SVG/DWG/source-CAD fixtures
   are found or the pilot source matrix is explicitly scoped without them.
 
