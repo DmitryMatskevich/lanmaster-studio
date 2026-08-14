@@ -48,5 +48,10 @@ assert.match(appSource, /Undo/);
 assert.match(appSource, /Redo/);
 assert.match(appSource, /Accept baseline/);
 assert.match(appSource, /patch visible before commit/);
+assert.match(appSource, /CommitReleasePanel/);
+assert.match(appSource, /commitDraft/);
+assert.match(appSource, /createRelease/);
+assert.match(appSource, /Release draft/);
+assert.match(appSource, /History/);
 
 console.log("Frontend scaffold verification passed");

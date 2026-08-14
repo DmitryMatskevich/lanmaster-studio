@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P5-10 Commit, revision, history and release UI
+active ID: P5-11 Responsive, accessibility and visual E2E suite
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -78,6 +78,7 @@ completed IDs:
 - P5-07: schema-driven property editor scaffold
 - P5-08: patch to preview workflow with progress, cancel and retry states
 - P5-09: before/after diff, QA panel and undo/redo scaffold
+- P5-10: commit, revision history and release UI scaffold
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
