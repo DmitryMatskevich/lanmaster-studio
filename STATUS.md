@@ -438,6 +438,8 @@ results:
   route restoration without data/artifact loss.
 - PASS: P7-08 engineering scaffold: engineer/librarian/admin guides and guide
   coverage verifier.
+- PASS: P7-09 engineering scaffold: limited launch readiness evaluator for
+  owners, training, support, SLA and prerequisite gates.
 
 blockers:
 - P7-01 cannot fully pass before real shadow builds cover at least 28 calendar
@@ -449,6 +451,9 @@ blockers:
 - P7-06 final pass requires actual production deployment evidence.
 - P7-07 final pass requires live incident/rollback rehearsal evidence.
 - P7-08 final pass requires walkthrough by new users.
+- P7-09 final pass requires all prerequisite P7 gates to have real evidence and
+  assigned launch owners/SLA/support.
 
 next ID:
-- P7-09: training and limited production launch.
+- Gate P7: blocked until real observation, approvals, deployment, DR, rollback
+  and training evidence exist.
