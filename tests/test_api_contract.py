@@ -198,6 +198,13 @@ def test_draft_patch_commit_lifecycle_with_optimistic_lock(tmp_path):
     assert revisions.status_code == 200
     assert [item["id"] for item in revisions.json()["items"]] == [revision["id"]]
 
+    revision_detail = client.get(f"/api/v1/revisions/{revision['id']}", headers={"X-Dev-Roles": "viewer"})
+    assert revision_detail.status_code == 200
+    assert revision_detail.json()["pmd"]["parameters"]["width"] == 600
+
+    missing_revision = client.get("/api/v1/revisions/missing", headers={"X-Dev-Roles": "viewer"})
+    assert missing_revision.status_code == 404
+
     missing_revisions = client.get("/api/v1/models/missing/revisions", headers={"X-Dev-Roles": "viewer"})
     assert missing_revisions.status_code == 404
 

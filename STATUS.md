@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: Gate P5 Editor MVP review
+active ID: P6-01 Production document/artifact upload lifecycle and isolated ingestion pool
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -80,6 +80,7 @@ completed IDs:
 - P5-09: before/after diff, QA panel and undo/redo scaffold
 - P5-10: commit, revision history and release UI scaffold
 - P5-11: responsive, accessibility and visual E2E suite
+- Gate P5: passed with PMD-backed editor flow
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.

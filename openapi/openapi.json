@@ -341,6 +341,80 @@
         }
       }
     },
+    "/api/v1/revisions/{revision_id}": {
+      "get": {
+        "tags": [
+          "models"
+        ],
+        "summary": "Api Get Revision",
+        "operationId": "api_get_revision_api_v1_revisions__revision_id__get",
+        "parameters": [
+          {
+            "name": "revision_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Revision Id"
+            }
+          },
+          {
+            "name": "X-Dev-User",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-User"
+            }
+          },
+          {
+            "name": "X-Dev-Roles",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-Roles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevisionDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/models/{model_id}/drafts": {
       "post": {
         "tags": [
@@ -3234,6 +3308,56 @@
           "updatedAt"
         ],
         "title": "ReleaseSummary"
+      },
+      "RevisionDetail": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "modelId": {
+            "type": "string",
+            "title": "Modelid"
+          },
+          "parentId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parentid"
+          },
+          "schemaVersion": {
+            "type": "string",
+            "title": "Schemaversion"
+          },
+          "contentHash": {
+            "type": "string",
+            "title": "Contenthash"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "pmd": {
+            "type": "object",
+            "title": "Pmd"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "modelId",
+          "schemaVersion",
+          "contentHash",
+          "createdAt",
+          "pmd"
+        ],
+        "title": "RevisionDetail"
       },
       "RevisionList": {
         "properties": {
