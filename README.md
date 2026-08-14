@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: P5-06 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: P5-07 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
@@ -32,6 +32,7 @@ The initial repository contains:
 - P5-03 virtualized component tree scaffold for large hierarchies.
 - P5-04 Three.js viewer scaffold and resource lifecycle cleanup.
 - P5-05 bidirectional tree/viewer component selection contract.
+- P5-06 viewer tools scaffold for visibility, isolate, views, section, measure and exploded view.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because

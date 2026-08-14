@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { Box, ChevronRight, LogIn, RefreshCw, Search, ShieldCheck } from "lucide-react";
+import { Box, ChevronRight, Eye, Focus, Layers, LogIn, RefreshCw, Ruler, Scissors, Search, ShieldCheck } from "lucide-react";
 import * as THREE from "three";
 
 import type { ModelSummary, RevisionSummary, UserInfo } from "../../clients/typescript/src";
@@ -279,6 +279,7 @@ function ModelRoute({
   const [revisions, setRevisions] = useState<RevisionSummary[]>([]);
   const [selectedRevisionId, setSelectedRevisionId] = useState("");
   const [selectedComponentId, setSelectedComponentId] = useState("cmp_0");
+  const [viewerMode, setViewerMode] = useState<ViewerMode>("visible");
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -347,6 +348,8 @@ function ModelRoute({
           <ModelViewer
             selectedRevisionId={selectedRevisionId}
             selectedComponentId={selectedComponentId}
+            viewerMode={viewerMode}
+            onModeChange={setViewerMode}
             onSelectComponent={setSelectedComponentId}
           />
         </div>
@@ -358,13 +361,19 @@ function ModelRoute({
   );
 }
 
+type ViewerMode = "visible" | "isolate" | "views" | "section" | "measure" | "explode";
+
 function ModelViewer({
   selectedRevisionId,
   selectedComponentId,
+  viewerMode,
+  onModeChange,
   onSelectComponent
 }: {
   selectedRevisionId: string;
   selectedComponentId: string;
+  viewerMode: ViewerMode;
+  onModeChange: (mode: ViewerMode) => void;
   onSelectComponent: (componentId: string) => void;
 }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
@@ -417,6 +426,9 @@ function ModelViewer({
     let frame = 0;
     function render() {
       material.color.set(selectedComponentId === "cmp_0" ? 0x2f8f83 : 0x8aa0ad);
+      mesh.visible = viewerMode !== "isolate" || selectedComponentId === "cmp_0";
+      mesh.position.x = viewerMode === "explode" ? 0.35 : 0;
+      mesh.scale.z = viewerMode === "section" ? 0.65 : 1;
       mesh.rotation.z = 0.02;
       mesh.rotation.y += 0.006;
       renderer.render(scene, camera);
@@ -434,7 +446,7 @@ function ModelViewer({
       (edgeLines.material as THREE.Material).dispose();
       renderer.dispose();
     };
-  }, [onSelectComponent, selectedComponentId, selectedRevisionId]);
+  }, [onSelectComponent, selectedComponentId, selectedRevisionId, viewerMode]);
 
   return (
     <section className="viewer-panel" aria-label="3D viewer">
@@ -442,8 +454,35 @@ function ModelViewer({
         <h2>3D viewer</h2>
         <span>{selectedRevisionId || "no revision"} · {selectedComponentId}</span>
       </div>
+      <div className="viewer-toolbar" aria-label="Viewer tools">
+        <ToolButton active={viewerMode === "visible"} label="Visibility" onClick={() => onModeChange("visible")}><Eye size={17} /></ToolButton>
+        <ToolButton active={viewerMode === "isolate"} label="Isolate" onClick={() => onModeChange("isolate")}><Focus size={17} /></ToolButton>
+        <ToolButton active={viewerMode === "views"} label="Views" onClick={() => onModeChange("views")}><Layers size={17} /></ToolButton>
+        <ToolButton active={viewerMode === "section"} label="Section" onClick={() => onModeChange("section")}><Scissors size={17} /></ToolButton>
+        <ToolButton active={viewerMode === "measure"} label="Measure" onClick={() => onModeChange("measure")}><Ruler size={17} /></ToolButton>
+        <ToolButton active={viewerMode === "explode"} label="Exploded view" onClick={() => onModeChange("explode")}><ChevronRight size={17} /></ToolButton>
+      </div>
       <div className="viewer-host" ref={hostRef} />
+      {viewerMode === "measure" && <div className="measure-readout">X 2200 · Y 1400 · Z 3200 mm</div>}
     </section>
+  );
+}
+
+function ToolButton({
+  active,
+  label,
+  onClick,
+  children
+}: {
+  active: boolean;
+  label: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button type="button" className={active ? "tool-button active" : "tool-button"} onClick={onClick} title={label} aria-label={label}>
+      {children}
+    </button>
   );
 }
 
