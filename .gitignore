@@ -16,6 +16,7 @@ dist/
 build/
 .next/
 coverage/
+frontend/e2e-artifacts/
 
 .venv/
 venv/

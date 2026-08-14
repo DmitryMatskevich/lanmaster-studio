@@ -32,8 +32,10 @@ jobs:
         run: |
           npm ci --prefix frontend
           npm audit --prefix frontend --audit-level=moderate
+          npx --prefix frontend playwright install --with-deps chromium
           npm run frontend:build
           npm run frontend:test
+          npm --prefix frontend run test:e2e
 
       - name: Verify Docker Compose stack
         run: python3 scripts/verify_compose.py
