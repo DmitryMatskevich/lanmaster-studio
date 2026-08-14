@@ -430,6 +430,8 @@ results:
   evaluator.
 - PASS: P7-04 engineering scaffold: dependency policy verifier, generated SBOM
   and npm audit gate.
+- PASS: P7-05 engineering scaffold: backup manifest, restore drill and RPO/RTO
+  evaluator.
 
 blockers:
 - P7-01 cannot fully pass before real shadow builds cover at least 28 calendar
@@ -437,6 +439,7 @@ blockers:
 - P7-02 cannot fully pass before Domain/Approver signs selected pilot acceptance.
 - P7-03 final SLO confirmation requires production-size benchmark samples.
 - P7-04 final pass requires independent security review approval.
+- P7-05 final pass requires a real pilot backup/restore drill.
 
 next ID:
-- P7-05: backup/restore, retention and disaster recovery drill.
+- P7-06: production deployment, autoscaling and alerts.
