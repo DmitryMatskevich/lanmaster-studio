@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: Gate P4 review
+active ID: P5-01 Scaffold React/TypeScript app, routing, auth and API client
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -68,6 +68,7 @@ completed IDs:
 - P4-08: AuditEvent and trace correlation with admin-only query API
 - P4-09: metrics, logs and trace dashboard skeleton
 - P4-10: Docker Compose local stack
+- Gate P4: passed; API/data/workers MVP is ready for P5 editor scaffolding
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -123,6 +124,7 @@ changed files:
 - `docs/discovery/p4-08-audit.md`
 - `docs/discovery/p4-09-observability.md`
 - `docs/discovery/p4-10-docker-compose.md`
+- `docs/discovery/p4-gate-review.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `pyproject.toml`
@@ -353,9 +355,19 @@ results:
 - PASS: P4-07 events tests passed: 10 passed.
 - PASS: P4-07 web smoke passed: durable REST event replay for job queued,
   running and heartbeat events.
+- PASS: P4-08 audit tests passed: 11 passed.
+- PASS: P4-08 web smoke passed: trace header, admin audit query, viewer 403
+  and Swagger UI loaded.
+- PASS: P4-09 observability tests passed: 12 passed.
+- PASS: P4-09 web smoke passed: summary, `/metrics`, dashboard and Swagger UI.
+- PASS: P4-10 Docker Compose local stack passed: pytest, scaffold verifier,
+  compose verifier, `docker compose config`, container build/start, `/health`,
+  `/metrics` and Swagger UI.
+- PASS: Gate P4 verification passed: regenerated OpenAPI/client, 12 API tests,
+  skeleton verifier, compose verifier, compose config and Docker web smoke.
 
 blockers:
-- none for Gate P3.
+- none for Gate P4.
 
 next ID:
-- P4-08: AuditEvent and trace correlation
+- P5-01: Scaffold React/TypeScript app, routing, auth and API client
