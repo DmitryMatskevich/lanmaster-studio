@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P6-11 RAG/chat evaluation corpus and dashboard
+active ID: P7-01 Shadow build pilot and operational metrics
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -91,6 +91,8 @@ completed IDs:
 - P6-08: PMDPatchProposal validation and authorization workflow
 - P6-09: chat proposal UI with sources, ambiguities and accept/reject
 - P6-10: RAG kill switch, prompt injection and tenant isolation guards
+- P6-11: RAG/chat evaluation corpus and dashboard summary
+- Gate P6: passed with verifiable proposal workflow
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.

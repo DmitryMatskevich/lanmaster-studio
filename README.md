@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: P6-11 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: P7-01 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
@@ -49,6 +49,8 @@ The initial repository contains:
 - P6-08 PMDPatchProposal validation and authorization workflow.
 - P6-09 chat proposal UI with sources, ambiguities and accept/reject.
 - P6-10 RAG kill switch, prompt injection and tenant isolation guards.
+- P6-11 RAG/chat evaluation corpus and dashboard summary.
+- Gate P6 passed with verifiable proposal workflow.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because
