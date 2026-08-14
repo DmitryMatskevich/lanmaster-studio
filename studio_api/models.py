@@ -139,3 +139,32 @@ class WorkerClaimRequest(BaseModel):
 class WorkerHeartbeat(BaseModel):
     workerId: str = Field(min_length=1, max_length=120)
     progress: int = Field(ge=0, le=100)
+
+
+class PreviewRequest(BaseModel):
+    baseRevisionToken: str
+    profile: str = Field(default="web-preview", max_length=80)
+    clientRequestId: Optional[str] = Field(default=None, max_length=160)
+
+
+class JobAccepted(BaseModel):
+    jobId: str
+    status: Literal["queued", "running"]
+    affectedComponentIds: List[str] = Field(default_factory=list)
+    eventsUrl: str
+
+
+class ReleaseCreate(BaseModel):
+    profile: str = Field(default="catalog-full", max_length=80)
+    clientRequestId: Optional[str] = Field(default=None, max_length=160)
+
+
+class ReleaseSummary(BaseModel):
+    id: str
+    revisionId: str
+    profile: str
+    status: Literal["queued", "running", "succeeded", "failed", "cancelled"]
+    jobId: Optional[str] = None
+    manifestArtifactId: Optional[str] = None
+    createdAt: datetime
+    updatedAt: datetime

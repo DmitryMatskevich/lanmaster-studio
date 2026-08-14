@@ -1138,6 +1138,280 @@
         }
       }
     },
+    "/api/v1/drafts/{draft_id}/preview": {
+      "post": {
+        "tags": [
+          "orchestration"
+        ],
+        "summary": "Api Preview Draft",
+        "operationId": "api_preview_draft_api_v1_drafts__draft_id__preview_post",
+        "parameters": [
+          {
+            "name": "draft_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Draft Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "name": "X-Dev-User",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-User"
+            }
+          },
+          {
+            "name": "X-Dev-Roles",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-Roles"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobAccepted"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/revisions/{revision_id}/releases": {
+      "post": {
+        "tags": [
+          "orchestration"
+        ],
+        "summary": "Api Create Release",
+        "operationId": "api_create_release_api_v1_revisions__revision_id__releases_post",
+        "parameters": [
+          {
+            "name": "revision_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Revision Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "name": "X-Dev-User",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-User"
+            }
+          },
+          {
+            "name": "X-Dev-Roles",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-Roles"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReleaseCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReleaseSummary"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/releases/{release_id}": {
+      "get": {
+        "tags": [
+          "orchestration"
+        ],
+        "summary": "Api Get Release",
+        "operationId": "api_get_release_api_v1_releases__release_id__get",
+        "parameters": [
+          {
+            "name": "release_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Release Id"
+            }
+          },
+          {
+            "name": "X-Dev-User",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-User"
+            }
+          },
+          {
+            "name": "X-Dev-Roles",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-Roles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReleaseSummary"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/auth/me": {
       "get": {
         "tags": [
@@ -1344,6 +1618,40 @@
           "database"
         ],
         "title": "HealthResponse"
+      },
+      "JobAccepted": {
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "title": "Jobid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running"
+            ],
+            "title": "Status"
+          },
+          "affectedComponentIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Affectedcomponentids"
+          },
+          "eventsUrl": {
+            "type": "string",
+            "title": "Eventsurl"
+          }
+        },
+        "type": "object",
+        "required": [
+          "jobId",
+          "status",
+          "eventsUrl"
+        ],
+        "title": "JobAccepted"
       },
       "JobCreate": {
         "properties": {
@@ -1677,6 +1985,130 @@
           "createdAt"
         ],
         "title": "PatchSummary"
+      },
+      "PreviewRequest": {
+        "properties": {
+          "baseRevisionToken": {
+            "type": "string",
+            "title": "Baserevisiontoken"
+          },
+          "profile": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Profile",
+            "default": "web-preview"
+          },
+          "clientRequestId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clientrequestid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "baseRevisionToken"
+        ],
+        "title": "PreviewRequest"
+      },
+      "ReleaseCreate": {
+        "properties": {
+          "profile": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Profile",
+            "default": "catalog-full"
+          },
+          "clientRequestId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clientrequestid"
+          }
+        },
+        "type": "object",
+        "title": "ReleaseCreate"
+      },
+      "ReleaseSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "revisionId": {
+            "type": "string",
+            "title": "Revisionid"
+          },
+          "profile": {
+            "type": "string",
+            "title": "Profile"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ],
+            "title": "Status"
+          },
+          "jobId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Jobid"
+          },
+          "manifestArtifactId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Manifestartifactid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updatedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "revisionId",
+          "profile",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "ReleaseSummary"
       },
       "RevisionSummary": {
         "properties": {

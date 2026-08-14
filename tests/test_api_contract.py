@@ -253,3 +253,65 @@ def test_job_queue_worker_protocol_and_idempotency(tmp_path):
     assert retried.status_code == 200
     assert retried.json()["state"] == "queued"
     assert retried.json()["attempt"] == 2
+
+
+def test_preview_and_release_orchestration_contract(tmp_path):
+    client = next(_client(tmp_path))
+    engineer = {"X-Dev-User": "engineer@example.test", "X-Dev-Roles": "engineer"}
+
+    model = client.post(
+        "/api/v1/models",
+        headers=engineer,
+        json={"article": "P4-05-ORCHESTRATION"},
+    ).json()
+    draft = client.post(
+        f"/api/v1/models/{model['id']}/drafts",
+        headers=engineer,
+        json={},
+    ).json()
+
+    stale_preview = client.post(
+        f"/api/v1/drafts/{draft['id']}/preview",
+        headers=engineer,
+        json={"baseRevisionToken": "stale", "profile": "web-preview"},
+    )
+    assert stale_preview.status_code == 409
+
+    preview = client.post(
+        f"/api/v1/drafts/{draft['id']}/preview",
+        headers={**engineer, "Idempotency-Key": "preview-p4-05"},
+        json={"baseRevisionToken": draft["headRevisionToken"], "profile": "web-preview"},
+    )
+    assert preview.status_code == 202
+    preview_body = preview.json()
+    assert preview_body["jobId"].startswith("job_")
+    assert preview_body["eventsUrl"] == f"/api/v1/events?jobId={preview_body['jobId']}"
+
+    revision = client.post(
+        f"/api/v1/drafts/{draft['id']}/commit",
+        headers=engineer,
+        json={
+            "baseRevisionToken": draft["headRevisionToken"],
+            "pmd": {"schemaVersion": "2.0.0", "id": "p4-05"},
+        },
+    ).json()
+
+    release = client.post(
+        f"/api/v1/revisions/{revision['id']}/releases",
+        headers={**engineer, "Idempotency-Key": "release-p4-05"},
+        json={"profile": "catalog-full"},
+    )
+    assert release.status_code == 202
+    release_body = release.json()
+    assert release_body["id"].startswith("rel_")
+    assert release_body["revisionId"] == revision["id"]
+    assert release_body["status"] == "queued"
+    assert release_body["jobId"].startswith("job_")
+
+    repeated_release = client.post(
+        f"/api/v1/revisions/{revision['id']}/releases",
+        headers={**engineer, "Idempotency-Key": "release-p4-05"},
+        json={"profile": "catalog-full"},
+    )
+    assert repeated_release.status_code == 202
+    assert repeated_release.json()["id"] == release_body["id"]

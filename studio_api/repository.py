@@ -9,11 +9,15 @@ from .models import (
     DraftCommit,
     DraftSummary,
     JobCreate,
+    JobAccepted,
     JobSummary,
     ModelCreate,
     ModelSummary,
     PatchCreate,
     PatchSummary,
+    PreviewRequest,
+    ReleaseCreate,
+    ReleaseSummary,
     RevisionSummary,
     WorkerClaimRequest,
     WorkerHeartbeat,
@@ -81,6 +85,19 @@ def _row_to_job(row) -> JobSummary:
         progress=row["progress"],
         workerId=row["worker_id"],
         heartbeatAt=datetime.fromisoformat(row["heartbeat_at"]) if row["heartbeat_at"] else None,
+        createdAt=datetime.fromisoformat(row["created_at"]),
+        updatedAt=datetime.fromisoformat(row["updated_at"]),
+    )
+
+
+def _row_to_release(row) -> ReleaseSummary:
+    return ReleaseSummary(
+        id=row["id"],
+        revisionId=row["revision_id"],
+        profile=row["profile"],
+        status=row["status"],
+        jobId=row["job_id"],
+        manifestArtifactId=row["manifest_artifact_id"],
         createdAt=datetime.fromisoformat(row["created_at"]),
         updatedAt=datetime.fromisoformat(row["updated_at"]),
     )
@@ -383,3 +400,90 @@ def heartbeat_job(job_id: str, payload: WorkerHeartbeat) -> JobSummary | None | 
         )
         updated = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
     return _row_to_job(updated)
+
+
+def enqueue_preview(draft_id: str, payload: PreviewRequest, idempotency_key: str | None) -> JobAccepted | None | str:
+    with session() as conn:
+        draft = conn.execute("SELECT * FROM drafts WHERE id = ?", (draft_id,)).fetchone()
+        if draft is None:
+            return None
+        if draft["status"] != "open":
+            return "DRAFT_CLOSED"
+        if draft["head_revision_token"] != payload.baseRevisionToken:
+            return "REVISION_CONFLICT"
+    job = enqueue_job(
+        JobCreate(
+            type="preview",
+            inputHash=_canonical_hash(
+                {
+                    "draftId": draft_id,
+                    "token": payload.baseRevisionToken,
+                    "profile": payload.profile,
+                }
+            ),
+            payload={
+                "draftId": draft_id,
+                "profile": payload.profile,
+                "clientRequestId": payload.clientRequestId,
+            },
+        ),
+        idempotency_key,
+    )
+    return JobAccepted(
+        jobId=job.id,
+        status=job.state,
+        affectedComponentIds=[],
+        eventsUrl=f"/api/v1/events?jobId={job.id}",
+    )
+
+
+def create_release(revision_id: str, payload: ReleaseCreate, idempotency_key: str | None) -> ReleaseSummary | None:
+    now = utc_now().isoformat()
+    with session() as conn:
+        revision = conn.execute("SELECT * FROM revisions WHERE id = ?", (revision_id,)).fetchone()
+        if revision is None:
+            return None
+    job = enqueue_job(
+        JobCreate(
+            type="release",
+            inputHash=_canonical_hash(
+                {
+                    "revisionId": revision_id,
+                    "profile": payload.profile,
+                }
+            ),
+            payload={
+                "revisionId": revision_id,
+                "profile": payload.profile,
+                "clientRequestId": payload.clientRequestId,
+            },
+        ),
+        idempotency_key,
+    )
+    release_id = new_id("rel")
+    with session() as conn:
+        existing = None
+        if idempotency_key:
+            existing = conn.execute(
+                "SELECT * FROM releases WHERE idempotency_key = ?",
+                (idempotency_key,),
+            ).fetchone()
+        if existing is not None:
+            return _row_to_release(existing)
+        conn.execute(
+            """
+            INSERT INTO releases (
+              id, revision_id, profile, status, job_id, idempotency_key,
+              created_at, updated_at
+            ) VALUES (?, ?, ?, 'queued', ?, ?, ?, ?)
+            """,
+            (release_id, revision_id, payload.profile, job.id, idempotency_key, now, now),
+        )
+        row = conn.execute("SELECT * FROM releases WHERE id = ?", (release_id,)).fetchone()
+    return _row_to_release(row)
+
+
+def get_release(release_id: str) -> ReleaseSummary | None:
+    with session() as conn:
+        row = conn.execute("SELECT * FROM releases WHERE id = ?", (release_id,)).fetchone()
+    return _row_to_release(row) if row else None
