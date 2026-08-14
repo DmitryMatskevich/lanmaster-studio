@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: P4-10 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: Gate P4 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
@@ -26,6 +26,7 @@ The initial repository contains:
 - P4-07 durable REST/WebSocket event replay.
 - P4-08 audit events and trace correlation across mutating API calls.
 - P4-09 observability summary, Prometheus-style metrics and dashboard skeleton.
+- P4-10 Docker Compose local API stack.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because
@@ -56,6 +57,18 @@ Useful URLs:
 - `http://127.0.0.1:8088/health`
 - `http://127.0.0.1:8088/api/v1/openapi.json`
 - `http://127.0.0.1:8088/docs`
+- `http://127.0.0.1:8088/api/v1/observability/dashboard`
+- `http://127.0.0.1:8088/metrics`
+
+## Docker Compose
+
+```bash
+docker compose up --build
+```
+
+The local container uses `.env.example` defaults, exposes the API on
+`http://127.0.0.1:8088`, and persists SQLite plus uploaded artifacts in the
+`studio-var` volume.
 
 ## External Repository Setup
 

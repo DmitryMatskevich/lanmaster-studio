@@ -1,0 +1,29 @@
+services:
+  studio-api:
+    build:
+      context: .
+    image: lanmaster-studio-api:local
+    env_file:
+      - .env.example
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-sqlite:////app/var/studio.db}
+      STUDIO_STORAGE_DIR: ${STUDIO_STORAGE_DIR:-/app/var/storage}
+      STUDIO_ENV: ${STUDIO_ENV:-dev}
+      STUDIO_AUTH_MODE: ${STUDIO_AUTH_MODE:-dev}
+    ports:
+      - "${STUDIO_API_PORT:-8088}:8088"
+    volumes:
+      - studio-var:/app/var
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8088/health', timeout=3).read()"
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+volumes:
+  studio-var:
