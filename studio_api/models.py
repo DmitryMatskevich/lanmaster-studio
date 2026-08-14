@@ -168,3 +168,39 @@ class ReleaseSummary(BaseModel):
     manifestArtifactId: Optional[str] = None
     createdAt: datetime
     updatedAt: datetime
+
+
+class UploadIntentCreate(BaseModel):
+    filename: str = Field(min_length=1, max_length=240)
+    mediaType: str = Field(min_length=1, max_length=160)
+    size: int = Field(gt=0)
+    sha256: str = Field(min_length=64, max_length=71)
+    scope: str = Field(default="source", max_length=80)
+
+
+class UploadIntent(BaseModel):
+    artifactId: str
+    uploadUrl: str
+    objectKey: str
+    expiresAt: datetime
+
+
+class UploadComplete(BaseModel):
+    artifactId: str
+
+
+class ArtifactSummary(BaseModel):
+    id: str
+    objectKey: str
+    sha256: str
+    mediaType: str
+    size: int
+    scope: str
+    status: Literal["pending", "ready"]
+    createdAt: datetime
+
+
+class DownloadUrl(BaseModel):
+    artifactId: str
+    downloadUrl: str
+    expiresAt: datetime

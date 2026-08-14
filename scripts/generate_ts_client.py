@@ -123,6 +123,30 @@ export interface ReleaseSummary {
   updatedAt: string;
 }
 
+export interface UploadIntent {
+  artifactId: string;
+  uploadUrl: string;
+  objectKey: string;
+  expiresAt: string;
+}
+
+export interface ArtifactSummary {
+  id: string;
+  objectKey: string;
+  sha256: string;
+  mediaType: string;
+  size: number;
+  scope: string;
+  status: "pending" | "ready";
+  createdAt: string;
+}
+
+export interface DownloadUrl {
+  artifactId: string;
+  downloadUrl: string;
+  expiresAt: string;
+}
+
 export class StudioApiClient {
   constructor(
     private readonly baseUrl = "",
@@ -262,6 +286,36 @@ export class StudioApiClient {
 
   async getRelease(releaseId: string): Promise<ReleaseSummary> {
     return this.request<ReleaseSummary>(`/api/v1/releases/${encodeURIComponent(releaseId)}`);
+  }
+
+  async createUploadIntent(payload: {
+    filename: string;
+    mediaType: string;
+    size: number;
+    sha256: string;
+    scope?: string;
+  }): Promise<UploadIntent> {
+    return this.request<UploadIntent>("/api/v1/documents/upload-intents", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async completeUpload(artifactId: string): Promise<ArtifactSummary> {
+    return this.request<ArtifactSummary>("/api/v1/documents/complete-upload", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ artifactId }),
+    });
+  }
+
+  async getArtifact(artifactId: string): Promise<ArtifactSummary> {
+    return this.request<ArtifactSummary>(`/api/v1/artifacts/${encodeURIComponent(artifactId)}`);
+  }
+
+  async getDownloadUrl(artifactId: string): Promise<DownloadUrl> {
+    return this.request<DownloadUrl>(`/api/v1/artifacts/${encodeURIComponent(artifactId)}/download-url`);
   }
 
   private async request<T>(path: string, init: RequestInit = {}): Promise<T> {

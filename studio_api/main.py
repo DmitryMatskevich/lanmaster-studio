@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from typing import Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Response, status
+from fastapi.responses import FileResponse
 
 from . import __version__
 from .auth import Role, UserContext, current_user, require_roles
@@ -11,6 +12,8 @@ from .config import get_settings
 from .db import apply_migrations, connect
 from .models import HealthResponse, ModelCreate, ModelList, ModelSummary, UserInfo
 from .models import (
+    ArtifactSummary,
+    DownloadUrl,
     DraftCommit,
     DraftCreate,
     DraftSummary,
@@ -22,6 +25,9 @@ from .models import (
     PreviewRequest,
     ReleaseCreate,
     ReleaseSummary,
+    UploadComplete,
+    UploadIntent,
+    UploadIntentCreate,
     RevisionSummary,
     WorkerClaimRequest,
     WorkerHeartbeat,
@@ -34,9 +40,14 @@ from .repository import (
     commit_draft,
     create_draft,
     create_model,
+    create_download_url,
+    create_upload_intent,
     get_draft,
     get_job,
     get_model,
+    complete_upload,
+    get_artifact,
+    artifact_object_key,
     heartbeat_job,
     enqueue_job,
     enqueue_preview,
@@ -45,6 +56,7 @@ from .repository import (
     list_models,
     retry_job,
 )
+from .storage import object_path, verify_download_signature
 
 
 settings = get_settings()
@@ -310,6 +322,72 @@ def api_get_release(
     if release is None:
         raise HTTPException(status_code=404, detail="Release not found")
     return release
+
+
+@app.post(
+    f"{settings.api_prefix}/documents/upload-intents",
+    response_model=UploadIntent,
+    status_code=status.HTTP_201_CREATED,
+    tags=["artifacts"],
+)
+def api_create_upload_intent(
+    payload: UploadIntentCreate,
+    _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
+) -> UploadIntent:
+    return create_upload_intent(payload)
+
+
+@app.post(f"{settings.api_prefix}/documents/complete-upload", response_model=ArtifactSummary, tags=["artifacts"])
+def api_complete_upload(
+    payload: UploadComplete,
+    _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
+) -> ArtifactSummary:
+    result = complete_upload(payload)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Artifact not found")
+    if result == "OBJECT_MISSING":
+        raise HTTPException(status_code=409, detail="Uploaded object is missing")
+    if result == "HASH_OR_SIZE_MISMATCH":
+        raise HTTPException(status_code=422, detail="Uploaded object hash or size mismatch")
+    return result
+
+
+@app.get(f"{settings.api_prefix}/artifacts/{{artifact_id}}", response_model=ArtifactSummary, tags=["artifacts"])
+def api_get_artifact(
+    artifact_id: str,
+    _user: UserContext = Depends(require_roles(Role.VIEWER, Role.ENGINEER, Role.ADMIN)),
+) -> ArtifactSummary:
+    artifact = get_artifact(artifact_id)
+    if artifact is None:
+        raise HTTPException(status_code=404, detail="Artifact not found")
+    return artifact
+
+
+@app.get(f"{settings.api_prefix}/artifacts/{{artifact_id}}/download-url", response_model=DownloadUrl, tags=["artifacts"])
+def api_download_url(
+    artifact_id: str,
+    _user: UserContext = Depends(require_roles(Role.VIEWER, Role.ENGINEER, Role.ADMIN)),
+) -> DownloadUrl:
+    result = create_download_url(artifact_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Artifact not found")
+    if result == "ARTIFACT_NOT_READY":
+        raise HTTPException(status_code=409, detail="Artifact is not ready")
+    return result
+
+
+@app.get(f"{settings.api_prefix}/artifacts/{{artifact_id}}/download", tags=["artifacts"])
+def api_download_artifact(
+    artifact_id: str,
+    expires: int,
+    signature: str,
+) -> FileResponse:
+    object_key = artifact_object_key(artifact_id)
+    if object_key is None:
+        raise HTTPException(status_code=404, detail="Artifact not found")
+    if not verify_download_signature(artifact_id, object_key, expires, signature):
+        raise HTTPException(status_code=403, detail="Invalid or expired signature")
+    return FileResponse(object_path(object_key))
 
 
 @app.get(f"{settings.api_prefix}/auth/me", response_model=UserInfo, tags=["auth"])

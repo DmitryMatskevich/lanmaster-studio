@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: P4-06 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: P4-07 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
@@ -22,6 +22,7 @@ The initial repository contains:
 - P4-03 model/revision/draft/patch lifecycle with optimistic locking.
 - P4-04 SQLite-backed job queue and CAD worker protocol.
 - P4-05 preview/release orchestration over queued jobs.
+- P4-06 local object storage, upload verification and signed downloads.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because
