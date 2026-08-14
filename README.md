@@ -60,6 +60,7 @@ The initial repository contains:
 - P7-07 incident rollback rehearsal scaffold; live rehearsal pending.
 - P7-08 engineer, librarian and administrator guides with coverage verifier.
 - P7-09 limited production launch readiness scaffold; launch blocked until P7 evidence is real.
+- Gate P7 review recorded as blocked by required real pilot evidence.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because
