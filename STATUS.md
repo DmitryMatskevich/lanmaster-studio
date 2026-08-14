@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P6-02 Production PDF vector/raster/mixed extraction pipeline
+active ID: P6-03 SVG/DXF/DWG ingestion and LibreDWG adapter
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -82,6 +82,7 @@ completed IDs:
 - P5-11: responsive, accessibility and visual E2E suite
 - Gate P5: passed with PMD-backed editor flow
 - P6-01: production upload limits, scan, immutable hash and isolated ingestion job queue
+- P6-02: PDF vector/raster/mixed extraction with page and region provenance
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
