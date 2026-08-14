@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P5-03 Tree component with virtualized large hierarchy
+active ID: P5-04 Three.js viewer and resource lifecycle
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -71,6 +71,7 @@ completed IDs:
 - Gate P4: passed; API/data/workers MVP is ready for P5 editor scaffolding
 - P5-01: React/TypeScript app scaffold, routing, dev auth and API client
 - P5-02: catalog, search and revision selector
+- P5-03: virtualized tree component with 1000-node fixed-row hierarchy
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -129,6 +130,7 @@ changed files:
 - `docs/discovery/p4-gate-review.md`
 - `docs/discovery/p5-01-frontend-scaffold.md`
 - `docs/discovery/p5-02-catalog-revisions.md`
+- `docs/discovery/p5-03-virtualized-tree.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `pyproject.toml`
@@ -374,9 +376,11 @@ results:
   `npm run frontend:build`, `npm run frontend:test`.
 - PASS: P5-02 API/frontend tests passed: 12 API tests, frontend audit/build/test,
   revision list API smoke and frontend `/models/{id}` route smoke.
+- PASS: P5-03 frontend/API tests passed: virtualized tree verifier,
+  frontend audit/build/test, 12 API tests and route/bundle web smoke.
 
 blockers:
 - none for Gate P4.
 
 next ID:
-- P5-03: Tree component with virtualized large hierarchy
+- P5-04: Three.js viewer and resource lifecycle
