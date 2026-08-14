@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: Gate P4 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: P5-01 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
