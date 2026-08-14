@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P4-05 Preview/release orchestration
+active ID: P4-06 Object storage and signed URLs
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -62,6 +62,7 @@ completed IDs:
   optimistic locking
 - P4-04: Queue and CAD worker protocol with idempotency, cancel, retry,
   claim and heartbeat
+- P4-05: Preview/release orchestration returning 202 jobs and queued releases
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -111,6 +112,7 @@ changed files:
 - `docs/discovery/p4-02-auth-rbac.md`
 - `docs/discovery/p4-03-lifecycle.md`
 - `docs/discovery/p4-04-queue-worker.md`
+- `docs/discovery/p4-05-orchestration.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `pyproject.toml`
@@ -332,9 +334,12 @@ results:
 - PASS: P4-04 queue/worker tests passed: 7 passed.
 - PASS: P4-04 web smoke passed: idempotent enqueue, claim, heartbeat, cancel,
   retry and read state.
+- PASS: P4-05 orchestration tests passed: 8 passed.
+- PASS: P4-05 web smoke passed: preview 202, release 202, release read 200 and
+  Swagger UI loaded.
 
 blockers:
 - none for Gate P3.
 
 next ID:
-- P4-05: Preview/release orchestration
+- P4-06: Object storage and signed URLs

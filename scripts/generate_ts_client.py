@@ -105,6 +105,24 @@ export interface JobSummary {
   updatedAt: string;
 }
 
+export interface JobAccepted {
+  jobId: string;
+  status: "queued" | "running";
+  affectedComponentIds: string[];
+  eventsUrl: string;
+}
+
+export interface ReleaseSummary {
+  id: string;
+  revisionId: string;
+  profile: string;
+  status: "queued" | "running" | "succeeded" | "failed" | "cancelled";
+  jobId?: string | null;
+  manifestArtifactId?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export class StudioApiClient {
   constructor(
     private readonly baseUrl = "",
@@ -212,6 +230,38 @@ export class StudioApiClient {
       headers: { "content-type": "application/json" },
       body: JSON.stringify(payload),
     });
+  }
+
+  async previewDraft(
+    draftId: string,
+    payload: { baseRevisionToken: string; profile?: string; clientRequestId?: string | null },
+    idempotencyKey?: string,
+  ): Promise<JobAccepted> {
+    const headers: Record<string, string> = { "content-type": "application/json" };
+    if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;
+    return this.request<JobAccepted>(`/api/v1/drafts/${encodeURIComponent(draftId)}/preview`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async createRelease(
+    revisionId: string,
+    payload: { profile?: string; clientRequestId?: string | null } = {},
+    idempotencyKey?: string,
+  ): Promise<ReleaseSummary> {
+    const headers: Record<string, string> = { "content-type": "application/json" };
+    if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;
+    return this.request<ReleaseSummary>(`/api/v1/revisions/${encodeURIComponent(revisionId)}/releases`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async getRelease(releaseId: string): Promise<ReleaseSummary> {
+    return this.request<ReleaseSummary>(`/api/v1/releases/${encodeURIComponent(releaseId)}`);
   }
 
   private async request<T>(path: string, init: RequestInit = {}): Promise<T> {

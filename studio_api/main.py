@@ -15,9 +15,13 @@ from .models import (
     DraftCreate,
     DraftSummary,
     JobCreate,
+    JobAccepted,
     JobSummary,
     PatchCreate,
     PatchSummary,
+    PreviewRequest,
+    ReleaseCreate,
+    ReleaseSummary,
     RevisionSummary,
     WorkerClaimRequest,
     WorkerHeartbeat,
@@ -35,6 +39,9 @@ from .repository import (
     get_model,
     heartbeat_job,
     enqueue_job,
+    enqueue_preview,
+    create_release,
+    get_release,
     list_models,
     retry_job,
 )
@@ -252,6 +259,57 @@ def api_heartbeat_job(
     if result == "HEARTBEAT_REJECTED":
         raise HTTPException(status_code=409, detail="Heartbeat rejected for job state or worker")
     return result
+
+
+@app.post(
+    f"{settings.api_prefix}/drafts/{{draft_id}}/preview",
+    response_model=JobAccepted,
+    status_code=status.HTTP_202_ACCEPTED,
+    tags=["orchestration"],
+)
+def api_preview_draft(
+    draft_id: str,
+    payload: PreviewRequest,
+    idempotency_key: Optional[str] = Header(default=None, alias="Idempotency-Key"),
+    _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
+) -> JobAccepted:
+    result = enqueue_preview(draft_id, payload, idempotency_key)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Draft not found")
+    if result == "REVISION_CONFLICT":
+        raise HTTPException(status_code=409, detail="Draft head revision token changed")
+    if result == "DRAFT_CLOSED":
+        raise HTTPException(status_code=409, detail="Draft is not open")
+    return result
+
+
+@app.post(
+    f"{settings.api_prefix}/revisions/{{revision_id}}/releases",
+    response_model=ReleaseSummary,
+    status_code=status.HTTP_202_ACCEPTED,
+    tags=["orchestration"],
+)
+def api_create_release(
+    revision_id: str,
+    payload: ReleaseCreate,
+    idempotency_key: Optional[str] = Header(default=None, alias="Idempotency-Key"),
+    _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
+) -> ReleaseSummary:
+    release = create_release(revision_id, payload, idempotency_key)
+    if release is None:
+        raise HTTPException(status_code=404, detail="Revision not found")
+    return release
+
+
+@app.get(f"{settings.api_prefix}/releases/{{release_id}}", response_model=ReleaseSummary, tags=["orchestration"])
+def api_get_release(
+    release_id: str,
+    _user: UserContext = Depends(require_roles(Role.VIEWER, Role.ENGINEER, Role.ADMIN)),
+) -> ReleaseSummary:
+    release = get_release(release_id)
+    if release is None:
+        raise HTTPException(status_code=404, detail="Release not found")
+    return release
 
 
 @app.get(f"{settings.api_prefix}/auth/me", response_model=UserInfo, tags=["auth"])
