@@ -424,10 +424,13 @@ results:
 - PASS: Gate P6 verifiable proposal workflow.
 - PASS: P7-01 engineering scaffold: shadow build metrics, non-publishable
   shadow records and 28-day exit-criteria evaluator.
+- PASS: P7-02 engineering scaffold: signed domain approval, manifest hash and
+  shadow-exit release decision contract.
 
 blockers:
 - P7-01 cannot fully pass before real shadow builds cover at least 28 calendar
   days. Observation started 2026-08-14; earliest exit review 2026-09-10.
+- P7-02 cannot fully pass before Domain/Approver signs selected pilot acceptance.
 
 next ID:
-- P7-01: continue production shadow observation; no release until P7-02 signed acceptance.
+- P7-03: load/performance profiling and critical-path optimization scaffold.

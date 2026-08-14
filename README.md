@@ -52,6 +52,7 @@ The initial repository contains:
 - P6-11 RAG/chat evaluation corpus and dashboard summary.
 - Gate P6 passed with verifiable proposal workflow.
 - P7-01 shadow build metric and exit-criteria scaffold; observation window active.
+- P7-02 signed domain approval release-decision scaffold; approval pending.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because
