@@ -85,6 +85,26 @@ export interface RevisionSummary {
   createdAt: string;
 }
 
+export interface JobCreate {
+  type: string;
+  inputHash: string;
+  payload?: Record<string, unknown>;
+}
+
+export interface JobSummary {
+  id: string;
+  type: string;
+  state: "queued" | "running" | "succeeded" | "failed" | "cancelled";
+  inputHash: string;
+  idempotencyKey?: string | null;
+  attempt: number;
+  progress: number;
+  workerId?: string | null;
+  heartbeatAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export class StudioApiClient {
   constructor(
     private readonly baseUrl = "",
@@ -153,6 +173,44 @@ export class StudioApiClient {
   async abandonDraft(draftId: string): Promise<void> {
     await this.request<void>(`/api/v1/drafts/${encodeURIComponent(draftId)}`, {
       method: "DELETE",
+    });
+  }
+
+  async enqueueJob(payload: JobCreate, idempotencyKey?: string): Promise<JobSummary> {
+    const headers: Record<string, string> = { "content-type": "application/json" };
+    if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;
+    return this.request<JobSummary>("/api/v1/jobs", {
+      method: "POST",
+      headers,
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async getJob(jobId: string): Promise<JobSummary> {
+    return this.request<JobSummary>(`/api/v1/jobs/${encodeURIComponent(jobId)}`);
+  }
+
+  async cancelJob(jobId: string): Promise<JobSummary> {
+    return this.request<JobSummary>(`/api/v1/jobs/${encodeURIComponent(jobId)}/cancel`, { method: "POST" });
+  }
+
+  async retryJob(jobId: string): Promise<JobSummary> {
+    return this.request<JobSummary>(`/api/v1/jobs/${encodeURIComponent(jobId)}/retry`, { method: "POST" });
+  }
+
+  async claimJob(payload: { workerId: string; types?: string[] }): Promise<JobSummary | null> {
+    return this.request<JobSummary | null>("/api/v1/workers/claim", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async heartbeatJob(jobId: string, payload: { workerId: string; progress: number }): Promise<JobSummary> {
+    return this.request<JobSummary>(`/api/v1/jobs/${encodeURIComponent(jobId)}/heartbeat`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
     });
   }
 

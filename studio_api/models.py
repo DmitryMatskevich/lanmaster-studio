@@ -109,3 +109,33 @@ class RevisionSummary(BaseModel):
     schemaVersion: str
     contentHash: str
     createdAt: datetime
+
+
+class JobCreate(BaseModel):
+    type: str = Field(min_length=1, max_length=80)
+    inputHash: str = Field(min_length=1, max_length=160)
+    payload: Dict[str, Any] = Field(default_factory=dict)
+
+
+class JobSummary(BaseModel):
+    id: str
+    type: str
+    state: Literal["queued", "running", "succeeded", "failed", "cancelled"]
+    inputHash: str
+    idempotencyKey: Optional[str] = None
+    attempt: int
+    progress: int
+    workerId: Optional[str] = None
+    heartbeatAt: Optional[datetime] = None
+    createdAt: datetime
+    updatedAt: datetime
+
+
+class WorkerClaimRequest(BaseModel):
+    workerId: str = Field(min_length=1, max_length=120)
+    types: List[str] = Field(default_factory=list)
+
+
+class WorkerHeartbeat(BaseModel):
+    workerId: str = Field(min_length=1, max_length=120)
+    progress: int = Field(ge=0, le=100)

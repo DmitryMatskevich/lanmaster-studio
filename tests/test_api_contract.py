@@ -189,3 +189,67 @@ def test_draft_patch_commit_lifecycle_with_optimistic_lock(tmp_path):
     published = client.get(f"/api/v1/models/{model['id']}", headers={"X-Dev-Roles": "viewer"}).json()
     assert published["status"] == "published"
     assert published["activeRevisionId"] == revision["id"]
+
+
+def test_job_queue_worker_protocol_and_idempotency(tmp_path):
+    client = next(_client(tmp_path))
+    engineer = {"X-Dev-User": "engineer@example.test", "X-Dev-Roles": "engineer"}
+
+    first = client.post(
+        "/api/v1/jobs",
+        headers={**engineer, "Idempotency-Key": "p4-04-preview-1"},
+        json={
+            "type": "preview",
+            "inputHash": "sha256:abc",
+            "payload": {"draftId": "drf_test"},
+        },
+    )
+    assert first.status_code == 202
+    job = first.json()
+    assert job["state"] == "queued"
+    assert job["idempotencyKey"] == "p4-04-preview-1"
+
+    repeated = client.post(
+        "/api/v1/jobs",
+        headers={**engineer, "Idempotency-Key": "p4-04-preview-1"},
+        json={
+            "type": "preview",
+            "inputHash": "sha256:abc",
+            "payload": {"draftId": "drf_test"},
+        },
+    )
+    assert repeated.status_code == 202
+    assert repeated.json()["id"] == job["id"]
+
+    claimed = client.post(
+        "/api/v1/workers/claim",
+        headers=engineer,
+        json={"workerId": "cad-worker-1", "types": ["preview"]},
+    )
+    assert claimed.status_code == 200
+    assert claimed.json()["id"] == job["id"]
+    assert claimed.json()["state"] == "running"
+
+    heartbeat = client.post(
+        f"/api/v1/jobs/{job['id']}/heartbeat",
+        headers=engineer,
+        json={"workerId": "cad-worker-1", "progress": 42},
+    )
+    assert heartbeat.status_code == 200
+    assert heartbeat.json()["progress"] == 42
+
+    wrong_worker = client.post(
+        f"/api/v1/jobs/{job['id']}/heartbeat",
+        headers=engineer,
+        json={"workerId": "other-worker", "progress": 50},
+    )
+    assert wrong_worker.status_code == 409
+
+    cancelled = client.post(f"/api/v1/jobs/{job['id']}/cancel", headers=engineer)
+    assert cancelled.status_code == 200
+    assert cancelled.json()["state"] == "cancelled"
+
+    retried = client.post(f"/api/v1/jobs/{job['id']}/retry", headers=engineer)
+    assert retried.status_code == 200
+    assert retried.json()["state"] == "queued"
+    assert retried.json()["attempt"] == 2
