@@ -148,6 +148,21 @@ export interface EventList {
   nextSequence?: number | null;
 }
 
+export interface AuditEventSummary {
+  id: string;
+  actor: string;
+  action: string;
+  resourceType: string;
+  resourceId: string;
+  traceId: string;
+  payload: Record<string, unknown>;
+  createdAt: string;
+}
+
+export interface AuditEventList {
+  items: AuditEventSummary[];
+}
+
 export class StudioApiClient {
   constructor(
     private readonly baseUrl = "",
@@ -332,6 +347,21 @@ export class StudioApiClient {
     if (params.limit) query.set("limit", String(params.limit));
     const suffix = query.toString() ? `?${query.toString()}` : "";
     return this.request<EventList>(`/api/v1/events${suffix}`);
+  }
+
+  async listAuditEvents(params: {
+    traceId?: string;
+    resourceType?: string;
+    resourceId?: string;
+    limit?: number;
+  } = {}): Promise<AuditEventList> {
+    const query = new URLSearchParams();
+    if (params.traceId) query.set("traceId", params.traceId);
+    if (params.resourceType) query.set("resourceType", params.resourceType);
+    if (params.resourceId) query.set("resourceId", params.resourceId);
+    if (params.limit) query.set("limit", String(params.limit));
+    const suffix = query.toString() ? `?${query.toString()}` : "";
+    return this.request<AuditEventList>(`/api/v1/audit-events${suffix}`);
   }
 
   private async request<T>(path: string, init: RequestInit = {}): Promise<T> {

@@ -3,7 +3,7 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from typing import Optional
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Response, WebSocket, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response, WebSocket, status
 from fastapi.responses import FileResponse
 
 from . import __version__
@@ -13,6 +13,7 @@ from .db import apply_migrations, connect
 from .models import HealthResponse, ModelCreate, ModelList, ModelSummary, UserInfo
 from .models import (
     ArtifactSummary,
+    AuditEventList,
     DownloadUrl,
     EventList,
     DraftCommit,
@@ -55,10 +56,13 @@ from .repository import (
     create_release,
     get_release,
     list_events,
+    list_audit_events,
     list_models,
     retry_job,
+    record_audit,
 )
 from .storage import object_path, verify_download_signature
+from .trace import new_trace_id, trace_id_var
 
 
 settings = get_settings()
@@ -76,6 +80,18 @@ app = FastAPI(
     openapi_url=f"{settings.api_prefix}/openapi.json",
     lifespan=lifespan,
 )
+
+
+@app.middleware("http")
+async def trace_middleware(request: Request, call_next):
+    trace_id = request.headers.get("X-Trace-Id") or new_trace_id()
+    token = trace_id_var.set(trace_id)
+    try:
+        response = await call_next(request)
+    finally:
+        trace_id_var.reset(token)
+    response.headers["X-Trace-Id"] = trace_id
+    return response
 
 
 @app.get("/health", response_model=HealthResponse, tags=["system"])
@@ -111,6 +127,7 @@ def api_create_model(
     _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
 ) -> ModelSummary:
     model = create_model(payload)
+    record_audit(_user.subject, "model.create", "model", model.id, {"article": model.article})
     response.headers["Location"] = f"{settings.api_prefix}/models/{model.id}"
     return model
 
@@ -143,6 +160,7 @@ def api_create_draft(
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     if draft is None:
         raise HTTPException(status_code=404, detail="Model not found")
+    record_audit(_user.subject, "draft.create", "draft", draft.id, {"modelId": model_id})
     return draft
 
 
@@ -170,6 +188,7 @@ def api_apply_patch(
         raise HTTPException(status_code=409, detail="Draft head revision token changed")
     if result == "DRAFT_CLOSED":
         raise HTTPException(status_code=409, detail="Draft is not open")
+    record_audit(user.subject, "draft.patch", "draft", draft_id, {"patchId": result.id})
     return result
 
 
@@ -186,6 +205,7 @@ def api_commit_draft(
         raise HTTPException(status_code=409, detail="Draft head revision token changed")
     if result == "DRAFT_CLOSED":
         raise HTTPException(status_code=409, detail="Draft is not open")
+    record_audit(_user.subject, "draft.commit", "revision", result.id, {"draftId": draft_id})
     return result
 
 
@@ -199,6 +219,7 @@ def api_abandon_draft(
         raise HTTPException(status_code=404, detail="Draft not found")
     if result is False:
         raise HTTPException(status_code=409, detail="Draft is not open")
+    record_audit(_user.subject, "draft.abandon", "draft", draft_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
@@ -213,7 +234,9 @@ def api_enqueue_job(
     idempotency_key: Optional[str] = Header(default=None, alias="Idempotency-Key"),
     _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
 ) -> JobSummary:
-    return enqueue_job(payload, idempotency_key)
+    job = enqueue_job(payload, idempotency_key)
+    record_audit(_user.subject, "job.enqueue", "job", job.id, {"type": job.type})
+    return job
 
 
 @app.get(f"{settings.api_prefix}/jobs/{{job_id}}", response_model=JobSummary, tags=["jobs"])
@@ -237,6 +260,7 @@ def api_cancel_job(
         raise HTTPException(status_code=404, detail="Job not found")
     if result == "JOB_TERMINAL":
         raise HTTPException(status_code=409, detail="Job is already terminal")
+    record_audit(_user.subject, "job.cancel", "job", job_id)
     return result
 
 
@@ -250,6 +274,7 @@ def api_retry_job(
         raise HTTPException(status_code=404, detail="Job not found")
     if result == "JOB_NOT_RETRYABLE":
         raise HTTPException(status_code=409, detail="Job is not retryable")
+    record_audit(_user.subject, "job.retry", "job", job_id, {"attempt": result.attempt})
     return result
 
 
@@ -258,7 +283,10 @@ def api_claim_job(
     payload: WorkerClaimRequest,
     _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
 ) -> Optional[JobSummary]:
-    return claim_job(payload)
+    job = claim_job(payload)
+    if job is not None:
+        record_audit(_user.subject, "worker.claim", "job", job.id, {"workerId": payload.workerId})
+    return job
 
 
 @app.post(f"{settings.api_prefix}/jobs/{{job_id}}/heartbeat", response_model=JobSummary, tags=["workers"])
@@ -272,6 +300,7 @@ def api_heartbeat_job(
         raise HTTPException(status_code=404, detail="Job not found")
     if result == "HEARTBEAT_REJECTED":
         raise HTTPException(status_code=409, detail="Heartbeat rejected for job state or worker")
+    record_audit(_user.subject, "worker.heartbeat", "job", job_id, {"progress": payload.progress})
     return result
 
 
@@ -294,6 +323,7 @@ def api_preview_draft(
         raise HTTPException(status_code=409, detail="Draft head revision token changed")
     if result == "DRAFT_CLOSED":
         raise HTTPException(status_code=409, detail="Draft is not open")
+    record_audit(_user.subject, "preview.enqueue", "job", result.jobId, {"draftId": draft_id})
     return result
 
 
@@ -312,6 +342,7 @@ def api_create_release(
     release = create_release(revision_id, payload, idempotency_key)
     if release is None:
         raise HTTPException(status_code=404, detail="Revision not found")
+    record_audit(_user.subject, "release.create", "release", release.id, {"revisionId": revision_id})
     return release
 
 
@@ -336,7 +367,9 @@ def api_create_upload_intent(
     payload: UploadIntentCreate,
     _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
 ) -> UploadIntent:
-    return create_upload_intent(payload)
+    intent = create_upload_intent(payload)
+    record_audit(_user.subject, "artifact.upload_intent", "artifact", intent.artifactId, {"scope": payload.scope})
+    return intent
 
 
 @app.post(f"{settings.api_prefix}/documents/complete-upload", response_model=ArtifactSummary, tags=["artifacts"])
@@ -351,6 +384,7 @@ def api_complete_upload(
         raise HTTPException(status_code=409, detail="Uploaded object is missing")
     if result == "HASH_OR_SIZE_MISMATCH":
         raise HTTPException(status_code=422, detail="Uploaded object hash or size mismatch")
+    record_audit(_user.subject, "artifact.complete_upload", "artifact", result.id, {"sha256": result.sha256})
     return result
 
 
@@ -402,6 +436,22 @@ def api_events(
 ) -> EventList:
     return list_events(
         after_sequence=afterSequence,
+        resource_type=resourceType,
+        resource_id=resourceId,
+        limit=limit,
+    )
+
+
+@app.get(f"{settings.api_prefix}/audit-events", response_model=AuditEventList, tags=["audit"])
+def api_audit_events(
+    traceId: Optional[str] = Query(default=None),
+    resourceType: Optional[str] = Query(default=None),
+    resourceId: Optional[str] = Query(default=None),
+    limit: int = Query(default=100, ge=1, le=500),
+    _user: UserContext = Depends(require_roles(Role.ADMIN)),
+) -> AuditEventList:
+    return list_audit_events(
+        trace_id=traceId,
         resource_type=resourceType,
         resource_id=resourceId,
         limit=limit,

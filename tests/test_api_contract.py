@@ -424,3 +424,35 @@ def test_events_rest_replay_and_websocket_replay(tmp_path):
     with client.websocket_connect(f"/api/v1/ws?afterSequence={after}") as ws:
         message = ws.receive_json()
     assert any(event["type"] == "job.heartbeat" for event in message["items"])
+
+
+def test_audit_events_and_trace_correlation(tmp_path):
+    client = next(_client(tmp_path))
+    engineer = {"X-Dev-User": "engineer@example.test", "X-Dev-Roles": "engineer", "X-Trace-Id": "tr_test_trace"}
+
+    created = client.post(
+        "/api/v1/models",
+        headers=engineer,
+        json={"article": "P4-08-AUDIT"},
+    )
+    assert created.status_code == 201
+    assert created.headers["X-Trace-Id"] == "tr_test_trace"
+    model = created.json()
+
+    viewer_denied = client.get(
+        "/api/v1/audit-events",
+        headers={"X-Dev-Roles": "viewer"},
+    )
+    assert viewer_denied.status_code == 403
+
+    audit = client.get(
+        "/api/v1/audit-events",
+        headers={"X-Dev-Roles": "admin"},
+        params={"traceId": "tr_test_trace", "resourceType": "model", "resourceId": model["id"]},
+    )
+    assert audit.status_code == 200
+    items = audit.json()["items"]
+    assert len(items) == 1
+    assert items[0]["actor"] == "engineer@example.test"
+    assert items[0]["action"] == "model.create"
+    assert items[0]["traceId"] == "tr_test_trace"
