@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: P6-08 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: P6-09 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
@@ -46,6 +46,7 @@ The initial repository contains:
 - P6-05 deterministic chunking and PostgreSQL full-text/pgvector schema.
 - P6-06 hybrid retrieval with filters, reranking and citations.
 - P6-07 LLM provider abstraction and typed EditIntent.
+- P6-08 PMDPatchProposal validation and authorization workflow.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because
