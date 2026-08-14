@@ -27,5 +27,10 @@ assert.match(appSource, /selectedComponentId/);
 assert.match(appSource, /onSelectComponent/);
 assert.match(appSource, /componentId/);
 assert.match(appSource, /Raycaster/);
+assert.match(appSource, /viewerMode/);
+assert.match(appSource, /Visibility/);
+assert.match(appSource, /Exploded view/);
+assert.match(appSource, /Measure/);
+assert.match(appSource, /Section/);
 
 console.log("Frontend scaffold verification passed");
