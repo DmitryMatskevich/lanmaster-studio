@@ -440,6 +440,7 @@ results:
   coverage verifier.
 - PASS: P7-09 engineering scaffold: limited launch readiness evaluator for
   owners, training, support, SLA and prerequisite gates.
+- Gate P7 review: blocked by required real pilot evidence, not by missing code.
 
 blockers:
 - P7-01 cannot fully pass before real shadow builds cover at least 28 calendar
@@ -455,5 +456,5 @@ blockers:
   assigned launch owners/SLA/support.
 
 next ID:
-- Gate P7: blocked until real observation, approvals, deployment, DR, rollback
-  and training evidence exist.
+- Collect P7 real evidence: shadow observation through 2026-09-10, approvals,
+  deployment, DR drill, rollback rehearsal and training walkthrough.
