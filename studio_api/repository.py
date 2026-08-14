@@ -10,6 +10,8 @@ from .models import (
     DraftSummary,
     ArtifactSummary,
     DownloadUrl,
+    EventList,
+    EventSummary,
     JobCreate,
     JobAccepted,
     JobSummary,
@@ -119,6 +121,33 @@ def _row_to_artifact(row) -> ArtifactSummary:
         scope=row["scope"],
         status=row["status"],
         createdAt=datetime.fromisoformat(row["created_at"]),
+    )
+
+
+def _row_to_event(row) -> EventSummary:
+    return EventSummary(
+        sequence=row["sequence"],
+        type=row["type"],
+        resourceType=row["resource_type"],
+        resourceId=row["resource_id"],
+        payload=json.loads(row["payload_json"]),
+        createdAt=datetime.fromisoformat(row["created_at"]),
+    )
+
+
+def _record_event(conn, event_type: str, resource_type: str, resource_id: str, payload: dict) -> None:
+    conn.execute(
+        """
+        INSERT INTO events (type, resource_type, resource_id, payload_json, created_at)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (
+            event_type,
+            resource_type,
+            resource_id,
+            json.dumps(payload, sort_keys=True, ensure_ascii=False),
+            utc_now().isoformat(),
+        ),
     )
 
 
@@ -329,6 +358,7 @@ def enqueue_job(payload: JobCreate, idempotency_key: str | None) -> JobSummary:
                 now,
             ),
         )
+        _record_event(conn, "job.queued", "job", job_id, {"state": "queued", "type": payload.type})
         row = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
     return _row_to_job(row)
 
@@ -351,6 +381,7 @@ def cancel_job(job_id: str) -> JobSummary | None | str:
             "UPDATE jobs SET state = 'cancelled', updated_at = ? WHERE id = ?",
             (now, job_id),
         )
+        _record_event(conn, "job.cancelled", "job", job_id, {"state": "cancelled"})
         updated = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
     return _row_to_job(updated)
 
@@ -372,6 +403,7 @@ def retry_job(job_id: str) -> JobSummary | None | str:
             """,
             (now, job_id),
         )
+        _record_event(conn, "job.retried", "job", job_id, {"state": "queued", "attempt": row["attempt"] + 1})
         updated = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
     return _row_to_job(updated)
 
@@ -397,6 +429,7 @@ def claim_job(payload: WorkerClaimRequest) -> JobSummary | None:
             """,
             (payload.workerId, now, now, row["id"]),
         )
+        _record_event(conn, "job.running", "job", row["id"], {"state": "running", "workerId": payload.workerId})
         updated = conn.execute("SELECT * FROM jobs WHERE id = ?", (row["id"],)).fetchone()
     return _row_to_job(updated)
 
@@ -417,6 +450,7 @@ def heartbeat_job(job_id: str, payload: WorkerHeartbeat) -> JobSummary | None | 
             """,
             (now, payload.progress, now, job_id),
         )
+        _record_event(conn, "job.heartbeat", "job", job_id, {"progress": payload.progress, "workerId": payload.workerId})
         updated = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
     return _row_to_job(updated)
 
@@ -498,6 +532,7 @@ def create_release(revision_id: str, payload: ReleaseCreate, idempotency_key: st
             """,
             (release_id, revision_id, payload.profile, job.id, idempotency_key, now, now),
         )
+        _record_event(conn, "release.queued", "release", release_id, {"revisionId": revision_id, "jobId": job.id})
         row = conn.execute("SELECT * FROM releases WHERE id = ?", (release_id,)).fetchone()
     return _row_to_release(row)
 
@@ -559,6 +594,7 @@ def complete_upload(payload: UploadComplete) -> ArtifactSummary | None | str:
             "UPDATE artifacts SET status = 'ready', updated_at = ? WHERE id = ?",
             (now, payload.artifactId),
         )
+        _record_event(conn, "artifact.ready", "artifact", payload.artifactId, {"status": "ready"})
         updated = conn.execute("SELECT * FROM artifacts WHERE id = ?", (payload.artifactId,)).fetchone()
     return _row_to_artifact(updated)
 
@@ -588,3 +624,22 @@ def artifact_object_key(artifact_id: str) -> str | None:
     with session() as conn:
         row = conn.execute("SELECT object_key FROM artifacts WHERE id = ? AND status = 'ready'", (artifact_id,)).fetchone()
     return row["object_key"] if row else None
+
+
+def list_events(after_sequence: int = 0, resource_type: str | None = None, resource_id: str | None = None, limit: int = 100) -> EventList:
+    limit = max(1, min(limit, 500))
+    sql = "SELECT * FROM events WHERE sequence > ?"
+    params: list[object] = [after_sequence]
+    if resource_type:
+        sql += " AND resource_type = ?"
+        params.append(resource_type)
+    if resource_id:
+        sql += " AND resource_id = ?"
+        params.append(resource_id)
+    sql += " ORDER BY sequence ASC LIMIT ?"
+    params.append(limit)
+    with session() as conn:
+        rows = conn.execute(sql, params).fetchall()
+    items = [_row_to_event(row) for row in rows]
+    next_seq = items[-1].sequence if items else after_sequence
+    return EventList(items=items, nextSequence=next_seq)

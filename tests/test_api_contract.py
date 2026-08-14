@@ -381,3 +381,46 @@ def test_object_storage_upload_complete_and_signed_url(tmp_path):
         json={"artifactId": bad["artifactId"]},
     )
     assert mismatch.status_code == 422
+
+
+def test_events_rest_replay_and_websocket_replay(tmp_path):
+    client = next(_client(tmp_path))
+    engineer = {"X-Dev-User": "engineer@example.test", "X-Dev-Roles": "engineer"}
+
+    job = client.post(
+        "/api/v1/jobs",
+        headers={**engineer, "Idempotency-Key": "events-job"},
+        json={"type": "preview", "inputHash": "sha256:events"},
+    ).json()
+    client.post(
+        "/api/v1/workers/claim",
+        headers=engineer,
+        json={"workerId": "events-worker", "types": ["preview"]},
+    )
+    client.post(
+        f"/api/v1/jobs/{job['id']}/heartbeat",
+        headers=engineer,
+        json={"workerId": "events-worker", "progress": 25},
+    )
+
+    replay = client.get(
+        "/api/v1/events",
+        headers={"X-Dev-Roles": "viewer"},
+        params={"resourceType": "job", "resourceId": job["id"]},
+    )
+    assert replay.status_code == 200
+    events = replay.json()["items"]
+    assert [event["type"] for event in events] == ["job.queued", "job.running", "job.heartbeat"]
+    assert events[-1]["payload"]["progress"] == 25
+
+    after = events[0]["sequence"]
+    after_replay = client.get(
+        "/api/v1/events",
+        headers={"X-Dev-Roles": "viewer"},
+        params={"afterSequence": after, "resourceType": "job", "resourceId": job["id"]},
+    )
+    assert [event["type"] for event in after_replay.json()["items"]] == ["job.running", "job.heartbeat"]
+
+    with client.websocket_connect(f"/api/v1/ws?afterSequence={after}") as ws:
+        message = ws.receive_json()
+    assert any(event["type"] == "job.heartbeat" for event in message["items"])

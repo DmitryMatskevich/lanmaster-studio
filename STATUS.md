@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P4-07 WebSocket events and REST replay
+active ID: P4-08 AuditEvent and trace correlation
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -64,6 +64,7 @@ completed IDs:
   claim and heartbeat
 - P4-05: Preview/release orchestration returning 202 jobs and queued releases
 - P4-06: Object storage and signed URLs with hash/size verification
+- P4-07: WebSocket events and REST replay
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -115,6 +116,7 @@ changed files:
 - `docs/discovery/p4-04-queue-worker.md`
 - `docs/discovery/p4-05-orchestration.md`
 - `docs/discovery/p4-06-storage.md`
+- `docs/discovery/p4-07-events.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `pyproject.toml`
@@ -342,9 +344,12 @@ results:
 - PASS: P4-06 storage tests passed: 9 passed.
 - PASS: P4-06 web smoke passed: upload intent, hash/size checked complete,
   signed URL and actual download bytes.
+- PASS: P4-07 events tests passed: 10 passed.
+- PASS: P4-07 web smoke passed: durable REST event replay for job queued,
+  running and heartbeat events.
 
 blockers:
 - none for Gate P3.
 
 next ID:
-- P4-07: WebSocket events and REST replay
+- P4-08: AuditEvent and trace correlation
