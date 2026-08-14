@@ -294,6 +294,28 @@ h1 {
   overflow: hidden;
 }
 
+.chat-panel {
+  grid-column: 1 / -1;
+  border: 1px solid #d7dde2;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.chat-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 14px;
+}
+
+.proposal-box {
+  display: grid;
+  gap: 10px;
+  border-top: 1px solid #eef2f5;
+  padding: 14px;
+}
+
 .history-list {
   display: grid;
 }

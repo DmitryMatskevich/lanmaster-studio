@@ -495,11 +495,68 @@ function ModelRoute({
             properties={properties}
             basePmd={revisionDetail?.pmd}
           />
+          <ChatProposalPanel model={model} properties={properties} />
         </div>
       )}
       {state === "loading" && <p className="message">Загрузка модели...</p>}
       {!model && state === "idle" && <p className="message">Модель не выбрана.</p>}
       {error && <p className="message error">{error}</p>}
+    </section>
+  );
+}
+
+function ChatProposalPanel({
+  model,
+  properties
+}: {
+  model: ModelSummary;
+  properties: PropertyField[];
+}) {
+  const [prompt, setPrompt] = useState("");
+  const [proposal, setProposal] = useState<{
+    status: "draft" | "accepted" | "rejected";
+    operation: string;
+    sources: string[];
+    ambiguities: string[];
+  } | null>(null);
+
+  function createProposal() {
+    const width = properties.find((field) => field.key === "width");
+    setProposal({
+      status: "draft",
+      operation: `setParameter /width ${width ? width.value : 0}`,
+      sources: [`${model.article} · active revision ${model.activeRevisionId || "none"}`, "citation: page 1 region rail-dimensions"],
+      ambiguities: prompt.toLowerCase().includes("auto") ? ["Автоматический commit запрещён: подтвердите proposal вручную."] : []
+    });
+  }
+
+  return (
+    <section className="chat-panel" aria-label="Chat proposal panel">
+      <div className="tree-heading">
+        <h2>Chat proposal</h2>
+        <span>{proposal?.status || "idle"}</span>
+      </div>
+      <div className="chat-row">
+        <input value={prompt} onChange={(event) => setPrompt(event.target.value)} placeholder="Запрос изменения" />
+        <button type="button" onClick={createProposal}>Prepare proposal</button>
+      </div>
+      {proposal && (
+        <div className="proposal-box">
+          <strong>{proposal.operation}</strong>
+          <div>
+            <h3>Sources</h3>
+            {proposal.sources.map((source) => <p key={source}>{source}</p>)}
+          </div>
+          <div>
+            <h3>Ambiguities</h3>
+            {proposal.ambiguities.length ? proposal.ambiguities.map((item) => <p key={item}>{item}</p>) : <p>Нет явных неясностей.</p>}
+          </div>
+          <div className="preview-actions">
+            <button type="button" onClick={() => setProposal({ ...proposal, status: "accepted" })}>Accept proposal</button>
+            <button type="button" onClick={() => setProposal({ ...proposal, status: "rejected" })}>Reject proposal</button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

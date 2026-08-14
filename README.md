@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: P6-09 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: P6-10 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
@@ -47,6 +47,7 @@ The initial repository contains:
 - P6-06 hybrid retrieval with filters, reranking and citations.
 - P6-07 LLM provider abstraction and typed EditIntent.
 - P6-08 PMDPatchProposal validation and authorization workflow.
+- P6-09 chat proposal UI with sources, ambiguities and accept/reject.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because

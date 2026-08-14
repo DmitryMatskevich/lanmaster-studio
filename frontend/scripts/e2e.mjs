@@ -167,7 +167,8 @@ try {
         ".property-panel",
         ".preview-panel",
         ".qa-panel",
-        ".release-panel"
+        ".release-panel",
+        ".chat-panel"
       ];
       const boxes = selectors.map((selector) => {
         const element = document.querySelector(selector);
@@ -197,6 +198,12 @@ try {
     assert.equal(report.overlaps.length, 0, `${viewport.name} layout overlaps: ${report.overlaps.join(", ")}`);
     assert.ok(report.headings.includes("Commit / release"), `${viewport.name} missing release heading`);
     assert.ok(report.headings.includes("Revision selector"), `${viewport.name} missing PMD revision selector`);
+    await page.getByPlaceholder("Запрос изменения").fill("auto change width with sources");
+    await page.getByRole("button", { name: "Prepare proposal" }).click();
+    await page.getByText("Sources").waitFor();
+    await page.getByText("Ambiguities").waitFor();
+    await page.getByRole("button", { name: "Accept proposal" }).click();
+    await page.getByText("accepted").waitFor();
     await page.close();
   }
 
