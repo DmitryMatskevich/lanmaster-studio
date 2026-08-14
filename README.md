@@ -56,6 +56,7 @@ The initial repository contains:
 - P7-03 critical-path performance profile scaffold; production benchmark data pending.
 - P7-04 dependency policy and SBOM scaffold; independent security approval pending.
 - P7-05 backup/restore DR evaluator scaffold; pilot restore drill pending.
+- P7-06 production deployment readiness scaffold; real production deployment pending.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because
