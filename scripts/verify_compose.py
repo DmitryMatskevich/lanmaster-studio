@@ -28,6 +28,8 @@ def main() -> int:
     assert "uvicorn" in dockerfile_text
     assert "HEALTHCHECK" in dockerfile_text
     assert "USER studio" in dockerfile_text
+    assert "AS frontend-build" in dockerfile_text
+    assert "frontend/dist" in dockerfile_text
 
     env_text = env_example.read_text(encoding="utf-8")
     assert "DATABASE_URL=sqlite:////app/var/studio.db" in env_text

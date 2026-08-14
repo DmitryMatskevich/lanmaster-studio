@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P5-01 Scaffold React/TypeScript app, routing, auth and API client
+active ID: P5-02 Catalog, search and revision selector
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -69,6 +69,7 @@ completed IDs:
 - P4-09: metrics, logs and trace dashboard skeleton
 - P4-10: Docker Compose local stack
 - Gate P4: passed; API/data/workers MVP is ready for P5 editor scaffolding
+- P5-01: React/TypeScript app scaffold, routing, dev auth and API client
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -125,6 +126,7 @@ changed files:
 - `docs/discovery/p4-09-observability.md`
 - `docs/discovery/p4-10-docker-compose.md`
 - `docs/discovery/p4-gate-review.md`
+- `docs/discovery/p5-01-frontend-scaffold.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `pyproject.toml`
@@ -365,9 +367,12 @@ results:
   `/metrics` and Swagger UI.
 - PASS: Gate P4 verification passed: regenerated OpenAPI/client, 12 API tests,
   skeleton verifier, compose verifier, compose config and Docker web smoke.
+- PASS: P5-01 frontend scaffold build/test/audit passed: `npm ci --prefix
+  frontend`, `npm audit --prefix frontend --audit-level=moderate`,
+  `npm run frontend:build`, `npm run frontend:test`.
 
 blockers:
 - none for Gate P4.
 
 next ID:
-- P5-01: Scaffold React/TypeScript app, routing, auth and API client
+- P5-02: Catalog, search and revision selector
