@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P7-01 Shadow build pilot and operational metrics
+active ID: P7-01 Shadow build pilot observation window
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -417,9 +417,17 @@ results:
   frontend audit/build/test, 12 API tests and API patch/preview web smoke.
 - PASS: P5-09 frontend/API tests passed: diff/QA/undo verifier,
   frontend audit/build/test, 12 API tests and route/bundle browser smoke.
+- PASS: P5-10 commit, revision history and release UI scaffold.
+- PASS: P5-11 responsive, accessibility and visual E2E suite.
+- PASS: Gate P5 PMD-backed editor flow.
+- PASS: P6-01 through P6-11 ingestion/RAG workflow.
+- PASS: Gate P6 verifiable proposal workflow.
+- PASS: P7-01 engineering scaffold: shadow build metrics, non-publishable
+  shadow records and 28-day exit-criteria evaluator.
 
 blockers:
-- none for Gate P4.
+- P7-01 cannot fully pass before real shadow builds cover at least 28 calendar
+  days. Observation started 2026-08-14; earliest exit review 2026-09-10.
 
 next ID:
-- P5-10: Commit, revision, history and release UI
+- P7-01: continue production shadow observation; no release until P7-02 signed acceptance.
