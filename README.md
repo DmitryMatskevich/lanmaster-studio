@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: P4-03 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: P4-04 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
@@ -19,6 +19,7 @@ The initial repository contains:
 - ADR directory for architecture decisions owned by Studio.
 - P4-01 FastAPI scaffold, SQLite migrations, OpenAPI and generated TypeScript client.
 - P4-02 dev/OIDC auth abstraction and RBAC contract.
+- P4-03 model/revision/draft/patch lifecycle with optimistic locking.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because

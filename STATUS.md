@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P4-03 Model/Revision/Draft/Patch lifecycle
+active ID: P4-04 Queue and CAD worker protocol
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -58,6 +58,8 @@ completed IDs:
 - P4-01: FastAPI scaffold, SQLite migration runner, OpenAPI generation,
   generated TypeScript client and API contract tests
 - P4-02: dev/OIDC auth abstraction and RBAC with negative tests
+- P4-03: Model/Revision/Draft/Patch lifecycle with immutable commit and
+  optimistic locking
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -105,6 +107,7 @@ changed files:
 - `docs/discovery/p2-gate-review.md`
 - `docs/discovery/p4-01-api-scaffold.md`
 - `docs/discovery/p4-02-auth-rbac.md`
+- `docs/discovery/p4-03-lifecycle.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `pyproject.toml`
@@ -320,9 +323,12 @@ results:
 - PASS: P4-02 auth/RBAC tests passed: 5 passed.
 - PASS: P4-02 web smoke passed: viewer write denied, engineer write allowed,
   viewer read allowed and Swagger UI loaded.
+- PASS: P4-03 lifecycle tests passed: 6 passed.
+- PASS: P4-03 web smoke passed: stale patch rejected, patch accepted, commit
+  created immutable revision and model became published.
 
 blockers:
 - none for Gate P3.
 
 next ID:
-- P4-03: Model/Revision/Draft/Patch lifecycle
+- P4-04: Queue and CAD worker protocol

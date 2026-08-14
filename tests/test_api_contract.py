@@ -113,3 +113,79 @@ def test_prod_auth_mode_rejects_dev_headers_until_oidc_configured(tmp_path):
         )
         assert denied.status_code == 501
         assert "OIDC authentication is not configured" in denied.json()["detail"]
+
+
+def test_draft_patch_commit_lifecycle_with_optimistic_lock(tmp_path):
+    client = next(_client(tmp_path))
+    engineer = {"X-Dev-User": "engineer@example.test", "X-Dev-Roles": "engineer"}
+
+    model = client.post(
+        "/api/v1/models",
+        headers=engineer,
+        json={"article": "P4-03-LIFECYCLE"},
+    ).json()
+
+    draft_response = client.post(
+        f"/api/v1/models/{model['id']}/drafts",
+        headers=engineer,
+        json={},
+    )
+    assert draft_response.status_code == 201
+    draft = draft_response.json()
+    token = draft["headRevisionToken"]
+
+    conflict = client.post(
+        f"/api/v1/drafts/{draft['id']}/patches",
+        headers=engineer,
+        json={
+            "baseRevisionToken": "stale-token",
+            "operations": [{"op": "setParameter", "path": "/width", "value": 600}],
+        },
+    )
+    assert conflict.status_code == 409
+
+    patch_response = client.post(
+        f"/api/v1/drafts/{draft['id']}/patches",
+        headers=engineer,
+        json={
+            "baseRevisionToken": token,
+            "operations": [{"op": "setParameter", "path": "/width", "value": 600}],
+        },
+    )
+    assert patch_response.status_code == 200
+    assert patch_response.json()["actor"] == "engineer@example.test"
+
+    updated_draft = client.get(f"/api/v1/drafts/{draft['id']}", headers={"X-Dev-Roles": "viewer"}).json()
+    assert updated_draft["headRevisionToken"] != token
+
+    commit_response = client.post(
+        f"/api/v1/drafts/{draft['id']}/commit",
+        headers=engineer,
+        json={
+            "baseRevisionToken": updated_draft["headRevisionToken"],
+            "schemaVersion": "2.0.0",
+            "pmd": {
+                "schemaVersion": "2.0.0",
+                "id": "p4-03-lifecycle",
+                "parameters": {"width": 600},
+            },
+        },
+    )
+    assert commit_response.status_code == 200
+    revision = commit_response.json()
+    assert revision["id"].startswith("rev_")
+    assert revision["contentHash"].startswith("sha256:")
+
+    closed = client.post(
+        f"/api/v1/drafts/{draft['id']}/patches",
+        headers=engineer,
+        json={
+            "baseRevisionToken": updated_draft["headRevisionToken"],
+            "operations": [{"op": "setParameter", "path": "/width", "value": 800}],
+        },
+    )
+    assert closed.status_code == 409
+
+    published = client.get(f"/api/v1/models/{model['id']}", headers={"X-Dev-Roles": "viewer"}).json()
+    assert published["status"] == "published"
+    assert published["activeRevisionId"] == revision["id"]
