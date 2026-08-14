@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P4-10 Docker Compose local stack
+active ID: Gate P4 review
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -67,6 +67,7 @@ completed IDs:
 - P4-07: WebSocket events and REST replay
 - P4-08: AuditEvent and trace correlation with admin-only query API
 - P4-09: metrics, logs and trace dashboard skeleton
+- P4-10: Docker Compose local stack
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -121,6 +122,7 @@ changed files:
 - `docs/discovery/p4-07-events.md`
 - `docs/discovery/p4-08-audit.md`
 - `docs/discovery/p4-09-observability.md`
+- `docs/discovery/p4-10-docker-compose.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `pyproject.toml`

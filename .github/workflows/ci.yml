@@ -27,3 +27,6 @@ jobs:
           python3 scripts/generate_openapi.py
           python3 scripts/generate_ts_client.py
           python3 -m pytest
+
+      - name: Verify Docker Compose stack
+        run: python3 scripts/verify_compose.py
