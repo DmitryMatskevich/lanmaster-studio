@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { Box, ChevronRight, Eye, Focus, Layers, LogIn, RefreshCw, Ruler, Scissors, Search, ShieldCheck } from "lucide-react";
 import * as THREE from "three";
 
-import type { ModelSummary, RevisionSummary, UserInfo } from "../../clients/typescript/src";
+import type { DraftSummary, JobSummary, ModelSummary, RevisionSummary, UserInfo } from "../../clients/typescript/src";
 import { createStudioClient, type SessionState, type StudioRole } from "./api";
 import "./styles.css";
 
@@ -295,6 +295,7 @@ function ModelRoute({
     { key: "depth", label: "Depth", unit: "mm", min: 600, max: 1200, value: 1000, sourceStatus: "documented" },
     { key: "railOffset", label: "Rail offset", unit: "mm", min: 0, max: 200, value: 100, sourceStatus: "estimated" }
   ]);
+  const [previewState, setPreviewState] = useState<PreviewState>({ status: "idle" });
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -368,11 +369,111 @@ function ModelRoute({
             onSelectComponent={setSelectedComponentId}
           />
           <PropertyEditor fields={properties} onChange={setProperties} />
+          <PreviewWorkflow
+            client={client}
+            model={model}
+            properties={properties}
+            state={previewState}
+            onStateChange={setPreviewState}
+          />
         </div>
       )}
       {state === "loading" && <p className="message">Загрузка модели...</p>}
       {!model && state === "idle" && <p className="message">Модель не выбрана.</p>}
       {error && <p className="message error">{error}</p>}
+    </section>
+  );
+}
+
+type PreviewState =
+  | { status: "idle" }
+  | { status: "patching"; draftId?: string }
+  | { status: "queued"; draftId: string; jobId: string }
+  | { status: "running"; draftId: string; job: JobSummary }
+  | { status: "error"; message: string; jobId?: string };
+
+function PreviewWorkflow({
+  client,
+  model,
+  properties,
+  state,
+  onStateChange
+}: {
+  client: ReturnType<typeof createStudioClient>;
+  model: ModelSummary;
+  properties: PropertyField[];
+  state: PreviewState;
+  onStateChange: (state: PreviewState) => void;
+}) {
+  async function runPreview() {
+    onStateChange({ status: "patching" });
+    try {
+      const draft = await client.createDraft(model.id, { baseRevisionId: model.activeRevisionId });
+      const patched = await client.applyPatch(draft.id, {
+        baseRevisionToken: draft.headRevisionToken,
+        operations: properties.map((field) => ({
+          op: "setParameter",
+          path: `/${field.key}`,
+          value: field.value,
+          unit: field.unit
+        }))
+      });
+      const updatedDraft: DraftSummary = await client.getDraft(patched.draftId);
+      const accepted = await client.previewDraft(updatedDraft.id, {
+        baseRevisionToken: updatedDraft.headRevisionToken,
+        profile: "web-preview"
+      });
+      onStateChange({ status: "queued", draftId: updatedDraft.id, jobId: accepted.jobId });
+    } catch (err) {
+      onStateChange({ status: "error", message: err instanceof Error ? err.message : "Preview failed" });
+    }
+  }
+
+  async function refreshJob(jobId: string, draftId: string) {
+    try {
+      const job = await client.getJob(jobId);
+      onStateChange({ status: "running", draftId, job });
+    } catch (err) {
+      onStateChange({ status: "error", jobId, message: err instanceof Error ? err.message : "Progress failed" });
+    }
+  }
+
+  async function cancelJob(jobId: string) {
+    try {
+      const job = await client.cancelJob(jobId);
+      onStateChange({ status: "running", draftId: state.status === "queued" || state.status === "running" ? state.draftId : "", job });
+    } catch (err) {
+      onStateChange({ status: "error", jobId, message: err instanceof Error ? err.message : "Cancel failed" });
+    }
+  }
+
+  async function retryJob(jobId: string) {
+    try {
+      const job = await client.retryJob(jobId);
+      onStateChange({ status: "running", draftId: state.status === "running" ? state.draftId : "", job });
+    } catch (err) {
+      onStateChange({ status: "error", jobId, message: err instanceof Error ? err.message : "Retry failed" });
+    }
+  }
+
+  const activeJobId = state.status === "queued" ? state.jobId : state.status === "running" ? state.job.id : state.status === "error" ? state.jobId : undefined;
+  const activeDraftId = state.status === "queued" || state.status === "running" ? state.draftId : "";
+
+  return (
+    <section className="preview-panel" aria-label="Patch preview workflow">
+      <div className="tree-heading">
+        <h2>Preview workflow</h2>
+        <span>{state.status}</span>
+      </div>
+      <div className="preview-actions">
+        <button type="button" onClick={runPreview}>Preview patch</button>
+        {activeJobId && <button type="button" onClick={() => refreshJob(activeJobId, activeDraftId)}>Progress</button>}
+        {activeJobId && <button type="button" onClick={() => cancelJob(activeJobId)}>Cancel</button>}
+        {activeJobId && <button type="button" onClick={() => retryJob(activeJobId)}>Retry</button>}
+      </div>
+      {state.status === "queued" && <p className="message ok">Queued job {state.jobId}</p>}
+      {state.status === "running" && <p className="message ok">Job {state.job.id}: {state.job.state}, {state.job.progress}%</p>}
+      {state.status === "error" && <p className="message error">{state.message}</p>}
     </section>
   );
 }

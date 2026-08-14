@@ -37,5 +37,11 @@ assert.match(appSource, /sourceStatus/);
 assert.match(appSource, /schema-driven/);
 assert.match(appSource, /min=/);
 assert.match(appSource, /unit/);
+assert.match(appSource, /PreviewWorkflow/);
+assert.match(appSource, /previewDraft/);
+assert.match(appSource, /applyPatch/);
+assert.match(appSource, /cancelJob/);
+assert.match(appSource, /retryJob/);
+assert.match(appSource, /Progress/);
 
 console.log("Frontend scaffold verification passed");
