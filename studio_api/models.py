@@ -1,0 +1,61 @@
+from __future__ import annotations
+
+from datetime import datetime, timezone
+from typing import List, Literal, Optional
+from uuid import uuid4
+
+from pydantic import BaseModel, ConfigDict, Field
+
+
+def new_id(prefix: str) -> str:
+    return f"{prefix}_{uuid4().hex}"
+
+
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+class ErrorDetail(BaseModel):
+    path: Optional[str] = None
+    target: Optional[str] = None
+    message: str
+
+
+class ErrorEnvelope(BaseModel):
+    code: str
+    message: str
+    traceId: str
+    details: List[ErrorDetail] = Field(default_factory=list)
+
+
+class ModelCreate(BaseModel):
+    article: str = Field(min_length=1, max_length=120)
+    manufacturer: str = Field(default="LANMASTER", min_length=1, max_length=120)
+    series: Optional[str] = Field(default=None, max_length=120)
+    name: Optional[str] = Field(default=None, max_length=240)
+
+
+class ModelSummary(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    article: str
+    manufacturer: str
+    series: Optional[str] = None
+    name: Optional[str] = None
+    status: Literal["draft", "published", "archived"] = "draft"
+    activeRevisionId: Optional[str] = None
+    createdAt: datetime
+    updatedAt: datetime
+
+
+class ModelList(BaseModel):
+    items: List[ModelSummary]
+    nextCursor: Optional[str] = None
+
+
+class HealthResponse(BaseModel):
+    status: Literal["ok"]
+    service: str
+    version: str
+    database: Literal["ok"]

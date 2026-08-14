@@ -1,0 +1,21 @@
+[project]
+name = "lanmaster-studio"
+version = "0.1.0"
+description = "LANMASTER Studio API, orchestration and future web editor."
+requires-python = ">=3.9"
+dependencies = [
+  "fastapi==0.115.6",
+  "uvicorn[standard]==0.32.1",
+  "pydantic==2.10.4",
+]
+
+[project.optional-dependencies]
+test = [
+  "httpx==0.28.1",
+  "pytest==8.3.4",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
