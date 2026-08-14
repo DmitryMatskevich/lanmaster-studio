@@ -16,3 +16,14 @@ jobs:
 
       - name: Verify scaffold
         run: python3 scripts/verify_skeleton.py
+
+      - name: Install API dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r requirements.txt
+
+      - name: Verify API contract
+        run: |
+          python3 scripts/generate_openapi.py
+          python3 scripts/generate_ts_client.py
+          python3 -m pytest

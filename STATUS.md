@@ -1,6 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
+active ID: P4-02 OIDC dev/prod abstraction and RBAC
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -54,10 +55,14 @@ completed IDs:
 - P3-10: PMD 2.0 stable contract and schema compatibility suite completed
 - P3-11: catalog migration cost/classification evidence completed
 - Gate P3: passed; PMD Stable is complete
+- P4-01: FastAPI scaffold, SQLite migration runner, OpenAPI generation,
+  generated TypeScript client and API contract tests
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
 - API, frontend, editor and RAG may start from P4 after PMD Stable gate P3.
+- P4-01 uses SQLite for the local MVP stack; production database/provider
+  remains a P4/P7 deployment decision.
 - Remote branch protection is an external GitHub setting; local evidence is limited
   to CI and ownership configuration files.
 - Pilot set starts with `TWT-CBB-42U-8x10-P1`, `TWT-CBWNG-12U-6x6-BK`,
@@ -97,8 +102,25 @@ changed files:
 - `docs/discovery/p0-adr-slo-decision-package.md`
 - `docs/discovery/p1-gate-review.md`
 - `docs/discovery/p2-gate-review.md`
+- `docs/discovery/p4-01-api-scaffold.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
+- `pyproject.toml`
+- `requirements.txt`
+- `studio_api/__init__.py`
+- `studio_api/config.py`
+- `studio_api/db.py`
+- `studio_api/main.py`
+- `studio_api/models.py`
+- `studio_api/repository.py`
+- `migrations/0001_p4_01_core.sql`
+- `scripts/init_db.py`
+- `scripts/generate_openapi.py`
+- `scripts/generate_ts_client.py`
+- `openapi/openapi.json`
+- `clients/typescript/src/index.ts`
+- `tests/test_api_contract.py`
+- `tests/test_generated_artifacts.py`
 - `test-fixtures/source-formats/README.md`
 - `test-fixtures/source-formats/manifest.yml`
 - `test-fixtures/source-formats/minimal-panel.svg`
@@ -135,6 +157,7 @@ changed files:
 - `../lanmaster-cad/tests/test_pmd_structural_fixtures.py`
 - `../lanmaster-cad/tests/test_pmd_validation.py`
 - `../lanmaster-cad/requirements.lock`
+- `docs/discovery/p4-01-api-scaffold.md`
 
 test commands:
 - `python3 scripts/verify_skeleton.py`
@@ -175,6 +198,13 @@ test commands:
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest -q tests/test_pmd_ir.py tests/test_pmd_evaluation.py tests/test_pmd_compiler.py tests/test_pmd_declarative_backend.py tests/test_pmd_import_step_backend.py tests/test_pmd_legacy_backend.py tests/test_pmd_cache.py tests/test_pmd_exporters.py tests/test_pmd_verification.py tests/test_pmd_manifest.py tests/test_pmd_v1_adapter.py tests/test_pmd_workflow.py`
 - `cd ../lanmaster-cad && .venv/bin/python -m pytest -q`
 - `cd ../lanmaster-cad && .venv/bin/python -m lmcad.cli pmd release lmcad/pmd/examples/minimal_open_frame.json --out /tmp/pmd-p2-cli-smoke --profile baseline`
+- `python3 -m venv .venv`
+- `.venv/bin/pip install -r requirements.txt`
+- `.venv/bin/python scripts/init_db.py`
+- `.venv/bin/python scripts/generate_openapi.py`
+- `.venv/bin/python scripts/generate_ts_client.py`
+- `.venv/bin/python -m pytest`
+- `.venv/bin/python scripts/verify_skeleton.py`
 
 results:
 - PASS: P0-01 scaffold verification passed
@@ -281,9 +311,12 @@ results:
   backend wiring were remediated with negative tests.
 - PASS: repeated independent review found no High/Medium findings and returned
   Gate P2 PASS.
+- PASS: P4-01 API scaffold contract tests passed: 3 passed.
+- PASS: P4-01 web smoke passed through local Uvicorn: health, OpenAPI,
+  model create/list and Swagger UI `/docs`.
 
 blockers:
 - none for Gate P3.
 
 next ID:
-- P4-01: scaffold FastAPI, migrations, OpenAPI and generated TS client
+- P4-02: OIDC dev/prod abstraction and RBAC
