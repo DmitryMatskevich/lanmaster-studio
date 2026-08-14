@@ -428,12 +428,15 @@ results:
   shadow-exit release decision contract.
 - PASS: P7-03 engineering scaffold: critical-path p50/p95/max and per-stage SLO
   evaluator.
+- PASS: P7-04 engineering scaffold: dependency policy verifier, generated SBOM
+  and npm audit gate.
 
 blockers:
 - P7-01 cannot fully pass before real shadow builds cover at least 28 calendar
   days. Observation started 2026-08-14; earliest exit review 2026-09-10.
 - P7-02 cannot fully pass before Domain/Approver signs selected pilot acceptance.
 - P7-03 final SLO confirmation requires production-size benchmark samples.
+- P7-04 final pass requires independent security review approval.
 
 next ID:
-- P7-04: security review, threat tests, SBOM and dependency policy.
+- P7-05: backup/restore, retention and disaster recovery drill.
