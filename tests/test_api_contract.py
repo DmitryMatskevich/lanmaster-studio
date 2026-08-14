@@ -456,3 +456,36 @@ def test_audit_events_and_trace_correlation(tmp_path):
     assert items[0]["actor"] == "engineer@example.test"
     assert items[0]["action"] == "model.create"
     assert items[0]["traceId"] == "tr_test_trace"
+
+
+def test_observability_summary_metrics_and_dashboard(tmp_path):
+    client = next(_client(tmp_path))
+    engineer = {"X-Dev-User": "engineer@example.test", "X-Dev-Roles": "engineer"}
+
+    client.post("/api/v1/models", headers=engineer, json={"article": "P4-09-METRICS"})
+    client.post(
+        "/api/v1/jobs",
+        headers=engineer,
+        json={"type": "preview", "inputHash": "sha256:p4-09"},
+    )
+
+    viewer_denied = client.get("/api/v1/observability/summary", headers={"X-Dev-Roles": "viewer"})
+    assert viewer_denied.status_code == 403
+
+    summary = client.get("/api/v1/observability/summary", headers={"X-Dev-Roles": "admin"})
+    assert summary.status_code == 200
+    body = summary.json()
+    assert body["service"] == "LANMASTER Studio"
+    assert body["modelsTotal"] == 1
+    assert body["auditEventsTotal"] >= 2
+    assert {"state": "queued", "count": 1} in body["jobsByState"]
+
+    metrics = client.get("/metrics")
+    assert metrics.status_code == 200
+    assert "lanmaster_studio_models_total 1" in metrics.text
+    assert 'lanmaster_studio_jobs{state="queued"} 1' in metrics.text
+
+    dashboard = client.get("/api/v1/observability/dashboard", headers={"X-Dev-Roles": "admin"})
+    assert dashboard.status_code == 200
+    assert "LANMASTER Studio Observability" in dashboard.text
+    assert "queued: 1" in dashboard.text

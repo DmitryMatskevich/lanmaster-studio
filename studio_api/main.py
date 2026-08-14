@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from typing import Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response, WebSocket, status
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse
 
 from . import __version__
 from .auth import Role, UserContext, current_user, require_roles
@@ -22,6 +22,7 @@ from .models import (
     JobCreate,
     JobAccepted,
     JobSummary,
+    ObservabilitySummary,
     PatchCreate,
     PatchSummary,
     PreviewRequest,
@@ -55,6 +56,7 @@ from .repository import (
     enqueue_preview,
     create_release,
     get_release,
+    get_observability_summary,
     list_events,
     list_audit_events,
     list_models,
@@ -474,3 +476,89 @@ def api_auth_me(user: UserContext = Depends(current_user)) -> UserInfo:
         roles=[role.value for role in user.roles],
         authMode=user.authMode,
     )
+
+
+@app.get(f"{settings.api_prefix}/observability/summary", response_model=ObservabilitySummary, tags=["observability"])
+def api_observability_summary(
+    _user: UserContext = Depends(require_roles(Role.ADMIN)),
+) -> ObservabilitySummary:
+    return get_observability_summary(settings.app_name, __version__)
+
+
+def _metric_lines(summary: ObservabilitySummary) -> str:
+    lines = [
+        "# HELP lanmaster_studio_models_total Total Studio models.",
+        "# TYPE lanmaster_studio_models_total gauge",
+        f"lanmaster_studio_models_total {summary.modelsTotal}",
+        "# HELP lanmaster_studio_drafts_open Open Studio drafts.",
+        "# TYPE lanmaster_studio_drafts_open gauge",
+        f"lanmaster_studio_drafts_open {summary.draftsOpen}",
+        "# HELP lanmaster_studio_events_total Durable events stored.",
+        "# TYPE lanmaster_studio_events_total counter",
+        f"lanmaster_studio_events_total {summary.eventsTotal}",
+        "# HELP lanmaster_studio_audit_events_total Audit events stored.",
+        "# TYPE lanmaster_studio_audit_events_total counter",
+        f"lanmaster_studio_audit_events_total {summary.auditEventsTotal}",
+        "# HELP lanmaster_studio_last_event_sequence Last durable event sequence.",
+        "# TYPE lanmaster_studio_last_event_sequence gauge",
+        f"lanmaster_studio_last_event_sequence {summary.lastEventSequence}",
+    ]
+    for item in summary.jobsByState:
+        lines.append(f'lanmaster_studio_jobs{{state="{item.state}"}} {item.count}')
+    for item in summary.releasesByStatus:
+        lines.append(f'lanmaster_studio_releases{{status="{item.state}"}} {item.count}')
+    for item in summary.artifactsByStatus:
+        lines.append(f'lanmaster_studio_artifacts{{status="{item.state}"}} {item.count}')
+    return "\n".join(lines) + "\n"
+
+
+@app.get("/metrics", response_class=PlainTextResponse, tags=["observability"])
+def api_metrics() -> PlainTextResponse:
+    summary = get_observability_summary(settings.app_name, __version__)
+    return PlainTextResponse(_metric_lines(summary), media_type="text/plain; version=0.0.4")
+
+
+@app.get(f"{settings.api_prefix}/observability/dashboard", response_class=HTMLResponse, tags=["observability"])
+def api_observability_dashboard(
+    _user: UserContext = Depends(require_roles(Role.ADMIN)),
+) -> HTMLResponse:
+    summary = get_observability_summary(settings.app_name, __version__)
+    jobs = "".join(f"<li>{item.state}: {item.count}</li>" for item in summary.jobsByState) or "<li>none</li>"
+    releases = "".join(f"<li>{item.state}: {item.count}</li>" for item in summary.releasesByStatus) or "<li>none</li>"
+    artifacts = "".join(f"<li>{item.state}: {item.count}</li>" for item in summary.artifactsByStatus) or "<li>none</li>"
+    html = f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>LANMASTER Studio Observability</title>
+  <style>
+    body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 32px; color: #1f2937; }}
+    main {{ max-width: 960px; }}
+    section {{ border-top: 1px solid #d1d5db; padding: 16px 0; }}
+    dl {{ display: grid; grid-template-columns: 220px 1fr; gap: 8px 20px; }}
+    dt {{ font-weight: 700; }}
+    dd {{ margin: 0; }}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>LANMASTER Studio Observability</h1>
+    <section>
+      <dl>
+        <dt>Service</dt><dd>{summary.service}</dd>
+        <dt>Version</dt><dd>{summary.version}</dd>
+        <dt>Models</dt><dd>{summary.modelsTotal}</dd>
+        <dt>Open drafts</dt><dd>{summary.draftsOpen}</dd>
+        <dt>Events</dt><dd>{summary.eventsTotal}</dd>
+        <dt>Audit events</dt><dd>{summary.auditEventsTotal}</dd>
+        <dt>Last event sequence</dt><dd>{summary.lastEventSequence}</dd>
+        <dt>Generated</dt><dd>{summary.generatedAt.isoformat()}</dd>
+      </dl>
+    </section>
+    <section><h2>Jobs</h2><ul>{jobs}</ul></section>
+    <section><h2>Releases</h2><ul>{releases}</ul></section>
+    <section><h2>Artifacts</h2><ul>{artifacts}</ul></section>
+  </main>
+</body>
+</html>"""
+    return HTMLResponse(html)

@@ -233,3 +233,22 @@ class AuditEventSummary(BaseModel):
 
 class AuditEventList(BaseModel):
     items: List[AuditEventSummary]
+
+
+class CountByState(BaseModel):
+    state: str
+    count: int
+
+
+class ObservabilitySummary(BaseModel):
+    service: str
+    version: str
+    modelsTotal: int
+    draftsOpen: int
+    jobsByState: List[CountByState]
+    releasesByStatus: List[CountByState]
+    artifactsByStatus: List[CountByState]
+    eventsTotal: int
+    auditEventsTotal: int
+    lastEventSequence: int
+    generatedAt: datetime

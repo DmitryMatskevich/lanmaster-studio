@@ -2077,6 +2077,157 @@
           }
         }
       }
+    },
+    "/api/v1/observability/summary": {
+      "get": {
+        "tags": [
+          "observability"
+        ],
+        "summary": "Api Observability Summary",
+        "operationId": "api_observability_summary_api_v1_observability_summary_get",
+        "parameters": [
+          {
+            "name": "X-Dev-User",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-User"
+            }
+          },
+          {
+            "name": "X-Dev-Roles",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-Roles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObservabilitySummary"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": [
+          "observability"
+        ],
+        "summary": "Api Metrics",
+        "operationId": "api_metrics_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/observability/dashboard": {
+      "get": {
+        "tags": [
+          "observability"
+        ],
+        "summary": "Api Observability Dashboard",
+        "operationId": "api_observability_dashboard_api_v1_observability_dashboard_get",
+        "parameters": [
+          {
+            "name": "X-Dev-User",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-User"
+            }
+          },
+          {
+            "name": "X-Dev-Roles",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-Roles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2198,6 +2349,24 @@
           "createdAt"
         ],
         "title": "AuditEventSummary"
+      },
+      "CountByState": {
+        "properties": {
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "state",
+          "count"
+        ],
+        "title": "CountByState"
       },
       "DownloadUrl": {
         "properties": {
@@ -2729,6 +2898,79 @@
           "updatedAt"
         ],
         "title": "ModelSummary"
+      },
+      "ObservabilitySummary": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "modelsTotal": {
+            "type": "integer",
+            "title": "Modelstotal"
+          },
+          "draftsOpen": {
+            "type": "integer",
+            "title": "Draftsopen"
+          },
+          "jobsByState": {
+            "items": {
+              "$ref": "#/components/schemas/CountByState"
+            },
+            "type": "array",
+            "title": "Jobsbystate"
+          },
+          "releasesByStatus": {
+            "items": {
+              "$ref": "#/components/schemas/CountByState"
+            },
+            "type": "array",
+            "title": "Releasesbystatus"
+          },
+          "artifactsByStatus": {
+            "items": {
+              "$ref": "#/components/schemas/CountByState"
+            },
+            "type": "array",
+            "title": "Artifactsbystatus"
+          },
+          "eventsTotal": {
+            "type": "integer",
+            "title": "Eventstotal"
+          },
+          "auditEventsTotal": {
+            "type": "integer",
+            "title": "Auditeventstotal"
+          },
+          "lastEventSequence": {
+            "type": "integer",
+            "title": "Lasteventsequence"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Generatedat"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "version",
+          "modelsTotal",
+          "draftsOpen",
+          "jobsByState",
+          "releasesByStatus",
+          "artifactsByStatus",
+          "eventsTotal",
+          "auditEventsTotal",
+          "lastEventSequence",
+          "generatedAt"
+        ],
+        "title": "ObservabilitySummary"
       },
       "PatchCreate": {
         "properties": {
