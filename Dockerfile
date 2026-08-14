@@ -1,3 +1,14 @@
+FROM node:20.11.1-slim AS frontend-build
+
+WORKDIR /app
+
+COPY clients ./clients
+COPY frontend/package.json frontend/package-lock.json ./frontend/
+RUN npm ci --prefix frontend
+COPY frontend ./frontend
+RUN npm run --prefix frontend build
+
+
 FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -20,6 +31,7 @@ COPY migrations ./migrations
 COPY scripts ./scripts
 COPY openapi ./openapi
 COPY clients ./clients
+COPY --from=frontend-build /app/frontend/dist ./frontend/dist
 COPY README.md STATUS.md ./
 
 RUN mkdir -p /app/var/storage \

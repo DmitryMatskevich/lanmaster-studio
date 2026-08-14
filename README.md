@@ -27,6 +27,7 @@ The initial repository contains:
 - P4-08 audit events and trace correlation across mutating API calls.
 - P4-09 observability summary, Prometheus-style metrics and dashboard skeleton.
 - P4-10 Docker Compose local API stack.
+- P5-01 React/TypeScript frontend scaffold with routing, dev auth and API client wiring.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because
@@ -69,6 +70,17 @@ docker compose up --build
 The local container uses `.env.example` defaults, exposes the API on
 `http://127.0.0.1:8088`, and persists SQLite plus uploaded artifacts in the
 `studio-var` volume.
+
+## Frontend
+
+```bash
+npm ci --prefix frontend
+npm run frontend:build
+npm run frontend:test
+```
+
+After `frontend:build`, FastAPI serves the editor scaffold from `/` when
+`frontend/dist` exists.
 
 ## External Repository Setup
 

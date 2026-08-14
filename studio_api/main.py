@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response, WebSocket, status
 from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse
+from fastapi.staticfiles import StaticFiles
 
 from . import __version__
 from .auth import Role, UserContext, current_user, require_roles
@@ -68,6 +70,7 @@ from .trace import new_trace_id, trace_id_var
 
 
 settings = get_settings()
+FRONTEND_DIST = Path(__file__).resolve().parents[1] / "frontend" / "dist"
 
 
 @asynccontextmanager
@@ -560,5 +563,17 @@ def api_observability_dashboard(
     <section><h2>Artifacts</h2><ul>{artifacts}</ul></section>
   </main>
 </body>
-</html>"""
+    </html>"""
     return HTMLResponse(html)
+
+
+if FRONTEND_DIST.exists():
+    app.mount("/assets", StaticFiles(directory=FRONTEND_DIST / "assets"), name="frontend-assets")
+
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    def frontend_app(full_path: str) -> FileResponse:
+        index_path = FRONTEND_DIST / "index.html"
+        if full_path.startswith("api/") or full_path in {"health", "metrics"}:
+            raise HTTPException(status_code=404, detail="Not found")
+        return FileResponse(index_path)

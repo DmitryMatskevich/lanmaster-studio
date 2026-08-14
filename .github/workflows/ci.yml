@@ -28,5 +28,12 @@ jobs:
           python3 scripts/generate_ts_client.py
           python3 -m pytest
 
+      - name: Verify frontend scaffold
+        run: |
+          npm ci --prefix frontend
+          npm audit --prefix frontend --audit-level=moderate
+          npm run frontend:build
+          npm run frontend:test
+
       - name: Verify Docker Compose stack
         run: python3 scripts/verify_compose.py
