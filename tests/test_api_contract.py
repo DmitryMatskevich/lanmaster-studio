@@ -1,13 +1,17 @@
 from __future__ import annotations
 
 import importlib
+import hashlib
 import os
+from pathlib import Path
+from urllib.parse import urlparse
 
 from fastapi.testclient import TestClient
 
 
 def _client(tmp_path):
     os.environ["DATABASE_URL"] = f"sqlite:///{tmp_path / 'studio-test.db'}"
+    os.environ["STUDIO_STORAGE_DIR"] = str(tmp_path / "storage")
     os.environ["STUDIO_AUTH_MODE"] = "dev"
     import studio_api.config
     import studio_api.db
@@ -315,3 +319,65 @@ def test_preview_and_release_orchestration_contract(tmp_path):
     )
     assert repeated_release.status_code == 202
     assert repeated_release.json()["id"] == release_body["id"]
+
+
+def test_object_storage_upload_complete_and_signed_url(tmp_path):
+    client = next(_client(tmp_path))
+    engineer = {"X-Dev-User": "engineer@example.test", "X-Dev-Roles": "engineer"}
+    data = b"lanmaster artifact"
+    digest = hashlib.sha256(data).hexdigest()
+
+    intent = client.post(
+        "/api/v1/documents/upload-intents",
+        headers=engineer,
+        json={
+            "filename": "source.txt",
+            "mediaType": "text/plain",
+            "size": len(data),
+            "sha256": digest,
+            "scope": "source",
+        },
+    )
+    assert intent.status_code == 201
+    body = intent.json()
+    upload_path = Path(urlparse(body["uploadUrl"]).path)
+    upload_path.write_bytes(data)
+
+    completed = client.post(
+        "/api/v1/documents/complete-upload",
+        headers=engineer,
+        json={"artifactId": body["artifactId"]},
+    )
+    assert completed.status_code == 200
+    artifact = completed.json()
+    assert artifact["status"] == "ready"
+    assert artifact["sha256"] == digest
+
+    download = client.get(
+        f"/api/v1/artifacts/{body['artifactId']}/download-url",
+        headers={"X-Dev-Roles": "viewer"},
+    )
+    assert download.status_code == 200
+    assert f"artifactId={body['artifactId']}" in download.json()["downloadUrl"]
+    downloaded = client.get(download.json()["downloadUrl"])
+    assert downloaded.status_code == 200
+    assert downloaded.content == data
+
+    bad = client.post(
+        "/api/v1/documents/upload-intents",
+        headers=engineer,
+        json={
+            "filename": "bad.txt",
+            "mediaType": "text/plain",
+            "size": 99,
+            "sha256": digest,
+            "scope": "source",
+        },
+    ).json()
+    Path(urlparse(bad["uploadUrl"]).path).write_bytes(data)
+    mismatch = client.post(
+        "/api/v1/documents/complete-upload",
+        headers=engineer,
+        json={"artifactId": bad["artifactId"]},
+    )
+    assert mismatch.status_code == 422

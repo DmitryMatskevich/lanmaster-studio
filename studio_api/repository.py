@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from .db import session
 from .models import (
     DraftCommit,
     DraftSummary,
+    ArtifactSummary,
+    DownloadUrl,
     JobCreate,
     JobAccepted,
     JobSummary,
@@ -19,11 +21,15 @@ from .models import (
     ReleaseCreate,
     ReleaseSummary,
     RevisionSummary,
+    UploadComplete,
+    UploadIntent,
+    UploadIntentCreate,
     WorkerClaimRequest,
     WorkerHeartbeat,
     new_id,
     utc_now,
 )
+from .storage import object_path, sha256_file, sign_download_path
 
 
 def _row_to_model(row) -> ModelSummary:
@@ -100,6 +106,19 @@ def _row_to_release(row) -> ReleaseSummary:
         manifestArtifactId=row["manifest_artifact_id"],
         createdAt=datetime.fromisoformat(row["created_at"]),
         updatedAt=datetime.fromisoformat(row["updated_at"]),
+    )
+
+
+def _row_to_artifact(row) -> ArtifactSummary:
+    return ArtifactSummary(
+        id=row["id"],
+        objectKey=row["object_key"],
+        sha256=row["sha256"],
+        mediaType=row["media_type"],
+        size=row["size"],
+        scope=row["scope"],
+        status=row["status"],
+        createdAt=datetime.fromisoformat(row["created_at"]),
     )
 
 
@@ -487,3 +506,85 @@ def get_release(release_id: str) -> ReleaseSummary | None:
     with session() as conn:
         row = conn.execute("SELECT * FROM releases WHERE id = ?", (release_id,)).fetchone()
     return _row_to_release(row) if row else None
+
+
+def create_upload_intent(payload: UploadIntentCreate) -> UploadIntent:
+    now = utc_now().isoformat()
+    artifact_id = new_id("art")
+    safe_name = payload.filename.replace("/", "_").replace("\\", "_")
+    object_key = f"{payload.scope}/{artifact_id}/{safe_name}"
+    object_path(object_key)
+    with session() as conn:
+        conn.execute(
+            """
+            INSERT INTO artifacts (
+              id, object_key, sha256, media_type, size, scope, status,
+              created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?)
+            """,
+            (
+                artifact_id,
+                object_key,
+                payload.sha256.removeprefix("sha256:"),
+                payload.mediaType,
+                payload.size,
+                payload.scope,
+                now,
+                now,
+            ),
+        )
+    expires = (utc_now() + timedelta(minutes=15)).replace(microsecond=0)
+    return UploadIntent(
+        artifactId=artifact_id,
+        uploadUrl=f"file://{object_path(object_key)}",
+        objectKey=object_key,
+        expiresAt=expires,
+    )
+
+
+def complete_upload(payload: UploadComplete) -> ArtifactSummary | None | str:
+    now = utc_now().isoformat()
+    with session() as conn:
+        row = conn.execute("SELECT * FROM artifacts WHERE id = ?", (payload.artifactId,)).fetchone()
+        if row is None:
+            return None
+        path = object_path(row["object_key"])
+        if not path.exists():
+            return "OBJECT_MISSING"
+        actual_size = path.stat().st_size
+        actual_hash = sha256_file(path)
+        if actual_size != row["size"] or actual_hash != row["sha256"]:
+            return "HASH_OR_SIZE_MISMATCH"
+        conn.execute(
+            "UPDATE artifacts SET status = 'ready', updated_at = ? WHERE id = ?",
+            (now, payload.artifactId),
+        )
+        updated = conn.execute("SELECT * FROM artifacts WHERE id = ?", (payload.artifactId,)).fetchone()
+    return _row_to_artifact(updated)
+
+
+def get_artifact(artifact_id: str) -> ArtifactSummary | None:
+    with session() as conn:
+        row = conn.execute("SELECT * FROM artifacts WHERE id = ?", (artifact_id,)).fetchone()
+    return _row_to_artifact(row) if row else None
+
+
+def create_download_url(artifact_id: str) -> DownloadUrl | None | str:
+    with session() as conn:
+        row = conn.execute("SELECT * FROM artifacts WHERE id = ?", (artifact_id,)).fetchone()
+        if row is None:
+            return None
+        if row["status"] != "ready":
+            return "ARTIFACT_NOT_READY"
+        url, expires = sign_download_path(artifact_id, row["object_key"])
+    return DownloadUrl(
+        artifactId=artifact_id,
+        downloadUrl=url,
+        expiresAt=datetime.fromtimestamp(expires, tz=utc_now().tzinfo),
+    )
+
+
+def artifact_object_key(artifact_id: str) -> str | None:
+    with session() as conn:
+        row = conn.execute("SELECT object_key FROM artifacts WHERE id = ? AND status = 'ready'", (artifact_id,)).fetchone()
+    return row["object_key"] if row else None
