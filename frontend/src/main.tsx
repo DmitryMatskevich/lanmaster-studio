@@ -278,6 +278,7 @@ function ModelRoute({
   const [model, setModel] = useState<ModelSummary | null>(null);
   const [revisions, setRevisions] = useState<RevisionSummary[]>([]);
   const [selectedRevisionId, setSelectedRevisionId] = useState("");
+  const [selectedComponentId, setSelectedComponentId] = useState("cmp_0");
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -338,8 +339,16 @@ function ModelRoute({
               <p className="message">У модели пока нет ревизий.</p>
             )}
           </section>
-          <VirtualizedTree nodes={buildDemoTree(1000)} selectedId={selectedRevisionId || model.id} />
-          <ModelViewer selectedRevisionId={selectedRevisionId} />
+          <VirtualizedTree
+            nodes={buildDemoTree(1000)}
+            selectedId={selectedComponentId}
+            onSelect={setSelectedComponentId}
+          />
+          <ModelViewer
+            selectedRevisionId={selectedRevisionId}
+            selectedComponentId={selectedComponentId}
+            onSelectComponent={setSelectedComponentId}
+          />
         </div>
       )}
       {state === "loading" && <p className="message">Загрузка модели...</p>}
@@ -349,7 +358,15 @@ function ModelRoute({
   );
 }
 
-function ModelViewer({ selectedRevisionId }: { selectedRevisionId: string }) {
+function ModelViewer({
+  selectedRevisionId,
+  selectedComponentId,
+  onSelectComponent
+}: {
+  selectedRevisionId: string;
+  selectedComponentId: string;
+  onSelectComponent: (componentId: string) => void;
+}) {
   const hostRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -371,6 +388,7 @@ function ModelViewer({ selectedRevisionId }: { selectedRevisionId: string }) {
     const cabinet = new THREE.BoxGeometry(2.2, 1.4, 3.2);
     const material = new THREE.MeshStandardMaterial({ color: 0x8aa0ad, metalness: 0.25, roughness: 0.55 });
     const mesh = new THREE.Mesh(cabinet, material);
+    mesh.userData.componentId = "cmp_0";
     scene.add(mesh);
 
     const edges = new THREE.EdgesGeometry(cabinet);
@@ -381,9 +399,24 @@ function ModelViewer({ selectedRevisionId }: { selectedRevisionId: string }) {
     const light = new THREE.DirectionalLight(0xffffff, 1.8);
     light.position.set(4, 5, 3);
     scene.add(light);
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+
+    function selectFromCanvas(event: PointerEvent) {
+      const bounds = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
+      pointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const hit = raycaster.intersectObject(mesh, true)[0];
+      if (hit) {
+        onSelectComponent(mesh.userData.componentId);
+      }
+    }
+    renderer.domElement.addEventListener("pointerdown", selectFromCanvas);
 
     let frame = 0;
     function render() {
+      material.color.set(selectedComponentId === "cmp_0" ? 0x2f8f83 : 0x8aa0ad);
       mesh.rotation.z = 0.02;
       mesh.rotation.y += 0.006;
       renderer.render(scene, camera);
@@ -393,6 +426,7 @@ function ModelViewer({ selectedRevisionId }: { selectedRevisionId: string }) {
 
     return () => {
       window.cancelAnimationFrame(frame);
+      renderer.domElement.removeEventListener("pointerdown", selectFromCanvas);
       host.removeChild(renderer.domElement);
       cabinet.dispose();
       edges.dispose();
@@ -400,13 +434,13 @@ function ModelViewer({ selectedRevisionId }: { selectedRevisionId: string }) {
       (edgeLines.material as THREE.Material).dispose();
       renderer.dispose();
     };
-  }, [selectedRevisionId]);
+  }, [onSelectComponent, selectedComponentId, selectedRevisionId]);
 
   return (
     <section className="viewer-panel" aria-label="3D viewer">
       <div className="tree-heading">
         <h2>3D viewer</h2>
-        <span>{selectedRevisionId || "no revision"}</span>
+        <span>{selectedRevisionId || "no revision"} · {selectedComponentId}</span>
       </div>
       <div className="viewer-host" ref={hostRef} />
     </section>
@@ -415,10 +449,12 @@ function ModelViewer({ selectedRevisionId }: { selectedRevisionId: string }) {
 
 function VirtualizedTree({
   nodes,
-  selectedId
+  selectedId,
+  onSelect
 }: {
   nodes: TreeNode[];
   selectedId: string;
+  onSelect: (componentId: string) => void;
 }) {
   const flatNodes = useMemo(() => flattenTree(nodes), [nodes]);
   const [scrollTop, setScrollTop] = useState(0);
@@ -441,15 +477,17 @@ function VirtualizedTree({
         <div className="tree-spacer" style={{ height: totalHeight }}>
           <div className="tree-window" style={{ transform: `translateY(${startIndex * TREE_ROW_HEIGHT}px)` }}>
             {visibleNodes.map((node) => (
-              <div
+              <button
                 className={node.id === selectedId ? "tree-row selected" : "tree-row"}
                 key={node.id}
+                type="button"
+                onClick={() => onSelect(node.id)}
                 style={{ height: TREE_ROW_HEIGHT, paddingLeft: 10 + node.depth * 18 }}
               >
                 {node.hasChildren ? <ChevronRight size={15} aria-hidden="true" /> : <span className="tree-dot" />}
                 <span>{node.label}</span>
                 <code>{node.id}</code>
-              </div>
+              </button>
             ))}
           </div>
         </div>
