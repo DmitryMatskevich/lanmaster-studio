@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: P5-04 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: P5-05 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
@@ -30,6 +30,7 @@ The initial repository contains:
 - P5-01 React/TypeScript frontend scaffold with routing, dev auth and API client wiring.
 - P5-02 catalog search and revision selector.
 - P5-03 virtualized component tree scaffold for large hierarchies.
+- P5-04 Three.js viewer scaffold and resource lifecycle cleanup.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because

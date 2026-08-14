@@ -20,5 +20,8 @@ assert.match(appSource, /buildDemoTree\(1000\)/);
 assert.match(appSource, /TREE_ROW_HEIGHT = 32/);
 assert.match(appSource, /TREE_VIEWPORT_HEIGHT = 384/);
 assert.match(appSource, /translateY/);
+assert.match(appSource, /new THREE\.WebGLRenderer/);
+assert.match(appSource, /renderer\.dispose\(\)/);
+assert.match(appSource, /requestAnimationFrame/);
 
 console.log("Frontend scaffold verification passed");

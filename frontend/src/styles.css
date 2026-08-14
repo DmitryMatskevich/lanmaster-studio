@@ -254,6 +254,25 @@ h1 {
   overflow: hidden;
 }
 
+.viewer-panel {
+  grid-column: 1 / -1;
+  border: 1px solid #d7dde2;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.viewer-host {
+  height: 360px;
+  min-height: 360px;
+}
+
+.viewer-host canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .tree-heading {
   display: flex;
   align-items: center;
