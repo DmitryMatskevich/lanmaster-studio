@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P6-05 Chunking, metadata, PostgreSQL full text and pgvector
+active ID: P6-06 Hybrid retrieval, filters, reranking and citations
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -85,6 +85,7 @@ completed IDs:
 - P6-02: PDF vector/raster/mixed extraction with page and region provenance
 - P6-03: SVG/DXF ingestion and LibreDWG DWG adapter diagnostics
 - P6-04: STEP/IFC/GLB metadata extraction
+- P6-05: deterministic chunking and PostgreSQL full-text/pgvector schema
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
