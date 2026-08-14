@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P6-07 LLM provider abstraction and typed EditIntent
+active ID: P6-08 PMDPatchProposal validation and authorization workflow
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -87,6 +87,7 @@ completed IDs:
 - P6-04: STEP/IFC/GLB metadata extraction
 - P6-05: deterministic chunking and PostgreSQL full-text/pgvector schema
 - P6-06: hybrid retrieval with filters, reranking and citations
+- P6-07: LLM provider abstraction and typed EditIntent
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
