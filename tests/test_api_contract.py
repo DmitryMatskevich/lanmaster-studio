@@ -367,6 +367,29 @@ def test_object_storage_upload_complete_and_signed_url(tmp_path):
     assert artifact["status"] == "ready"
     assert artifact["sha256"] == digest
 
+    repeated_complete = client.post(
+        "/api/v1/documents/complete-upload",
+        headers=engineer,
+        json={"artifactId": body["artifactId"]},
+    )
+    assert repeated_complete.status_code == 409
+    assert "immutable" in repeated_complete.json()["detail"]
+
+    artifact_events = client.get(
+        "/api/v1/events",
+        headers={"X-Dev-Roles": "viewer"},
+        params={"resourceType": "artifact", "resourceId": body["artifactId"]},
+    )
+    assert [event["type"] for event in artifact_events.json()["items"]] == ["artifact.ready"]
+
+    all_events = client.get("/api/v1/events", headers={"X-Dev-Roles": "viewer"}).json()["items"]
+    ingestion_events = [
+        event for event in all_events
+        if event["type"] == "job.queued" and event["payload"].get("type") == "ingest.document"
+    ]
+    assert ingestion_events
+    assert ingestion_events[-1]["payload"]["pool"] == "isolated-ingestion"
+
     download = client.get(
         f"/api/v1/artifacts/{body['artifactId']}/download-url",
         headers={"X-Dev-Roles": "viewer"},
@@ -395,6 +418,53 @@ def test_object_storage_upload_complete_and_signed_url(tmp_path):
         json={"artifactId": bad["artifactId"]},
     )
     assert mismatch.status_code == 422
+
+    too_large = client.post(
+        "/api/v1/documents/upload-intents",
+        headers=engineer,
+        json={
+            "filename": "huge.pdf",
+            "mediaType": "application/pdf",
+            "size": 50 * 1024 * 1024 + 1,
+            "sha256": digest,
+            "scope": "source",
+        },
+    )
+    assert too_large.status_code == 413
+
+    unsupported = client.post(
+        "/api/v1/documents/upload-intents",
+        headers=engineer,
+        json={
+            "filename": "script.exe",
+            "mediaType": "application/x-msdownload",
+            "size": len(data),
+            "sha256": digest,
+            "scope": "source",
+        },
+    )
+    assert unsupported.status_code == 415
+
+    eicar = b"X5O!P%@AP[4\\PZX54(P^)7CC)7}$"
+    malware_intent = client.post(
+        "/api/v1/documents/upload-intents",
+        headers=engineer,
+        json={
+            "filename": "scan.txt",
+            "mediaType": "text/plain",
+            "size": len(eicar),
+            "sha256": hashlib.sha256(eicar).hexdigest(),
+            "scope": "source",
+        },
+    ).json()
+    Path(urlparse(malware_intent["uploadUrl"]).path).write_bytes(eicar)
+    malware = client.post(
+        "/api/v1/documents/complete-upload",
+        headers=engineer,
+        json={"artifactId": malware_intent["artifactId"]},
+    )
+    assert malware.status_code == 422
+    assert "malware" in malware.json()["detail"]
 
 
 def test_events_rest_replay_and_websocket_replay(tmp_path):

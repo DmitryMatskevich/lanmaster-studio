@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: P6-01 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: P6-02 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
@@ -39,6 +39,7 @@ The initial repository contains:
 - P5-10 commit, revision history and release UI scaffold.
 - P5-11 responsive, accessibility and visual E2E suite.
 - Gate P5 passed with PMD-backed editor flow.
+- P6-01 upload limits, scan, immutable hash and isolated ingestion job queue.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because
