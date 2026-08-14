@@ -1,0 +1,7 @@
+checkpoint: P7-01
+status: observation_active
+started_at: "2026-08-14"
+minimum_days: 28
+earliest_exit_review: "2026-09-10"
+release_allowed: false
+reason: "Shadow build pilot requires real observed runs for at least four calendar weeks."
