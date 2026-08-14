@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -66,3 +66,46 @@ class UserInfo(BaseModel):
     displayName: str
     roles: List[str]
     authMode: str
+
+
+class DraftCreate(BaseModel):
+    baseRevisionId: Optional[str] = None
+
+
+class DraftSummary(BaseModel):
+    id: str
+    modelId: str
+    baseRevisionId: Optional[str] = None
+    headRevisionToken: str
+    status: Literal["open", "committed", "abandoned"]
+    createdAt: datetime
+    updatedAt: datetime
+
+
+class PatchCreate(BaseModel):
+    baseRevisionToken: str
+    operations: List[Dict[str, Any]] = Field(min_length=1)
+
+
+class PatchSummary(BaseModel):
+    id: str
+    draftId: str
+    actor: str
+    operations: List[Dict[str, Any]]
+    status: Literal["accepted"]
+    createdAt: datetime
+
+
+class DraftCommit(BaseModel):
+    baseRevisionToken: str
+    schemaVersion: str = "2.0.0"
+    pmd: Dict[str, Any]
+
+
+class RevisionSummary(BaseModel):
+    id: str
+    modelId: str
+    parentId: Optional[str] = None
+    schemaVersion: str
+    contentHash: str
+    createdAt: datetime

@@ -39,6 +39,39 @@ export interface UserInfo {
   authMode: string;
 }
 
+export interface DraftSummary {
+  id: string;
+  modelId: string;
+  baseRevisionId?: string | null;
+  headRevisionToken: string;
+  status: "open" | "committed" | "abandoned";
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PatchCreate {
+  baseRevisionToken: string;
+  operations: Record<string, unknown>[];
+}
+
+export interface PatchSummary {
+  id: string;
+  draftId: string;
+  actor: string;
+  operations: Record<string, unknown>[];
+  status: "accepted";
+  createdAt: string;
+}
+
+export interface RevisionSummary {
+  id: string;
+  modelId: string;
+  parentId?: string | null;
+  schemaVersion: string;
+  contentHash: string;
+  createdAt: string;
+}
+
 export class StudioApiClient {
   constructor(
     private readonly baseUrl = "",
@@ -73,11 +106,51 @@ export class StudioApiClient {
     return this.request<ModelSummary>(`/api/v1/models/${encodeURIComponent(modelId)}`);
   }
 
+  async createDraft(modelId: string, payload: { baseRevisionId?: string | null } = {}): Promise<DraftSummary> {
+    return this.request<DraftSummary>(`/api/v1/models/${encodeURIComponent(modelId)}/drafts`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async getDraft(draftId: string): Promise<DraftSummary> {
+    return this.request<DraftSummary>(`/api/v1/drafts/${encodeURIComponent(draftId)}`);
+  }
+
+  async applyPatch(draftId: string, payload: PatchCreate): Promise<PatchSummary> {
+    return this.request<PatchSummary>(`/api/v1/drafts/${encodeURIComponent(draftId)}/patches`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async commitDraft(
+    draftId: string,
+    payload: { baseRevisionToken: string; schemaVersion?: string; pmd: Record<string, unknown> },
+  ): Promise<RevisionSummary> {
+    return this.request<RevisionSummary>(`/api/v1/drafts/${encodeURIComponent(draftId)}/commit`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async abandonDraft(draftId: string): Promise<void> {
+    await this.request<void>(`/api/v1/drafts/${encodeURIComponent(draftId)}`, {
+      method: "DELETE",
+    });
+  }
+
   private async request<T>(path: string, init: RequestInit = {}): Promise<T> {
     const headers = { ...this.defaultHeaders, ...(init.headers || {}) };
     const response = await fetch(`${this.baseUrl}${path}`, { ...init, headers });
     if (!response.ok) {
       throw new Error(`LANMASTER Studio API ${response.status}: ${await response.text()}`);
+    }
+    if (response.status === 204) {
+      return undefined as T;
     }
     return response.json() as Promise<T>;
   }
