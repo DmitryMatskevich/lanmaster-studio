@@ -26,6 +26,7 @@ from .models import (
     PreviewRequest,
     ReleaseCreate,
     ReleaseSummary,
+    RevisionList,
     RevisionSummary,
     UploadComplete,
     UploadIntent,
@@ -243,6 +244,18 @@ def get_model(model_id: str) -> ModelSummary | None:
     with session() as conn:
         row = conn.execute("SELECT * FROM models WHERE id = ?", (model_id,)).fetchone()
     return _row_to_model(row) if row else None
+
+
+def list_revisions(model_id: str) -> RevisionList | None:
+    with session() as conn:
+        model = conn.execute("SELECT id FROM models WHERE id = ?", (model_id,)).fetchone()
+        if model is None:
+            return None
+        rows = conn.execute(
+            "SELECT * FROM revisions WHERE model_id = ? ORDER BY created_at DESC, id DESC",
+            (model_id,),
+        ).fetchall()
+    return RevisionList(items=[_row_to_revision(row) for row in rows])
 
 
 def create_draft(model_id: str, base_revision_id: str | None = None) -> DraftSummary | None:

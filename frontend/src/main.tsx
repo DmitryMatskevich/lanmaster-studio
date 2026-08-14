@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { Box, LogIn, RefreshCw, Search, ShieldCheck } from "lucide-react";
 
-import type { ModelSummary, UserInfo } from "../../clients/typescript/src";
+import type { ModelSummary, RevisionSummary, UserInfo } from "../../clients/typescript/src";
 import { createStudioClient, type SessionState, type StudioRole } from "./api";
 import "./styles.css";
 
@@ -119,10 +119,10 @@ function ModelListPage({
   const [models, setModels] = useState<ModelSummary[]>([]);
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
 
-  async function load() {
+  async function load(nextQuery = query) {
     setState("loading");
     try {
-      const result = await client.listModels({ query: query || undefined, limit: 50 });
+      const result = await client.listModels({ query: nextQuery || undefined, limit: 50 });
       setModels(result.items);
       setState("idle");
     } catch {
@@ -130,20 +130,29 @@ function ModelListPage({
     }
   }
 
+  useEffect(() => {
+    void load("");
+  }, [client]);
+
+  function submitSearch(event: React.FormEvent) {
+    event.preventDefault();
+    void load();
+  }
+
   return (
     <section className="panel">
       <div className="panel-heading">
         <h1>Каталог моделей</h1>
-        <div className="toolbar">
+        <form className="toolbar" onSubmit={submitSearch}>
           <label className="search">
             <Search size={16} aria-hidden="true" />
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Артикул или имя" />
           </label>
-          <button type="button" onClick={load} title="Обновить список">
+          <button type="submit" title="Найти модели">
             <RefreshCw size={18} aria-hidden="true" />
-            Обновить
+            Найти
           </button>
-        </div>
+        </form>
       </div>
       {state === "error" && <p className="message error">Не удалось загрузить модели.</p>}
       {state === "loading" && <p className="message">Загрузка...</p>}
@@ -217,17 +226,32 @@ function ModelRoute({
   modelId: string;
 }) {
   const [model, setModel] = useState<ModelSummary | null>(null);
+  const [revisions, setRevisions] = useState<RevisionSummary[]>([]);
+  const [selectedRevisionId, setSelectedRevisionId] = useState("");
+  const [state, setState] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
 
   async function load() {
-    if (!modelId) return;
     setError("");
+    setState("loading");
     try {
-      setModel(await client.getModel(modelId));
+      const [loadedModel, loadedRevisions] = await Promise.all([
+        client.getModel(modelId),
+        client.listRevisions(modelId)
+      ]);
+      setModel(loadedModel);
+      setRevisions(loadedRevisions.items);
+      setSelectedRevisionId(loadedModel.activeRevisionId || loadedRevisions.items[0]?.id || "");
+      setState("idle");
     } catch (err) {
+      setState("error");
       setError(err instanceof Error ? err.message : "Model load failed");
     }
   }
+
+  useEffect(() => {
+    void load();
+  }, [client, modelId]);
 
   return (
     <section className="panel">
@@ -239,15 +263,35 @@ function ModelRoute({
         </button>
       </div>
       {model && (
-        <dl className="details">
-          <dt>ID</dt><dd>{model.id}</dd>
-          <dt>Артикул</dt><dd>{model.article}</dd>
-          <dt>Производитель</dt><dd>{model.manufacturer}</dd>
-          <dt>Статус</dt><dd>{model.status}</dd>
-          <dt>Revision</dt><dd>{model.activeRevisionId || "-"}</dd>
-        </dl>
+        <div className="model-layout">
+          <dl className="details">
+            <dt>ID</dt><dd>{model.id}</dd>
+            <dt>Артикул</dt><dd>{model.article}</dd>
+            <dt>Производитель</dt><dd>{model.manufacturer}</dd>
+            <dt>Статус</dt><dd>{model.status}</dd>
+            <dt>Active revision</dt><dd>{model.activeRevisionId || "-"}</dd>
+          </dl>
+          <section className="selector-panel" aria-label="Revision selector">
+            <h2>Revision selector</h2>
+            {revisions.length > 0 ? (
+              <label>
+                Ревизия
+                <select value={selectedRevisionId} onChange={(event) => setSelectedRevisionId(event.target.value)}>
+                  {revisions.map((revision) => (
+                    <option value={revision.id} key={revision.id}>
+                      {revision.id} · {revision.contentHash.slice(0, 18)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : (
+              <p className="message">У модели пока нет ревизий.</p>
+            )}
+          </section>
+        </div>
       )}
-      {!model && !error && <p className="message">Нажмите загрузить, чтобы проверить API route.</p>}
+      {state === "loading" && <p className="message">Загрузка модели...</p>}
+      {!model && state === "idle" && <p className="message">Модель не выбрана.</p>}
       {error && <p className="message error">{error}</p>}
     </section>
   );

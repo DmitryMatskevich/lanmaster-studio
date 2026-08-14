@@ -30,6 +30,7 @@ from .models import (
     PreviewRequest,
     ReleaseCreate,
     ReleaseSummary,
+    RevisionList,
     UploadComplete,
     UploadIntent,
     UploadIntentCreate,
@@ -62,6 +63,7 @@ from .repository import (
     list_events,
     list_audit_events,
     list_models,
+    list_revisions,
     retry_job,
     record_audit,
 )
@@ -146,6 +148,17 @@ def api_get_model(
     if model is None:
         raise HTTPException(status_code=404, detail="Model not found")
     return model
+
+
+@app.get(f"{settings.api_prefix}/models/{{model_id}}/revisions", response_model=RevisionList, tags=["models"])
+def api_list_model_revisions(
+    model_id: str,
+    _user: UserContext = Depends(require_roles(Role.VIEWER, Role.ENGINEER, Role.ADMIN)),
+) -> RevisionList:
+    revisions = list_revisions(model_id)
+    if revisions is None:
+        raise HTTPException(status_code=404, detail="Model not found")
+    return revisions
 
 
 @app.post(
