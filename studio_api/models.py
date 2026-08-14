@@ -59,3 +59,10 @@ class HealthResponse(BaseModel):
     service: str
     version: str
     database: Literal["ok"]
+
+
+class UserInfo(BaseModel):
+    subject: str
+    displayName: str
+    roles: List[str]
+    authMode: str

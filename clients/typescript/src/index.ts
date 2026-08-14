@@ -32,11 +32,25 @@ export interface HealthResponse {
   database: "ok";
 }
 
+export interface UserInfo {
+  subject: string;
+  displayName: string;
+  roles: string[];
+  authMode: string;
+}
+
 export class StudioApiClient {
-  constructor(private readonly baseUrl = "") {}
+  constructor(
+    private readonly baseUrl = "",
+    private readonly defaultHeaders: Record<string, string> = {},
+  ) {}
 
   async health(): Promise<HealthResponse> {
     return this.request<HealthResponse>("/health");
+  }
+
+  async me(): Promise<UserInfo> {
+    return this.request<UserInfo>("/api/v1/auth/me");
   }
 
   async listModels(params: { query?: string; limit?: number } = {}): Promise<ModelList> {
@@ -60,7 +74,8 @@ export class StudioApiClient {
   }
 
   private async request<T>(path: string, init: RequestInit = {}): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${path}`, init);
+    const headers = { ...this.defaultHeaders, ...(init.headers || {}) };
+    const response = await fetch(`${this.baseUrl}${path}`, { ...init, headers });
     if (!response.ok) {
       throw new Error(`LANMASTER Studio API ${response.status}: ${await response.text()}`);
     }
