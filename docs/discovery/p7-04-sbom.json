@@ -1,0 +1,287 @@
+{
+  "bomFormat": "LANMASTER-Studio-SBOM",
+  "componentCount": 55,
+  "components": [
+    {
+      "ecosystem": "python",
+      "name": "fastapi",
+      "version": "0.115.6"
+    },
+    {
+      "ecosystem": "python",
+      "name": "uvicorn[standard]",
+      "version": "0.32.1"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pydantic",
+      "version": "2.10.4"
+    },
+    {
+      "ecosystem": "python",
+      "name": "httpx",
+      "version": "0.28.1"
+    },
+    {
+      "ecosystem": "python",
+      "name": "pytest",
+      "version": "8.3.4"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/aix-ppc64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/android-arm",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/android-arm64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/android-x64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/darwin-arm64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/darwin-x64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/freebsd-arm64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/freebsd-x64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/linux-arm",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/linux-arm64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/linux-ia32",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/linux-loong64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/linux-mips64el",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/linux-ppc64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/linux-riscv64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/linux-s390x",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/linux-x64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/netbsd-arm64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/netbsd-x64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/openbsd-arm64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/openbsd-x64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/openharmony-arm64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/sunos-x64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/win32-arm64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/win32-ia32",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@esbuild/win32-x64",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@tweenjs/tween.js",
+      "version": "23.1.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/prop-types",
+      "version": "15.7.15"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/react",
+      "version": "18.3.18"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/react-dom",
+      "version": "18.3.5"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/stats.js",
+      "version": "0.17.4"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/three",
+      "version": "0.171.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@types/webxr",
+      "version": "0.5.24"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@webgpu/types",
+      "version": "0.1.71"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "csstype",
+      "version": "3.2.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "esbuild",
+      "version": "0.25.12"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "fflate",
+      "version": "0.8.3"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "fsevents",
+      "version": "2.3.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "js-tokens",
+      "version": "4.0.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "loose-envify",
+      "version": "1.4.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "lucide-react",
+      "version": "0.468.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "meshoptimizer",
+      "version": "0.18.1"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "playwright",
+      "version": "1.55.1"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "playwright-core",
+      "version": "1.55.1"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "pngjs",
+      "version": "7.0.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "react",
+      "version": "18.3.1"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "react-dom",
+      "version": "18.3.1"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "scheduler",
+      "version": "0.23.2"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "three",
+      "version": "0.171.0"
+    },
+    {
+      "ecosystem": "npm",
+      "name": "typescript",
+      "version": "5.6.3"
+    }
+  ],
+  "policy": {
+    "frontendAuditCommand": "npm audit --prefix frontend --audit-level=moderate",
+    "npmLockfileRequired": true,
+    "pythonExactPinsRequired": true
+  },
+  "specVersion": "1"
+}

@@ -54,6 +54,7 @@ The initial repository contains:
 - P7-01 shadow build metric and exit-criteria scaffold; observation window active.
 - P7-02 signed domain approval release-decision scaffold; approval pending.
 - P7-03 critical-path performance profile scaffold; production benchmark data pending.
+- P7-04 dependency policy and SBOM scaffold; independent security approval pending.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because
