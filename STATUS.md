@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P5-04 Three.js viewer and resource lifecycle
+active ID: P5-05 Bidirectional tree/viewer selection
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -72,6 +72,7 @@ completed IDs:
 - P5-01: React/TypeScript app scaffold, routing, dev auth and API client
 - P5-02: catalog, search and revision selector
 - P5-03: virtualized tree component with 1000-node fixed-row hierarchy
+- P5-04: Three.js viewer scaffold and resource lifecycle cleanup
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -131,6 +132,7 @@ changed files:
 - `docs/discovery/p5-01-frontend-scaffold.md`
 - `docs/discovery/p5-02-catalog-revisions.md`
 - `docs/discovery/p5-03-virtualized-tree.md`
+- `docs/discovery/p5-04-three-viewer.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `pyproject.toml`
@@ -378,9 +380,11 @@ results:
   revision list API smoke and frontend `/models/{id}` route smoke.
 - PASS: P5-03 frontend/API tests passed: virtualized tree verifier,
   frontend audit/build/test, 12 API tests and route/bundle web smoke.
+- PASS: P5-04 frontend/API tests passed: Three.js viewer verifier,
+  frontend audit/build/test, 12 API tests and route/bundle browser smoke.
 
 blockers:
 - none for Gate P4.
 
 next ID:
-- P5-04: Three.js viewer and resource lifecycle
+- P5-05: Bidirectional tree/viewer selection

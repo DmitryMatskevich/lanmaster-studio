@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { Box, ChevronRight, LogIn, RefreshCw, Search, ShieldCheck } from "lucide-react";
+import * as THREE from "three";
 
 import type { ModelSummary, RevisionSummary, UserInfo } from "../../clients/typescript/src";
 import { createStudioClient, type SessionState, type StudioRole } from "./api";
@@ -338,11 +339,76 @@ function ModelRoute({
             )}
           </section>
           <VirtualizedTree nodes={buildDemoTree(1000)} selectedId={selectedRevisionId || model.id} />
+          <ModelViewer selectedRevisionId={selectedRevisionId} />
         </div>
       )}
       {state === "loading" && <p className="message">Загрузка модели...</p>}
       {!model && state === "idle" && <p className="message">Модель не выбрана.</p>}
       {error && <p className="message error">{error}</p>}
+    </section>
+  );
+}
+
+function ModelViewer({ selectedRevisionId }: { selectedRevisionId: string }) {
+  const hostRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+    const width = host.clientWidth || 640;
+    const height = host.clientHeight || 360;
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf8fafc);
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    camera.position.set(4, 3, 5);
+    camera.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(width, height, false);
+    host.appendChild(renderer.domElement);
+
+    const cabinet = new THREE.BoxGeometry(2.2, 1.4, 3.2);
+    const material = new THREE.MeshStandardMaterial({ color: 0x8aa0ad, metalness: 0.25, roughness: 0.55 });
+    const mesh = new THREE.Mesh(cabinet, material);
+    scene.add(mesh);
+
+    const edges = new THREE.EdgesGeometry(cabinet);
+    const edgeLines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x1f2933 }));
+    mesh.add(edgeLines);
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x94a3b8, 2.4));
+    const light = new THREE.DirectionalLight(0xffffff, 1.8);
+    light.position.set(4, 5, 3);
+    scene.add(light);
+
+    let frame = 0;
+    function render() {
+      mesh.rotation.z = 0.02;
+      mesh.rotation.y += 0.006;
+      renderer.render(scene, camera);
+      frame = window.requestAnimationFrame(render);
+    }
+    render();
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      host.removeChild(renderer.domElement);
+      cabinet.dispose();
+      edges.dispose();
+      material.dispose();
+      (edgeLines.material as THREE.Material).dispose();
+      renderer.dispose();
+    };
+  }, [selectedRevisionId]);
+
+  return (
+    <section className="viewer-panel" aria-label="3D viewer">
+      <div className="tree-heading">
+        <h2>3D viewer</h2>
+        <span>{selectedRevisionId || "no revision"}</span>
+      </div>
+      <div className="viewer-host" ref={hostRef} />
     </section>
   );
 }
