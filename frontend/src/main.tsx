@@ -410,11 +410,88 @@ function ModelRoute({
             canUndo={undoStack.length > 0}
             canRedo={redoStack.length > 0}
           />
+          <CommitReleasePanel client={client} model={model} previewState={previewState} properties={properties} />
         </div>
       )}
       {state === "loading" && <p className="message">Загрузка модели...</p>}
       {!model && state === "idle" && <p className="message">Модель не выбрана.</p>}
       {error && <p className="message error">{error}</p>}
+    </section>
+  );
+}
+
+function CommitReleasePanel({
+  client,
+  model,
+  previewState,
+  properties
+}: {
+  client: ReturnType<typeof createStudioClient>;
+  model: ModelSummary;
+  previewState: PreviewState;
+  properties: PropertyField[];
+}) {
+  const [message, setMessage] = useState("");
+  const [history, setHistory] = useState<RevisionSummary[]>([]);
+  const [committedRevision, setCommittedRevision] = useState<RevisionSummary | null>(null);
+  const draftId = previewState.status === "queued" || previewState.status === "running" ? previewState.draftId : "";
+  const releasableRevisionId = committedRevision?.id || model.activeRevisionId;
+  const canRelease = Boolean(releasableRevisionId);
+
+  async function loadHistory() {
+    const revisions = await client.listRevisions(model.id);
+    setHistory(revisions.items);
+  }
+
+  async function commitDraft() {
+    if (!draftId) {
+      setMessage("Нет draft для commit.");
+      return;
+    }
+    const draft = await client.getDraft(draftId);
+    const revision = await client.commitDraft(draft.id, {
+      baseRevisionToken: draft.headRevisionToken,
+      pmd: {
+        schemaVersion: "2.0.0",
+        id: model.article,
+        parameters: Object.fromEntries(properties.map((field) => [field.key, field.value]))
+      }
+    });
+    setCommittedRevision(revision);
+    setMessage(`Committed ${revision.id}`);
+    await loadHistory();
+  }
+
+  async function releaseActiveRevision() {
+    if (!releasableRevisionId) {
+      setMessage("Release draft запрещён: нужна опубликованная revision.");
+      return;
+    }
+    const release = await client.createRelease(releasableRevisionId, { profile: "catalog-full" });
+    setMessage(`Release queued ${release.id}`);
+  }
+
+  return (
+    <section className="release-panel" aria-label="Commit release history">
+      <div className="tree-heading">
+        <h2>Commit / release</h2>
+        <span>{canRelease ? "revision ready" : "draft only"}</span>
+      </div>
+      <div className="preview-actions">
+        <button type="button" onClick={commitDraft} disabled={!draftId}>Commit draft</button>
+        <button type="button" onClick={loadHistory}>History</button>
+        <button type="button" onClick={releaseActiveRevision} disabled={!canRelease}>Release active revision</button>
+      </div>
+      {!canRelease && <p className="message">Release draft запрещён: сначала commit создаёт revision.</p>}
+      {message && <p className="message ok">{message}</p>}
+      <div className="history-list">
+        {history.map((revision) => (
+          <div className="history-row" key={revision.id}>
+            <span>{revision.id}</span>
+            <code>{revision.contentHash}</code>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
