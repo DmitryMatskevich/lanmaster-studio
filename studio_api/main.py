@@ -3,7 +3,7 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from typing import Optional
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Response, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Response, WebSocket, status
 from fastapi.responses import FileResponse
 
 from . import __version__
@@ -14,6 +14,7 @@ from .models import HealthResponse, ModelCreate, ModelList, ModelSummary, UserIn
 from .models import (
     ArtifactSummary,
     DownloadUrl,
+    EventList,
     DraftCommit,
     DraftCreate,
     DraftSummary,
@@ -53,6 +54,7 @@ from .repository import (
     enqueue_preview,
     create_release,
     get_release,
+    list_events,
     list_models,
     retry_job,
 )
@@ -388,6 +390,30 @@ def api_download_artifact(
     if not verify_download_signature(artifact_id, object_key, expires, signature):
         raise HTTPException(status_code=403, detail="Invalid or expired signature")
     return FileResponse(object_path(object_key))
+
+
+@app.get(f"{settings.api_prefix}/events", response_model=EventList, tags=["events"])
+def api_events(
+    afterSequence: int = Query(default=0, ge=0),
+    resourceType: Optional[str] = Query(default=None),
+    resourceId: Optional[str] = Query(default=None),
+    limit: int = Query(default=100, ge=1, le=500),
+    _user: UserContext = Depends(require_roles(Role.VIEWER, Role.ENGINEER, Role.ADMIN)),
+) -> EventList:
+    return list_events(
+        after_sequence=afterSequence,
+        resource_type=resourceType,
+        resource_id=resourceId,
+        limit=limit,
+    )
+
+
+@app.websocket(f"{settings.api_prefix}/ws")
+async def api_ws(websocket: WebSocket, afterSequence: int = 0) -> None:
+    await websocket.accept()
+    events = list_events(after_sequence=afterSequence)
+    await websocket.send_json(events.model_dump(mode="json"))
+    await websocket.close()
 
 
 @app.get(f"{settings.api_prefix}/auth/me", response_model=UserInfo, tags=["auth"])

@@ -147,6 +147,20 @@ export interface DownloadUrl {
   expiresAt: string;
 }
 
+export interface EventSummary {
+  sequence: number;
+  type: string;
+  resourceType: string;
+  resourceId: string;
+  payload: Record<string, unknown>;
+  createdAt: string;
+}
+
+export interface EventList {
+  items: EventSummary[];
+  nextSequence?: number | null;
+}
+
 export class StudioApiClient {
   constructor(
     private readonly baseUrl = "",
@@ -316,6 +330,21 @@ export class StudioApiClient {
 
   async getDownloadUrl(artifactId: string): Promise<DownloadUrl> {
     return this.request<DownloadUrl>(`/api/v1/artifacts/${encodeURIComponent(artifactId)}/download-url`);
+  }
+
+  async listEvents(params: {
+    afterSequence?: number;
+    resourceType?: string;
+    resourceId?: string;
+    limit?: number;
+  } = {}): Promise<EventList> {
+    const query = new URLSearchParams();
+    if (params.afterSequence !== undefined) query.set("afterSequence", String(params.afterSequence));
+    if (params.resourceType) query.set("resourceType", params.resourceType);
+    if (params.resourceId) query.set("resourceId", params.resourceId);
+    if (params.limit) query.set("limit", String(params.limit));
+    const suffix = query.toString() ? `?${query.toString()}` : "";
+    return this.request<EventList>(`/api/v1/events${suffix}`);
   }
 
   private async request<T>(path: string, init: RequestInit = {}): Promise<T> {

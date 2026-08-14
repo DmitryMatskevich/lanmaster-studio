@@ -204,3 +204,17 @@ class DownloadUrl(BaseModel):
     artifactId: str
     downloadUrl: str
     expiresAt: datetime
+
+
+class EventSummary(BaseModel):
+    sequence: int
+    type: str
+    resourceType: str
+    resourceId: str
+    payload: Dict[str, Any]
+    createdAt: datetime
+
+
+class EventList(BaseModel):
+    items: List[EventSummary]
+    nextSequence: Optional[int] = None
