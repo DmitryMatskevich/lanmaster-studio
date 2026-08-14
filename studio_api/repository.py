@@ -9,6 +9,8 @@ from .models import (
     DraftCommit,
     DraftSummary,
     ArtifactSummary,
+    AuditEventList,
+    AuditEventSummary,
     DownloadUrl,
     EventList,
     EventSummary,
@@ -32,6 +34,7 @@ from .models import (
     utc_now,
 )
 from .storage import object_path, sha256_file, sign_download_path
+from .trace import get_trace_id
 
 
 def _row_to_model(row) -> ModelSummary:
@@ -133,6 +136,44 @@ def _row_to_event(row) -> EventSummary:
         payload=json.loads(row["payload_json"]),
         createdAt=datetime.fromisoformat(row["created_at"]),
     )
+
+
+def _row_to_audit(row) -> AuditEventSummary:
+    return AuditEventSummary(
+        id=row["id"],
+        actor=row["actor"],
+        action=row["action"],
+        resourceType=row["resource_type"],
+        resourceId=row["resource_id"],
+        traceId=row["trace_id"],
+        payload=json.loads(row["payload_json"]),
+        createdAt=datetime.fromisoformat(row["created_at"]),
+    )
+
+
+def record_audit(actor: str, action: str, resource_type: str, resource_id: str, payload: dict | None = None) -> AuditEventSummary:
+    audit_id = new_id("aud")
+    with session() as conn:
+        conn.execute(
+            """
+            INSERT INTO audit_events (
+              id, actor, action, resource_type, resource_id, trace_id,
+              payload_json, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                audit_id,
+                actor,
+                action,
+                resource_type,
+                resource_id,
+                get_trace_id(),
+                json.dumps(payload or {}, sort_keys=True, ensure_ascii=False),
+                utc_now().isoformat(),
+            ),
+        )
+        row = conn.execute("SELECT * FROM audit_events WHERE id = ?", (audit_id,)).fetchone()
+    return _row_to_audit(row)
 
 
 def _record_event(conn, event_type: str, resource_type: str, resource_id: str, payload: dict) -> None:
@@ -643,3 +684,23 @@ def list_events(after_sequence: int = 0, resource_type: str | None = None, resou
     items = [_row_to_event(row) for row in rows]
     next_seq = items[-1].sequence if items else after_sequence
     return EventList(items=items, nextSequence=next_seq)
+
+
+def list_audit_events(trace_id: str | None = None, resource_type: str | None = None, resource_id: str | None = None, limit: int = 100) -> AuditEventList:
+    limit = max(1, min(limit, 500))
+    sql = "SELECT * FROM audit_events WHERE 1=1"
+    params: list[object] = []
+    if trace_id:
+        sql += " AND trace_id = ?"
+        params.append(trace_id)
+    if resource_type:
+        sql += " AND resource_type = ?"
+        params.append(resource_type)
+    if resource_id:
+        sql += " AND resource_id = ?"
+        params.append(resource_id)
+    sql += " ORDER BY created_at ASC LIMIT ?"
+    params.append(limit)
+    with session() as conn:
+        rows = conn.execute(sql, params).fetchall()
+    return AuditEventList(items=[_row_to_audit(row) for row in rows])

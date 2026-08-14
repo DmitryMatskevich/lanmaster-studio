@@ -218,3 +218,18 @@ class EventSummary(BaseModel):
 class EventList(BaseModel):
     items: List[EventSummary]
     nextSequence: Optional[int] = None
+
+
+class AuditEventSummary(BaseModel):
+    id: str
+    actor: str
+    action: str
+    resourceType: str
+    resourceId: str
+    traceId: str
+    payload: Dict[str, Any]
+    createdAt: datetime
+
+
+class AuditEventList(BaseModel):
+    items: List[AuditEventSummary]

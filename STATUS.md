@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P4-08 AuditEvent and trace correlation
+active ID: P4-09 Metrics, logs and trace dashboard skeleton
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -65,6 +65,7 @@ completed IDs:
 - P4-05: Preview/release orchestration returning 202 jobs and queued releases
 - P4-06: Object storage and signed URLs with hash/size verification
 - P4-07: WebSocket events and REST replay
+- P4-08: AuditEvent and trace correlation with admin-only query API
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -117,6 +118,7 @@ changed files:
 - `docs/discovery/p4-05-orchestration.md`
 - `docs/discovery/p4-06-storage.md`
 - `docs/discovery/p4-07-events.md`
+- `docs/discovery/p4-08-audit.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `pyproject.toml`
