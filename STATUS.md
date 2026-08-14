@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P6-01 Production document/artifact upload lifecycle and isolated ingestion pool
+active ID: P6-02 Production PDF vector/raster/mixed extraction pipeline
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -81,6 +81,7 @@ completed IDs:
 - P5-10: commit, revision history and release UI scaffold
 - P5-11: responsive, accessibility and visual E2E suite
 - Gate P5: passed with PMD-backed editor flow
+- P6-01: production upload limits, scan, immutable hash and isolated ingestion job queue
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.

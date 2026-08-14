@@ -398,7 +398,22 @@ def api_create_upload_intent(
     payload: UploadIntentCreate,
     _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
 ) -> UploadIntent:
-    intent = create_upload_intent(payload)
+    try:
+        intent = create_upload_intent(
+            payload,
+            settings.upload_max_size_bytes,
+            settings.upload_allowed_media_types,
+            settings.upload_allowed_scopes,
+        )
+    except ValueError as exc:
+        detail = str(exc)
+        if detail == "UPLOAD_TOO_LARGE":
+            raise HTTPException(status_code=413, detail="Upload size exceeds configured limit") from exc
+        if detail == "MEDIA_TYPE_NOT_ALLOWED":
+            raise HTTPException(status_code=415, detail="Media type is not allowed") from exc
+        if detail == "SCOPE_NOT_ALLOWED":
+            raise HTTPException(status_code=422, detail="Upload scope is not allowed") from exc
+        raise
     record_audit(_user.subject, "artifact.upload_intent", "artifact", intent.artifactId, {"scope": payload.scope})
     return intent
 
@@ -415,6 +430,10 @@ def api_complete_upload(
         raise HTTPException(status_code=409, detail="Uploaded object is missing")
     if result == "HASH_OR_SIZE_MISMATCH":
         raise HTTPException(status_code=422, detail="Uploaded object hash or size mismatch")
+    if result == "MALWARE_DETECTED":
+        raise HTTPException(status_code=422, detail="Uploaded object failed malware scan")
+    if result == "ARTIFACT_IMMUTABLE":
+        raise HTTPException(status_code=409, detail="Artifact is already immutable")
     record_audit(_user.subject, "artifact.complete_upload", "artifact", result.id, {"sha256": result.sha256})
     return result
 

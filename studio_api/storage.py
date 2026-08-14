@@ -33,6 +33,15 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def scan_file(path: Path) -> str:
+    signatures = (b"EICAR-STANDARD-ANTIVIRUS-TEST-FILE", b"X5O!P%@AP[4\\PZX54(P^)7CC)7}$")
+    with path.open("rb") as handle:
+        sample = handle.read(1024 * 1024)
+    if any(signature in sample for signature in signatures):
+        return "malware_signature"
+    return "clean"
+
+
 def sign_download_path(artifact_id: str, object_key: str, ttl_seconds: int = 900) -> tuple[str, int]:
     expires = int(time.time()) + ttl_seconds
     secret = "lanmaster-studio-dev-signing-key"

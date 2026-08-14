@@ -37,7 +37,7 @@ from .models import (
     new_id,
     utc_now,
 )
-from .storage import object_path, sha256_file, sign_download_path
+from .storage import object_path, scan_file, sha256_file, sign_download_path
 from .trace import get_trace_id
 
 
@@ -618,7 +618,18 @@ def get_release(release_id: str) -> ReleaseSummary | None:
     return _row_to_release(row) if row else None
 
 
-def create_upload_intent(payload: UploadIntentCreate) -> UploadIntent:
+def create_upload_intent(
+    payload: UploadIntentCreate,
+    max_size_bytes: int,
+    allowed_media_types: tuple[str, ...],
+    allowed_scopes: tuple[str, ...],
+) -> UploadIntent:
+    if payload.size > max_size_bytes:
+        raise ValueError("UPLOAD_TOO_LARGE")
+    if payload.mediaType not in allowed_media_types:
+        raise ValueError("MEDIA_TYPE_NOT_ALLOWED")
+    if payload.scope not in allowed_scopes:
+        raise ValueError("SCOPE_NOT_ALLOWED")
     now = utc_now().isoformat()
     artifact_id = new_id("art")
     safe_name = payload.filename.replace("/", "_").replace("\\", "_")
@@ -658,6 +669,8 @@ def complete_upload(payload: UploadComplete) -> ArtifactSummary | None | str:
         row = conn.execute("SELECT * FROM artifacts WHERE id = ?", (payload.artifactId,)).fetchone()
         if row is None:
             return None
+        if row["status"] == "ready":
+            return "ARTIFACT_IMMUTABLE"
         path = object_path(row["object_key"])
         if not path.exists():
             return "OBJECT_MISSING"
@@ -665,11 +678,42 @@ def complete_upload(payload: UploadComplete) -> ArtifactSummary | None | str:
         actual_hash = sha256_file(path)
         if actual_size != row["size"] or actual_hash != row["sha256"]:
             return "HASH_OR_SIZE_MISMATCH"
+        scan_result = scan_file(path)
+        if scan_result != "clean":
+            return "MALWARE_DETECTED"
         conn.execute(
             "UPDATE artifacts SET status = 'ready', updated_at = ? WHERE id = ?",
             (now, payload.artifactId),
         )
         _record_event(conn, "artifact.ready", "artifact", payload.artifactId, {"status": "ready"})
+        job_id = new_id("job")
+        conn.execute(
+            """
+            INSERT INTO jobs (
+              id, type, state, input_hash, idempotency_key, payload_json,
+              attempt, progress, created_at, updated_at
+            ) VALUES (?, 'ingest.document', 'queued', ?, ?, ?, 1, 0, ?, ?)
+            """,
+            (
+                job_id,
+                f"sha256:{row['sha256']}",
+                f"ingest:{payload.artifactId}",
+                json.dumps(
+                    {
+                        "artifactId": payload.artifactId,
+                        "objectKey": row["object_key"],
+                        "mediaType": row["media_type"],
+                        "scope": row["scope"],
+                        "pool": "isolated-ingestion",
+                    },
+                    sort_keys=True,
+                    ensure_ascii=False,
+                ),
+                now,
+                now,
+            ),
+        )
+        _record_event(conn, "job.queued", "job", job_id, {"state": "queued", "type": "ingest.document", "pool": "isolated-ingestion"})
         updated = conn.execute("SELECT * FROM artifacts WHERE id = ?", (payload.artifactId,)).fetchone()
     return _row_to_artifact(updated)
 
