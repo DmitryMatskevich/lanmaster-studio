@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P5-05 Bidirectional tree/viewer selection
+active ID: P5-06 Visibility, isolate, views, section, measure and exploded view
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -73,6 +73,7 @@ completed IDs:
 - P5-02: catalog, search and revision selector
 - P5-03: virtualized tree component with 1000-node fixed-row hierarchy
 - P5-04: Three.js viewer scaffold and resource lifecycle cleanup
+- P5-05: bidirectional tree/viewer selection using componentId
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -133,6 +134,7 @@ changed files:
 - `docs/discovery/p5-02-catalog-revisions.md`
 - `docs/discovery/p5-03-virtualized-tree.md`
 - `docs/discovery/p5-04-three-viewer.md`
+- `docs/discovery/p5-05-selection-sync.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `pyproject.toml`
@@ -382,9 +384,11 @@ results:
   frontend audit/build/test, 12 API tests and route/bundle web smoke.
 - PASS: P5-04 frontend/API tests passed: Three.js viewer verifier,
   frontend audit/build/test, 12 API tests and route/bundle browser smoke.
+- PASS: P5-05 frontend/API tests passed: selected component verifier,
+  frontend audit/build/test, 12 API tests and route/bundle browser smoke.
 
 blockers:
 - none for Gate P4.
 
 next ID:
-- P5-05: Bidirectional tree/viewer selection
+- P5-06: Visibility, isolate, views, section, measure and exploded view

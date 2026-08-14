@@ -23,5 +23,9 @@ assert.match(appSource, /translateY/);
 assert.match(appSource, /new THREE\.WebGLRenderer/);
 assert.match(appSource, /renderer\.dispose\(\)/);
 assert.match(appSource, /requestAnimationFrame/);
+assert.match(appSource, /selectedComponentId/);
+assert.match(appSource, /onSelectComponent/);
+assert.match(appSource, /componentId/);
+assert.match(appSource, /Raycaster/);
 
 console.log("Frontend scaffold verification passed");
