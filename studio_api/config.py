@@ -11,6 +11,7 @@ class Settings:
     api_prefix: str = "/api/v1"
     database_url: str = "sqlite:///./var/studio.db"
     environment: str = "dev"
+    auth_mode: str = "dev"
 
     @property
     def sqlite_path(self) -> Path:
@@ -23,5 +24,5 @@ def get_settings() -> Settings:
     return Settings(
         database_url=os.environ.get("DATABASE_URL", "sqlite:///./var/studio.db"),
         environment=os.environ.get("STUDIO_ENV", "dev"),
+        auth_mode=os.environ.get("STUDIO_AUTH_MODE", "dev"),
     )
-
