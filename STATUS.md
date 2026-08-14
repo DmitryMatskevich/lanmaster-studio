@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P6-10 Prompt injection/data isolation tests and kill switch
+active ID: P6-11 RAG/chat evaluation corpus and dashboard
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -90,6 +90,7 @@ completed IDs:
 - P6-07: LLM provider abstraction and typed EditIntent
 - P6-08: PMDPatchProposal validation and authorization workflow
 - P6-09: chat proposal UI with sources, ambiguities and accept/reject
+- P6-10: RAG kill switch, prompt injection and tenant isolation guards
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
