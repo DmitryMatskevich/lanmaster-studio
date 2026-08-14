@@ -80,6 +80,42 @@ try {
       name: "Responsive visual E2E fixture"
     })
   });
+  const draft = await api(`/api/v1/models/${model.id}/drafts`, {
+    method: "POST",
+    body: JSON.stringify({})
+  });
+  const revision = await api(`/api/v1/drafts/${draft.id}/commit`, {
+    method: "POST",
+    body: JSON.stringify({
+      baseRevisionToken: draft.headRevisionToken,
+      schemaVersion: "2.0.0",
+      pmd: {
+        schemaVersion: "2.0.0",
+        id: "P5-11-E2E",
+        parameters: {
+          width: 600,
+          depth: 1000,
+          height: 2055,
+          railOffset: 95
+        },
+        parameterSchemas: {
+          width: { label: "Width", unit: "mm", min: 600, max: 800, sourceStatus: "documented" },
+          depth: { label: "Depth", unit: "mm", min: 600, max: 1200, sourceStatus: "documented" },
+          height: { label: "Height", unit: "mm", min: 1800, max: 2200, sourceStatus: "documented" },
+          railOffset: { label: "Rail offset", unit: "mm", min: 0, max: 200, sourceStatus: "documented" }
+        },
+        assembly: {
+          components: [
+            { id: "cabinet", name: "LANMASTER PMD cabinet", type: "assembly", children: ["front-door", "left-rail", "right-rail"] },
+            { id: "front-door", parentId: "cabinet", name: "Three-part front door", type: "door" },
+            { id: "left-rail", parentId: "cabinet", name: "Left mounting rail with square holes", type: "rail" },
+            { id: "right-rail", parentId: "cabinet", name: "Right mounting rail with square holes", type: "rail" }
+          ]
+        }
+      }
+    })
+  });
+  assert.ok(revision.id, "seed revision was not committed");
 
   const browser = await chromium.launch({ headless: true });
   const viewports = [
@@ -90,8 +126,20 @@ try {
   for (const viewport of viewports) {
     const page = await browser.newPage({ viewport });
     await page.goto(`${baseUrl}/models/${model.id}`, { waitUntil: "networkidle" });
+    await page.locator(".tree-row").first().waitFor();
+    const treeRows = await page.locator(".tree-row").allTextContents();
+    assert.ok(
+      treeRows.some((text) => text.includes("Left mounting rail with square holes")),
+      `${viewport.name} PMD tree did not load: ${treeRows.join(" | ")}`
+    );
+    await page.locator(".tree-row", { hasText: "Left mounting rail with square holes" }).click();
+    await page.locator(".property-row", { hasText: "Width" }).locator("input").fill("650");
     await page.getByRole("button", { name: "Exploded view" }).click();
     await page.getByRole("button", { name: "Measure" }).click();
+    await page.getByRole("button", { name: "Preview patch" }).click();
+    await page.getByText("Queued job").waitFor();
+    await page.getByRole("button", { name: "Commit draft" }).click();
+    await page.getByText("Committed").waitFor();
     await page.screenshot({
       path: resolve(artifactDir, `${viewport.name}.png`),
       fullPage: true
@@ -148,6 +196,7 @@ try {
     assert.equal(report.main, "LANMASTER Studio workspace");
     assert.equal(report.overlaps.length, 0, `${viewport.name} layout overlaps: ${report.overlaps.join(", ")}`);
     assert.ok(report.headings.includes("Commit / release"), `${viewport.name} missing release heading`);
+    assert.ok(report.headings.includes("Revision selector"), `${viewport.name} missing PMD revision selector`);
     await page.close();
   }
 

@@ -72,6 +72,10 @@ export interface RevisionSummary {
   createdAt: string;
 }
 
+export interface RevisionDetail extends RevisionSummary {
+  pmd: Record<string, unknown>;
+}
+
 export interface RevisionList {
   items: RevisionSummary[];
 }
@@ -222,6 +226,10 @@ export class StudioApiClient {
 
   async listRevisions(modelId: string): Promise<RevisionList> {
     return this.request<RevisionList>(`/api/v1/models/${encodeURIComponent(modelId)}/revisions`);
+  }
+
+  async getRevision(revisionId: string): Promise<RevisionDetail> {
+    return this.request<RevisionDetail>(`/api/v1/revisions/${encodeURIComponent(revisionId)}`);
   }
 
   async createDraft(modelId: string, payload: { baseRevisionId?: string | null } = {}): Promise<DraftSummary> {

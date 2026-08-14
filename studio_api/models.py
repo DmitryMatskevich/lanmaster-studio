@@ -111,6 +111,10 @@ class RevisionSummary(BaseModel):
     createdAt: datetime
 
 
+class RevisionDetail(RevisionSummary):
+    pmd: Dict[str, Any]
+
+
 class RevisionList(BaseModel):
     items: List[RevisionSummary]
 

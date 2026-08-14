@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { Box, ChevronRight, Eye, Focus, Layers, LogIn, RefreshCw, Ruler, Scissors, Search, ShieldCheck } from "lucide-react";
 import * as THREE from "three";
 
-import type { DraftSummary, JobSummary, ModelSummary, RevisionSummary, UserInfo } from "../../clients/typescript/src";
+import type { DraftSummary, JobSummary, ModelSummary, RevisionDetail, RevisionSummary, UserInfo } from "../../clients/typescript/src";
 import { createStudioClient, type SessionState, type StudioRole } from "./api";
 import "./styles.css";
 
@@ -57,6 +57,58 @@ function buildDemoTree(totalNodes = 1000): TreeNode[] {
     roots.push(root);
   }
   return roots;
+}
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
+}
+
+function asNumber(value: unknown, fallback: number): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
+}
+
+function buildTreeFromPmd(pmd: Record<string, unknown>): TreeNode[] {
+  const assembly = asRecord(pmd.assembly);
+  const components = Array.isArray(assembly.components) ? assembly.components.map(asRecord) : [];
+  if (components.length === 0) return buildDemoTree(1000);
+  const byId = new Map(components.map((component) => [String(component.id), component]));
+  const roots = components.filter((component) => !component.parentId);
+
+  function toNode(component: Record<string, unknown>): TreeNode {
+    const id = String(component.id);
+    const childIds = Array.isArray(component.children) ? component.children.map(String) : [];
+    const children = childIds
+      .map((childId) => byId.get(childId))
+      .filter((child): child is Record<string, unknown> => Boolean(child))
+      .map(toNode);
+    return {
+      id,
+      label: String(component.name || component.type || id),
+      children
+    };
+  }
+
+  return (roots.length ? roots : [components[0]]).map(toNode);
+}
+
+function buildPropertiesFromPmd(pmd: Record<string, unknown>, fallback: PropertyField[]): PropertyField[] {
+  const parameters = asRecord(pmd.parameters);
+  const schemas = asRecord(pmd.parameterSchemas);
+  const fields = Object.entries(parameters)
+    .filter(([, value]) => typeof value === "number")
+    .map(([key, value]) => {
+      const schema = asRecord(schemas[key]);
+      return {
+        key,
+        label: String(schema.label || key),
+        unit: String(schema.unit || "mm"),
+        min: asNumber(schema.min, 0),
+        max: asNumber(schema.max, Math.max(Number(value) * 2, Number(value) + 1)),
+        value: Number(value),
+        sourceStatus: schema.sourceStatus === "estimated" || schema.sourceStatus === "missing" ? schema.sourceStatus : "documented"
+      } satisfies PropertyField;
+    });
+  return fields.length > 0 ? fields : fallback;
 }
 
 function flattenTree(nodes: TreeNode[], depth = 0): FlatTreeNode[] {
@@ -287,14 +339,16 @@ function ModelRoute({
 }) {
   const [model, setModel] = useState<ModelSummary | null>(null);
   const [revisions, setRevisions] = useState<RevisionSummary[]>([]);
+  const [revisionDetail, setRevisionDetail] = useState<RevisionDetail | null>(null);
   const [selectedRevisionId, setSelectedRevisionId] = useState("");
   const [selectedComponentId, setSelectedComponentId] = useState("cmp_0");
   const [viewerMode, setViewerMode] = useState<ViewerMode>("visible");
-  const [properties, setProperties] = useState<PropertyField[]>([
+  const defaultProperties: PropertyField[] = [
     { key: "width", label: "Width", unit: "mm", min: 600, max: 800, value: 600, sourceStatus: "documented" },
     { key: "depth", label: "Depth", unit: "mm", min: 600, max: 1200, value: 1000, sourceStatus: "documented" },
     { key: "railOffset", label: "Rail offset", unit: "mm", min: 0, max: 200, value: 100, sourceStatus: "estimated" }
-  ]);
+  ];
+  const [properties, setProperties] = useState<PropertyField[]>(defaultProperties);
   const [baselineProperties, setBaselineProperties] = useState<PropertyField[]>(properties);
   const [undoStack, setUndoStack] = useState<PropertyField[][]>([]);
   const [redoStack, setRedoStack] = useState<PropertyField[][]>([]);
@@ -346,6 +400,29 @@ function ModelRoute({
     void load();
   }, [client, modelId]);
 
+  useEffect(() => {
+    if (!selectedRevisionId) {
+      setRevisionDetail(null);
+      return;
+    }
+    let cancelled = false;
+    client.getRevision(selectedRevisionId).then((revision) => {
+      if (cancelled) return;
+      setRevisionDetail(revision);
+      const nextProperties = buildPropertiesFromPmd(revision.pmd, defaultProperties);
+      setProperties(nextProperties);
+      setBaselineProperties(nextProperties);
+      setSelectedComponentId(buildTreeFromPmd(revision.pmd)[0]?.id || "cmp_0");
+    }).catch(() => {
+      if (!cancelled) setRevisionDetail(null);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [client, selectedRevisionId]);
+
+  const componentTree = revisionDetail ? buildTreeFromPmd(revisionDetail.pmd) : buildDemoTree(1000);
+
   return (
     <section className="panel">
       <div className="panel-heading">
@@ -382,13 +459,14 @@ function ModelRoute({
             )}
           </section>
           <VirtualizedTree
-            nodes={buildDemoTree(1000)}
+            nodes={componentTree}
             selectedId={selectedComponentId}
             onSelect={setSelectedComponentId}
           />
           <ModelViewer
             selectedRevisionId={selectedRevisionId}
             selectedComponentId={selectedComponentId}
+            properties={properties}
             viewerMode={viewerMode}
             onModeChange={setViewerMode}
             onSelectComponent={setSelectedComponentId}
@@ -410,7 +488,13 @@ function ModelRoute({
             canUndo={undoStack.length > 0}
             canRedo={redoStack.length > 0}
           />
-          <CommitReleasePanel client={client} model={model} previewState={previewState} properties={properties} />
+          <CommitReleasePanel
+            client={client}
+            model={model}
+            previewState={previewState}
+            properties={properties}
+            basePmd={revisionDetail?.pmd}
+          />
         </div>
       )}
       {state === "loading" && <p className="message">Загрузка модели...</p>}
@@ -424,12 +508,14 @@ function CommitReleasePanel({
   client,
   model,
   previewState,
-  properties
+  properties,
+  basePmd
 }: {
   client: ReturnType<typeof createStudioClient>;
   model: ModelSummary;
   previewState: PreviewState;
   properties: PropertyField[];
+  basePmd?: Record<string, unknown>;
 }) {
   const [message, setMessage] = useState("");
   const [history, setHistory] = useState<RevisionSummary[]>([]);
@@ -452,6 +538,7 @@ function CommitReleasePanel({
     const revision = await client.commitDraft(draft.id, {
       baseRevisionToken: draft.headRevisionToken,
       pmd: {
+        ...(basePmd || {}),
         schemaVersion: "2.0.0",
         id: model.article,
         parameters: Object.fromEntries(properties.map((field) => [field.key, field.value]))
@@ -686,12 +773,14 @@ type ViewerMode = "visible" | "isolate" | "views" | "section" | "measure" | "exp
 function ModelViewer({
   selectedRevisionId,
   selectedComponentId,
+  properties,
   viewerMode,
   onModeChange,
   onSelectComponent
 }: {
   selectedRevisionId: string;
   selectedComponentId: string;
+  properties: PropertyField[];
   viewerMode: ViewerMode;
   onModeChange: (mode: ViewerMode) => void;
   onSelectComponent: (componentId: string) => void;
@@ -714,7 +803,11 @@ function ModelViewer({
     renderer.setSize(width, height, false);
     host.appendChild(renderer.domElement);
 
-    const cabinet = new THREE.BoxGeometry(2.2, 1.4, 3.2);
+    const parameterMap = Object.fromEntries(properties.map((field) => [field.key, field.value]));
+    const modelWidth = asNumber(parameterMap.width, 600) / 300;
+    const modelDepth = asNumber(parameterMap.depth, 1000) / 700;
+    const modelHeight = asNumber(parameterMap.height, 2000) / 625;
+    const cabinet = new THREE.BoxGeometry(modelWidth, modelDepth, modelHeight);
     const material = new THREE.MeshStandardMaterial({ color: 0x8aa0ad, metalness: 0.25, roughness: 0.55 });
     const mesh = new THREE.Mesh(cabinet, material);
     mesh.userData.componentId = "cmp_0";
@@ -766,7 +859,7 @@ function ModelViewer({
       (edgeLines.material as THREE.Material).dispose();
       renderer.dispose();
     };
-  }, [onSelectComponent, selectedComponentId, selectedRevisionId, viewerMode]);
+  }, [onSelectComponent, properties, selectedComponentId, selectedRevisionId, viewerMode]);
 
   return (
     <section className="viewer-panel" aria-label="3D viewer">
@@ -783,7 +876,7 @@ function ModelViewer({
         <ToolButton active={viewerMode === "explode"} label="Exploded view" onClick={() => onModeChange("explode")}><ChevronRight size={17} /></ToolButton>
       </div>
       <div className="viewer-host" ref={hostRef} />
-      {viewerMode === "measure" && <div className="measure-readout">X 2200 · Y 1400 · Z 3200 mm</div>}
+      {viewerMode === "measure" && <div className="measure-readout">{properties.map((field) => `${field.key} ${field.value} ${field.unit}`).join(" · ")}</div>}
     </section>
   );
 }

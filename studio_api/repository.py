@@ -27,6 +27,7 @@ from .models import (
     ReleaseCreate,
     ReleaseSummary,
     RevisionList,
+    RevisionDetail,
     RevisionSummary,
     UploadComplete,
     UploadIntent,
@@ -84,6 +85,18 @@ def _row_to_revision(row) -> RevisionSummary:
         parentId=row["parent_id"],
         schemaVersion=row["schema_version"],
         contentHash=row["content_hash"],
+        createdAt=datetime.fromisoformat(row["created_at"]),
+    )
+
+
+def _row_to_revision_detail(row) -> RevisionDetail:
+    return RevisionDetail(
+        id=row["id"],
+        modelId=row["model_id"],
+        parentId=row["parent_id"],
+        schemaVersion=row["schema_version"],
+        contentHash=row["content_hash"],
+        pmd=json.loads(row["pmd_json"]),
         createdAt=datetime.fromisoformat(row["created_at"]),
     )
 
@@ -256,6 +269,12 @@ def list_revisions(model_id: str) -> RevisionList | None:
             (model_id,),
         ).fetchall()
     return RevisionList(items=[_row_to_revision(row) for row in rows])
+
+
+def get_revision(revision_id: str) -> RevisionDetail | None:
+    with session() as conn:
+        row = conn.execute("SELECT * FROM revisions WHERE id = ?", (revision_id,)).fetchone()
+    return _row_to_revision_detail(row) if row else None
 
 
 def create_draft(model_id: str, base_revision_id: str | None = None) -> DraftSummary | None:
