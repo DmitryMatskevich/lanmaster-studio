@@ -16,5 +16,9 @@ assert.match(appSource, /client\.listModels/);
 assert.match(appSource, /client\.getModel/);
 assert.match(appSource, /client\.listRevisions/);
 assert.match(appSource, /Revision selector/);
+assert.match(appSource, /buildDemoTree\(1000\)/);
+assert.match(appSource, /TREE_ROW_HEIGHT = 32/);
+assert.match(appSource, /TREE_VIEWPORT_HEIGHT = 384/);
+assert.match(appSource, /translateY/);
 
 console.log("Frontend scaffold verification passed");

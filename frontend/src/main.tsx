@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { Box, LogIn, RefreshCw, Search, ShieldCheck } from "lucide-react";
+import { Box, ChevronRight, LogIn, RefreshCw, Search, ShieldCheck } from "lucide-react";
 
 import type { ModelSummary, RevisionSummary, UserInfo } from "../../clients/typescript/src";
 import { createStudioClient, type SessionState, type StudioRole } from "./api";
@@ -10,6 +10,55 @@ const defaultSession: SessionState = {
   subject: "engineer@example.test",
   role: "engineer"
 };
+
+interface TreeNode {
+  id: string;
+  label: string;
+  children?: TreeNode[];
+}
+
+interface FlatTreeNode {
+  id: string;
+  label: string;
+  depth: number;
+  hasChildren: boolean;
+}
+
+const TREE_ROW_HEIGHT = 32;
+const TREE_VIEWPORT_HEIGHT = 384;
+const TREE_OVERSCAN = 6;
+
+function buildDemoTree(totalNodes = 1000): TreeNode[] {
+  const roots: TreeNode[] = [];
+  let index = 0;
+  while (index < totalNodes) {
+    const root: TreeNode = { id: `cmp_${index}`, label: `Assembly ${index + 1}`, children: [] };
+    index += 1;
+    for (let child = 0; child < 9 && index < totalNodes; child += 1) {
+      const childNode: TreeNode = { id: `cmp_${index}`, label: `Component ${index + 1}`, children: [] };
+      index += 1;
+      for (let leaf = 0; leaf < 9 && index < totalNodes; leaf += 1) {
+        childNode.children?.push({ id: `cmp_${index}`, label: `Part ${index + 1}` });
+        index += 1;
+      }
+      root.children?.push(childNode);
+    }
+    roots.push(root);
+  }
+  return roots;
+}
+
+function flattenTree(nodes: TreeNode[], depth = 0): FlatTreeNode[] {
+  return nodes.flatMap((node) => [
+    {
+      id: node.id,
+      label: node.label,
+      depth,
+      hasChildren: Boolean(node.children?.length)
+    },
+    ...flattenTree(node.children || [], depth + 1)
+  ]);
+}
 
 function App() {
   const [session, setSession] = useState<SessionState>(defaultSession);
@@ -288,11 +337,57 @@ function ModelRoute({
               <p className="message">У модели пока нет ревизий.</p>
             )}
           </section>
+          <VirtualizedTree nodes={buildDemoTree(1000)} selectedId={selectedRevisionId || model.id} />
         </div>
       )}
       {state === "loading" && <p className="message">Загрузка модели...</p>}
       {!model && state === "idle" && <p className="message">Модель не выбрана.</p>}
       {error && <p className="message error">{error}</p>}
+    </section>
+  );
+}
+
+function VirtualizedTree({
+  nodes,
+  selectedId
+}: {
+  nodes: TreeNode[];
+  selectedId: string;
+}) {
+  const flatNodes = useMemo(() => flattenTree(nodes), [nodes]);
+  const [scrollTop, setScrollTop] = useState(0);
+  const visibleCount = Math.ceil(TREE_VIEWPORT_HEIGHT / TREE_ROW_HEIGHT) + TREE_OVERSCAN * 2;
+  const startIndex = Math.max(0, Math.floor(scrollTop / TREE_ROW_HEIGHT) - TREE_OVERSCAN);
+  const visibleNodes = flatNodes.slice(startIndex, startIndex + visibleCount);
+  const totalHeight = flatNodes.length * TREE_ROW_HEIGHT;
+
+  return (
+    <section className="tree-panel" aria-label="Component tree">
+      <div className="tree-heading">
+        <h2>Дерево компонентов</h2>
+        <span>{flatNodes.length} nodes</span>
+      </div>
+      <div
+        className="tree-viewport"
+        style={{ height: TREE_VIEWPORT_HEIGHT }}
+        onScroll={(event) => setScrollTop(event.currentTarget.scrollTop)}
+      >
+        <div className="tree-spacer" style={{ height: totalHeight }}>
+          <div className="tree-window" style={{ transform: `translateY(${startIndex * TREE_ROW_HEIGHT}px)` }}>
+            {visibleNodes.map((node) => (
+              <div
+                className={node.id === selectedId ? "tree-row selected" : "tree-row"}
+                key={node.id}
+                style={{ height: TREE_ROW_HEIGHT, paddingLeft: 10 + node.depth * 18 }}
+              >
+                {node.hasChildren ? <ChevronRight size={15} aria-hidden="true" /> : <span className="tree-dot" />}
+                <span>{node.label}</span>
+                <code>{node.id}</code>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
