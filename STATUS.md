@@ -426,11 +426,14 @@ results:
   shadow records and 28-day exit-criteria evaluator.
 - PASS: P7-02 engineering scaffold: signed domain approval, manifest hash and
   shadow-exit release decision contract.
+- PASS: P7-03 engineering scaffold: critical-path p50/p95/max and per-stage SLO
+  evaluator.
 
 blockers:
 - P7-01 cannot fully pass before real shadow builds cover at least 28 calendar
   days. Observation started 2026-08-14; earliest exit review 2026-09-10.
 - P7-02 cannot fully pass before Domain/Approver signs selected pilot acceptance.
+- P7-03 final SLO confirmation requires production-size benchmark samples.
 
 next ID:
-- P7-03: load/performance profiling and critical-path optimization scaffold.
+- P7-04: security review, threat tests, SBOM and dependency policy.
