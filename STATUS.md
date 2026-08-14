@@ -432,6 +432,8 @@ results:
   and npm audit gate.
 - PASS: P7-05 engineering scaffold: backup manifest, restore drill and RPO/RTO
   evaluator.
+- PASS: P7-06 engineering scaffold: production deployment, autoscaling, alert
+  and rollback-runbook readiness evaluator.
 
 blockers:
 - P7-01 cannot fully pass before real shadow builds cover at least 28 calendar
@@ -440,6 +442,7 @@ blockers:
 - P7-03 final SLO confirmation requires production-size benchmark samples.
 - P7-04 final pass requires independent security review approval.
 - P7-05 final pass requires a real pilot backup/restore drill.
+- P7-06 final pass requires actual production deployment evidence.
 
 next ID:
-- P7-06: production deployment, autoscaling and alerts.
+- P7-07: incident/rollback rehearsal.
