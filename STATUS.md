@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P5-07 Schema-driven property editor
+active ID: P5-08 Patch to preview workflow and progress
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -75,6 +75,7 @@ completed IDs:
 - P5-04: Three.js viewer scaffold and resource lifecycle cleanup
 - P5-05: bidirectional tree/viewer selection using componentId
 - P5-06: viewer tools scaffold for visibility, isolate, views, section, measure and exploded view
+- P5-07: schema-driven property editor scaffold
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -137,6 +138,7 @@ changed files:
 - `docs/discovery/p5-04-three-viewer.md`
 - `docs/discovery/p5-05-selection-sync.md`
 - `docs/discovery/p5-06-viewer-tools.md`
+- `docs/discovery/p5-07-property-editor.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `pyproject.toml`
@@ -390,9 +392,11 @@ results:
   frontend audit/build/test, 12 API tests and route/bundle browser smoke.
 - PASS: P5-06 frontend/API tests passed: viewer tools verifier,
   frontend audit/build/test, 12 API tests and route/bundle browser smoke.
+- PASS: P5-07 frontend/API tests passed: property editor verifier,
+  frontend audit/build/test, 12 API tests and route/bundle browser smoke.
 
 blockers:
 - none for Gate P4.
 
 next ID:
-- P5-07: Schema-driven property editor
+- P5-08: Patch to preview workflow and progress

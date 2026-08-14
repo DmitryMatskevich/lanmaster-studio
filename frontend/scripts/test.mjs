@@ -32,5 +32,10 @@ assert.match(appSource, /Visibility/);
 assert.match(appSource, /Exploded view/);
 assert.match(appSource, /Measure/);
 assert.match(appSource, /Section/);
+assert.match(appSource, /PropertyEditor/);
+assert.match(appSource, /sourceStatus/);
+assert.match(appSource, /schema-driven/);
+assert.match(appSource, /min=/);
+assert.match(appSource, /unit/);
 
 console.log("Frontend scaffold verification passed");

@@ -262,6 +262,48 @@ h1 {
   overflow: hidden;
 }
 
+.property-panel {
+  grid-column: 1 / -1;
+  border: 1px solid #d7dde2;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.property-grid {
+  display: grid;
+  gap: 0;
+}
+
+.property-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 140px 60px;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  border-top: 1px solid #eef2f5;
+  padding: 8px 14px;
+}
+
+.property-row:first-child {
+  border-top: 0;
+}
+
+.property-row span {
+  display: grid;
+  gap: 3px;
+  color: #17202a;
+}
+
+.property-row small {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.property-row code {
+  color: #52606d;
+}
+
 .viewer-host {
   height: 360px;
   min-height: 360px;
@@ -431,6 +473,10 @@ h1 {
   }
 
   .model-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .property-row {
     grid-template-columns: 1fr;
   }
 }

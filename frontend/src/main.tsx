@@ -25,6 +25,16 @@ interface FlatTreeNode {
   hasChildren: boolean;
 }
 
+interface PropertyField {
+  key: string;
+  label: string;
+  unit: string;
+  min: number;
+  max: number;
+  value: number;
+  sourceStatus: "documented" | "estimated" | "missing";
+}
+
 const TREE_ROW_HEIGHT = 32;
 const TREE_VIEWPORT_HEIGHT = 384;
 const TREE_OVERSCAN = 6;
@@ -280,6 +290,11 @@ function ModelRoute({
   const [selectedRevisionId, setSelectedRevisionId] = useState("");
   const [selectedComponentId, setSelectedComponentId] = useState("cmp_0");
   const [viewerMode, setViewerMode] = useState<ViewerMode>("visible");
+  const [properties, setProperties] = useState<PropertyField[]>([
+    { key: "width", label: "Width", unit: "mm", min: 600, max: 800, value: 600, sourceStatus: "documented" },
+    { key: "depth", label: "Depth", unit: "mm", min: 600, max: 1200, value: 1000, sourceStatus: "documented" },
+    { key: "railOffset", label: "Rail offset", unit: "mm", min: 0, max: 200, value: 100, sourceStatus: "estimated" }
+  ]);
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -352,11 +367,51 @@ function ModelRoute({
             onModeChange={setViewerMode}
             onSelectComponent={setSelectedComponentId}
           />
+          <PropertyEditor fields={properties} onChange={setProperties} />
         </div>
       )}
       {state === "loading" && <p className="message">Загрузка модели...</p>}
       {!model && state === "idle" && <p className="message">Модель не выбрана.</p>}
       {error && <p className="message error">{error}</p>}
+    </section>
+  );
+}
+
+function PropertyEditor({
+  fields,
+  onChange
+}: {
+  fields: PropertyField[];
+  onChange: (fields: PropertyField[]) => void;
+}) {
+  function updateField(key: string, value: number) {
+    onChange(fields.map((field) => field.key === key ? { ...field, value } : field));
+  }
+
+  return (
+    <section className="property-panel" aria-label="Property editor">
+      <div className="tree-heading">
+        <h2>Свойства компонента</h2>
+        <span>schema-driven</span>
+      </div>
+      <div className="property-grid">
+        {fields.map((field) => (
+          <label className="property-row" key={field.key}>
+            <span>
+              {field.label}
+              <small>{field.sourceStatus}</small>
+            </span>
+            <input
+              type="number"
+              min={field.min}
+              max={field.max}
+              value={field.value}
+              onChange={(event) => updateField(field.key, Number(event.target.value))}
+            />
+            <code>{field.unit}</code>
+          </label>
+        ))}
+      </div>
     </section>
   );
 }
