@@ -27,6 +27,7 @@ class Settings:
         "model/ifc",
     )
     upload_allowed_scopes: tuple[str, ...] = ("source", "model", "view", "release")
+    rag_enabled: bool = True
 
     @property
     def sqlite_path(self) -> Path:
@@ -54,4 +55,5 @@ def get_settings() -> Settings:
                 "source,model,view,release",
             ).split(",") if item.strip()
         ),
+        rag_enabled=os.environ.get("STUDIO_RAG_ENABLED", "true").lower() in {"1", "true", "yes"},
     )
