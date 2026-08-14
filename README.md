@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: P6-04 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: P6-05 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
@@ -42,6 +42,7 @@ The initial repository contains:
 - P6-01 upload limits, scan, immutable hash and isolated ingestion job queue.
 - P6-02 PDF vector/raster/mixed extraction with page and region provenance.
 - P6-03 SVG/DXF ingestion and LibreDWG DWG adapter diagnostics.
+- P6-04 STEP/IFC/GLB metadata extraction.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because

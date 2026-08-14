@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P6-04 STEP/IFC/GLB metadata extraction
+active ID: P6-05 Chunking, metadata, PostgreSQL full text and pgvector
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -84,6 +84,7 @@ completed IDs:
 - P6-01: production upload limits, scan, immutable hash and isolated ingestion job queue
 - P6-02: PDF vector/raster/mixed extraction with page and region provenance
 - P6-03: SVG/DXF ingestion and LibreDWG DWG adapter diagnostics
+- P6-04: STEP/IFC/GLB metadata extraction
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
