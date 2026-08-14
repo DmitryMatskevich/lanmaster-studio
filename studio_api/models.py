@@ -111,6 +111,10 @@ class RevisionSummary(BaseModel):
     createdAt: datetime
 
 
+class RevisionList(BaseModel):
+    items: List[RevisionSummary]
+
+
 class JobCreate(BaseModel):
     type: str = Field(min_length=1, max_length=80)
     inputHash: str = Field(min_length=1, max_length=160)

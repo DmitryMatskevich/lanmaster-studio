@@ -194,6 +194,13 @@ def test_draft_patch_commit_lifecycle_with_optimistic_lock(tmp_path):
     assert published["status"] == "published"
     assert published["activeRevisionId"] == revision["id"]
 
+    revisions = client.get(f"/api/v1/models/{model['id']}/revisions", headers={"X-Dev-Roles": "viewer"})
+    assert revisions.status_code == 200
+    assert [item["id"] for item in revisions.json()["items"]] == [revision["id"]]
+
+    missing_revisions = client.get("/api/v1/models/missing/revisions", headers={"X-Dev-Roles": "viewer"})
+    assert missing_revisions.status_code == 404
+
 
 def test_job_queue_worker_protocol_and_idempotency(tmp_path):
     client = next(_client(tmp_path))

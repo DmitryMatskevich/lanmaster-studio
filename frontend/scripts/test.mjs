@@ -14,5 +14,7 @@ assert.match(appSource, /\/models\/\$\{model\.id\}/);
 assert.match(appSource, /client\.me\(\)/);
 assert.match(appSource, /client\.listModels/);
 assert.match(appSource, /client\.getModel/);
+assert.match(appSource, /client\.listRevisions/);
+assert.match(appSource, /Revision selector/);
 
 console.log("Frontend scaffold verification passed");

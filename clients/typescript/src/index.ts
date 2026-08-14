@@ -72,6 +72,10 @@ export interface RevisionSummary {
   createdAt: string;
 }
 
+export interface RevisionList {
+  items: RevisionSummary[];
+}
+
 export interface JobCreate {
   type: string;
   inputHash: string;
@@ -214,6 +218,10 @@ export class StudioApiClient {
 
   async getModel(modelId: string): Promise<ModelSummary> {
     return this.request<ModelSummary>(`/api/v1/models/${encodeURIComponent(modelId)}`);
+  }
+
+  async listRevisions(modelId: string): Promise<RevisionList> {
+    return this.request<RevisionList>(`/api/v1/models/${encodeURIComponent(modelId)}/revisions`);
   }
 
   async createDraft(modelId: string, payload: { baseRevisionId?: string | null } = {}): Promise<DraftSummary> {

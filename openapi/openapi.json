@@ -267,6 +267,80 @@
         }
       }
     },
+    "/api/v1/models/{model_id}/revisions": {
+      "get": {
+        "tags": [
+          "models"
+        ],
+        "summary": "Api List Model Revisions",
+        "operationId": "api_list_model_revisions_api_v1_models__model_id__revisions_get",
+        "parameters": [
+          {
+            "name": "model_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Model Id"
+            }
+          },
+          {
+            "name": "X-Dev-User",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-User"
+            }
+          },
+          {
+            "name": "X-Dev-Roles",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Dev-Roles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevisionList"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/models/{model_id}/drafts": {
       "post": {
         "tags": [
@@ -3160,6 +3234,22 @@
           "updatedAt"
         ],
         "title": "ReleaseSummary"
+      },
+      "RevisionList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RevisionSummary"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "RevisionList"
       },
       "RevisionSummary": {
         "properties": {
