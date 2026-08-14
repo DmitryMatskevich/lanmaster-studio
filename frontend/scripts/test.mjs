@@ -43,5 +43,10 @@ assert.match(appSource, /applyPatch/);
 assert.match(appSource, /cancelJob/);
 assert.match(appSource, /retryJob/);
 assert.match(appSource, /Progress/);
+assert.match(appSource, /DiffQaPanel/);
+assert.match(appSource, /Undo/);
+assert.match(appSource, /Redo/);
+assert.match(appSource, /Accept baseline/);
+assert.match(appSource, /patch visible before commit/);
 
 console.log("Frontend scaffold verification passed");

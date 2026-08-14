@@ -295,7 +295,32 @@ function ModelRoute({
     { key: "depth", label: "Depth", unit: "mm", min: 600, max: 1200, value: 1000, sourceStatus: "documented" },
     { key: "railOffset", label: "Rail offset", unit: "mm", min: 0, max: 200, value: 100, sourceStatus: "estimated" }
   ]);
+  const [baselineProperties, setBaselineProperties] = useState<PropertyField[]>(properties);
+  const [undoStack, setUndoStack] = useState<PropertyField[][]>([]);
+  const [redoStack, setRedoStack] = useState<PropertyField[][]>([]);
   const [previewState, setPreviewState] = useState<PreviewState>({ status: "idle" });
+
+  function updateProperties(next: PropertyField[]) {
+    setUndoStack((items) => [...items, properties]);
+    setRedoStack([]);
+    setProperties(next);
+  }
+
+  function undoProperties() {
+    const previous = undoStack.at(-1);
+    if (!previous) return;
+    setRedoStack((items) => [...items, properties]);
+    setUndoStack((items) => items.slice(0, -1));
+    setProperties(previous);
+  }
+
+  function redoProperties() {
+    const next = redoStack.at(-1);
+    if (!next) return;
+    setUndoStack((items) => [...items, properties]);
+    setRedoStack((items) => items.slice(0, -1));
+    setProperties(next);
+  }
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
 
@@ -368,7 +393,7 @@ function ModelRoute({
             onModeChange={setViewerMode}
             onSelectComponent={setSelectedComponentId}
           />
-          <PropertyEditor fields={properties} onChange={setProperties} />
+          <PropertyEditor fields={properties} onChange={updateProperties} />
           <PreviewWorkflow
             client={client}
             model={model}
@@ -376,11 +401,73 @@ function ModelRoute({
             state={previewState}
             onStateChange={setPreviewState}
           />
+          <DiffQaPanel
+            before={baselineProperties}
+            after={properties}
+            onAcceptBaseline={() => setBaselineProperties(properties)}
+            onUndo={undoProperties}
+            onRedo={redoProperties}
+            canUndo={undoStack.length > 0}
+            canRedo={redoStack.length > 0}
+          />
         </div>
       )}
       {state === "loading" && <p className="message">Загрузка модели...</p>}
       {!model && state === "idle" && <p className="message">Модель не выбрана.</p>}
       {error && <p className="message error">{error}</p>}
+    </section>
+  );
+}
+
+function DiffQaPanel({
+  before,
+  after,
+  onAcceptBaseline,
+  onUndo,
+  onRedo,
+  canUndo,
+  canRedo
+}: {
+  before: PropertyField[];
+  after: PropertyField[];
+  onAcceptBaseline: () => void;
+  onUndo: () => void;
+  onRedo: () => void;
+  canUndo: boolean;
+  canRedo: boolean;
+}) {
+  const diffs = after
+    .map((field) => {
+      const oldField = before.find((item) => item.key === field.key);
+      return oldField && oldField.value !== field.value ? { key: field.key, label: field.label, before: oldField.value, after: field.value, unit: field.unit } : null;
+    })
+    .filter((item): item is { key: string; label: string; before: number; after: number; unit: string } => Boolean(item));
+
+  return (
+    <section className="qa-panel" aria-label="Diff and QA panel">
+      <div className="tree-heading">
+        <h2>Diff / QA</h2>
+        <span>{diffs.length} changes</span>
+      </div>
+      <div className="preview-actions">
+        <button type="button" onClick={onUndo} disabled={!canUndo}>Undo</button>
+        <button type="button" onClick={onRedo} disabled={!canRedo}>Redo</button>
+        <button type="button" onClick={onAcceptBaseline}>Accept baseline</button>
+      </div>
+      {diffs.length === 0 ? (
+        <p className="message">Изменений параметров нет.</p>
+      ) : (
+        <div className="diff-table">
+          {diffs.map((diff) => (
+            <div className="diff-row" key={diff.key}>
+              <span>{diff.label}</span>
+              <code>{diff.before} {diff.unit}</code>
+              <strong>{diff.after} {diff.unit}</strong>
+            </div>
+          ))}
+        </div>
+      )}
+      <p className="message ok">QA: patch visible before commit; release action remains outside draft workflow.</p>
     </section>
   );
 }

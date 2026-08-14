@@ -278,6 +278,37 @@ h1 {
   overflow: hidden;
 }
 
+.qa-panel {
+  grid-column: 1 / -1;
+  border: 1px solid #d7dde2;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.diff-table {
+  display: grid;
+}
+
+.diff-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 160px 160px;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  border-top: 1px solid #eef2f5;
+  padding: 8px 14px;
+}
+
+.diff-row strong {
+  color: #1f7a4d;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .preview-actions {
   display: flex;
   flex-wrap: wrap;
