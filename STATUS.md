@@ -434,6 +434,8 @@ results:
   evaluator.
 - PASS: P7-06 engineering scaffold: production deployment, autoscaling, alert
   and rollback-runbook readiness evaluator.
+- PASS: P7-07 engineering scaffold: rollback rehearsal evaluator for legacy
+  route restoration without data/artifact loss.
 
 blockers:
 - P7-01 cannot fully pass before real shadow builds cover at least 28 calendar
@@ -443,6 +445,7 @@ blockers:
 - P7-04 final pass requires independent security review approval.
 - P7-05 final pass requires a real pilot backup/restore drill.
 - P7-06 final pass requires actual production deployment evidence.
+- P7-07 final pass requires live incident/rollback rehearsal evidence.
 
 next ID:
-- P7-07: incident/rollback rehearsal.
+- P7-08: engineer, librarian and administrator guides.
