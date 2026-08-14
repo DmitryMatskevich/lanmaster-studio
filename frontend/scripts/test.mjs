@@ -53,5 +53,6 @@ assert.match(appSource, /commitDraft/);
 assert.match(appSource, /createRelease/);
 assert.match(appSource, /Release draft/);
 assert.match(appSource, /History/);
+assert.match(appSource, /aria-label="LANMASTER Studio workspace"/);
 
 console.log("Frontend scaffold verification passed");

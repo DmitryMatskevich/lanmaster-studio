@@ -108,7 +108,7 @@ function App() {
           <button type="button" className="nav-link" onClick={() => navigate("/models/new")}>Новая модель</button>
         </nav>
       </aside>
-      <main className="workspace">
+      <main className="workspace" aria-label="LANMASTER Studio workspace">
         <AuthBar session={session} onChange={setSession} client={client} />
         {page}
       </main>

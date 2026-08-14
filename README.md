@@ -10,7 +10,7 @@ changes there.
 
 ## Current Scope
 
-Active roadmap checkpoint: P5-11 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
+Active roadmap checkpoint: Gate P5 from `plan/lanmaster-studio/06-delivery-roadmap.md`.
 
 The initial repository contains:
 
@@ -37,6 +37,7 @@ The initial repository contains:
 - P5-08 patch-to-preview workflow with progress, cancel and retry states.
 - P5-09 before/after diff, QA panel and undo/redo scaffold.
 - P5-10 commit, revision history and release UI scaffold.
+- P5-11 responsive, accessibility and visual E2E suite.
 - `STATUS.md` as the compact continuation log for Codex work.
 
 API, frontend, editor, and RAG implementation may now start from P4 because
@@ -84,8 +85,10 @@ The local container uses `.env.example` defaults, exposes the API on
 
 ```bash
 npm ci --prefix frontend
+npx --prefix frontend playwright install chromium
 npm run frontend:build
 npm run frontend:test
+PYTHON=.venv/bin/python npm --prefix frontend run test:e2e
 ```
 
 After `frontend:build`, FastAPI serves the editor scaffold from `/` when
