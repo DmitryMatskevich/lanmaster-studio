@@ -1,7 +1,7 @@
 # LANMASTER Studio Status
 
 milestone: P4 Studio API, data and workers
-active ID: P5-08 Patch to preview workflow and progress
+active ID: P5-09 Before/after, diff, QA panel, undo/redo
 
 completed IDs:
 - P0-01: repository scaffold, CI skeleton, issue labels, ownership metadata
@@ -76,6 +76,7 @@ completed IDs:
 - P5-05: bidirectional tree/viewer selection using componentId
 - P5-06: viewer tools scaffold for visibility, isolate, views, section, measure and exploded view
 - P5-07: schema-driven property editor scaffold
+- P5-08: patch to preview workflow with progress, cancel and retry states
 
 decisions/ADR:
 - ADR index created at `docs/adr/README.md`.
@@ -139,6 +140,7 @@ changed files:
 - `docs/discovery/p5-05-selection-sync.md`
 - `docs/discovery/p5-06-viewer-tools.md`
 - `docs/discovery/p5-07-property-editor.md`
+- `docs/discovery/p5-08-preview-workflow.md`
 - `scripts/verify_skeleton.py`
 - `scripts/verify_source_fixtures.py`
 - `pyproject.toml`
@@ -394,9 +396,11 @@ results:
   frontend audit/build/test, 12 API tests and route/bundle browser smoke.
 - PASS: P5-07 frontend/API tests passed: property editor verifier,
   frontend audit/build/test, 12 API tests and route/bundle browser smoke.
+- PASS: P5-08 frontend/API tests passed: preview workflow verifier,
+  frontend audit/build/test, 12 API tests and API patch/preview web smoke.
 
 blockers:
 - none for Gate P4.
 
 next ID:
-- P5-08: Patch to preview workflow and progress
+- P5-09: Before/after, diff, QA panel, undo/redo
