@@ -3,23 +3,40 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from typing import Optional
 
-from fastapi import Depends, FastAPI, HTTPException, Query, Response, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Response, status
 
 from . import __version__
 from .auth import Role, UserContext, current_user, require_roles
 from .config import get_settings
 from .db import apply_migrations, connect
 from .models import HealthResponse, ModelCreate, ModelList, ModelSummary, UserInfo
-from .models import DraftCommit, DraftCreate, DraftSummary, PatchCreate, PatchSummary, RevisionSummary
+from .models import (
+    DraftCommit,
+    DraftCreate,
+    DraftSummary,
+    JobCreate,
+    JobSummary,
+    PatchCreate,
+    PatchSummary,
+    RevisionSummary,
+    WorkerClaimRequest,
+    WorkerHeartbeat,
+)
 from .repository import (
     abandon_draft,
     apply_patch,
+    cancel_job,
+    claim_job,
     commit_draft,
     create_draft,
     create_model,
     get_draft,
+    get_job,
     get_model,
+    heartbeat_job,
+    enqueue_job,
     list_models,
+    retry_job,
 )
 
 
@@ -162,6 +179,79 @@ def api_abandon_draft(
     if result is False:
         raise HTTPException(status_code=409, detail="Draft is not open")
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@app.post(
+    f"{settings.api_prefix}/jobs",
+    response_model=JobSummary,
+    status_code=status.HTTP_202_ACCEPTED,
+    tags=["jobs"],
+)
+def api_enqueue_job(
+    payload: JobCreate,
+    idempotency_key: Optional[str] = Header(default=None, alias="Idempotency-Key"),
+    _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
+) -> JobSummary:
+    return enqueue_job(payload, idempotency_key)
+
+
+@app.get(f"{settings.api_prefix}/jobs/{{job_id}}", response_model=JobSummary, tags=["jobs"])
+def api_get_job(
+    job_id: str,
+    _user: UserContext = Depends(require_roles(Role.VIEWER, Role.ENGINEER, Role.ADMIN)),
+) -> JobSummary:
+    job = get_job(job_id)
+    if job is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return job
+
+
+@app.post(f"{settings.api_prefix}/jobs/{{job_id}}/cancel", response_model=JobSummary, tags=["jobs"])
+def api_cancel_job(
+    job_id: str,
+    _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
+) -> JobSummary:
+    result = cancel_job(job_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+    if result == "JOB_TERMINAL":
+        raise HTTPException(status_code=409, detail="Job is already terminal")
+    return result
+
+
+@app.post(f"{settings.api_prefix}/jobs/{{job_id}}/retry", response_model=JobSummary, tags=["jobs"])
+def api_retry_job(
+    job_id: str,
+    _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
+) -> JobSummary:
+    result = retry_job(job_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+    if result == "JOB_NOT_RETRYABLE":
+        raise HTTPException(status_code=409, detail="Job is not retryable")
+    return result
+
+
+@app.post(f"{settings.api_prefix}/workers/claim", response_model=Optional[JobSummary], tags=["workers"])
+def api_claim_job(
+    payload: WorkerClaimRequest,
+    _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
+) -> Optional[JobSummary]:
+    return claim_job(payload)
+
+
+@app.post(f"{settings.api_prefix}/jobs/{{job_id}}/heartbeat", response_model=JobSummary, tags=["workers"])
+def api_heartbeat_job(
+    job_id: str,
+    payload: WorkerHeartbeat,
+    _user: UserContext = Depends(require_roles(Role.ENGINEER, Role.ADMIN)),
+) -> JobSummary:
+    result = heartbeat_job(job_id, payload)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Job not found")
+    if result == "HEARTBEAT_REJECTED":
+        raise HTTPException(status_code=409, detail="Heartbeat rejected for job state or worker")
+    return result
 
 
 @app.get(f"{settings.api_prefix}/auth/me", response_model=UserInfo, tags=["auth"])

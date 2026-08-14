@@ -8,11 +8,15 @@ from .db import session
 from .models import (
     DraftCommit,
     DraftSummary,
+    JobCreate,
+    JobSummary,
     ModelCreate,
     ModelSummary,
     PatchCreate,
     PatchSummary,
     RevisionSummary,
+    WorkerClaimRequest,
+    WorkerHeartbeat,
     new_id,
     utc_now,
 )
@@ -63,6 +67,22 @@ def _row_to_revision(row) -> RevisionSummary:
         schemaVersion=row["schema_version"],
         contentHash=row["content_hash"],
         createdAt=datetime.fromisoformat(row["created_at"]),
+    )
+
+
+def _row_to_job(row) -> JobSummary:
+    return JobSummary(
+        id=row["id"],
+        type=row["type"],
+        state=row["state"],
+        inputHash=row["input_hash"],
+        idempotencyKey=row["idempotency_key"],
+        attempt=row["attempt"],
+        progress=row["progress"],
+        workerId=row["worker_id"],
+        heartbeatAt=datetime.fromisoformat(row["heartbeat_at"]) if row["heartbeat_at"] else None,
+        createdAt=datetime.fromisoformat(row["created_at"]),
+        updatedAt=datetime.fromisoformat(row["updated_at"]),
     )
 
 
@@ -243,3 +263,123 @@ def abandon_draft(draft_id: str) -> bool | None:
             (now, draft_id),
         )
     return True
+
+
+def enqueue_job(payload: JobCreate, idempotency_key: str | None) -> JobSummary:
+    now = utc_now().isoformat()
+    with session() as conn:
+        if idempotency_key:
+            existing = conn.execute(
+                "SELECT * FROM jobs WHERE idempotency_key = ?",
+                (idempotency_key,),
+            ).fetchone()
+            if existing is not None:
+                return _row_to_job(existing)
+        job_id = new_id("job")
+        conn.execute(
+            """
+            INSERT INTO jobs (
+              id, type, state, input_hash, idempotency_key, payload_json,
+              attempt, progress, created_at, updated_at
+            ) VALUES (?, ?, 'queued', ?, ?, ?, 1, 0, ?, ?)
+            """,
+            (
+                job_id,
+                payload.type,
+                payload.inputHash,
+                idempotency_key,
+                json.dumps(payload.payload, sort_keys=True, ensure_ascii=False),
+                now,
+                now,
+            ),
+        )
+        row = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
+    return _row_to_job(row)
+
+
+def get_job(job_id: str) -> JobSummary | None:
+    with session() as conn:
+        row = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
+    return _row_to_job(row) if row else None
+
+
+def cancel_job(job_id: str) -> JobSummary | None | str:
+    now = utc_now().isoformat()
+    with session() as conn:
+        row = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
+        if row is None:
+            return None
+        if row["state"] in {"succeeded", "failed", "cancelled"}:
+            return "JOB_TERMINAL"
+        conn.execute(
+            "UPDATE jobs SET state = 'cancelled', updated_at = ? WHERE id = ?",
+            (now, job_id),
+        )
+        updated = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
+    return _row_to_job(updated)
+
+
+def retry_job(job_id: str) -> JobSummary | None | str:
+    now = utc_now().isoformat()
+    with session() as conn:
+        row = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
+        if row is None:
+            return None
+        if row["state"] not in {"failed", "cancelled"}:
+            return "JOB_NOT_RETRYABLE"
+        conn.execute(
+            """
+            UPDATE jobs
+            SET state = 'queued', attempt = attempt + 1, progress = 0,
+                worker_id = NULL, heartbeat_at = NULL, updated_at = ?
+            WHERE id = ?
+            """,
+            (now, job_id),
+        )
+        updated = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
+    return _row_to_job(updated)
+
+
+def claim_job(payload: WorkerClaimRequest) -> JobSummary | None:
+    now = utc_now().isoformat()
+    with session() as conn:
+        params: list[object] = []
+        sql = "SELECT * FROM jobs WHERE state = 'queued'"
+        if payload.types:
+            sql += " AND type IN (" + ",".join("?" for _ in payload.types) + ")"
+            params.extend(payload.types)
+        sql += " ORDER BY created_at ASC LIMIT 1"
+        row = conn.execute(sql, params).fetchone()
+        if row is None:
+            return None
+        conn.execute(
+            """
+            UPDATE jobs
+            SET state = 'running', worker_id = ?, heartbeat_at = ?,
+                updated_at = ?
+            WHERE id = ?
+            """,
+            (payload.workerId, now, now, row["id"]),
+        )
+        updated = conn.execute("SELECT * FROM jobs WHERE id = ?", (row["id"],)).fetchone()
+    return _row_to_job(updated)
+
+
+def heartbeat_job(job_id: str, payload: WorkerHeartbeat) -> JobSummary | None | str:
+    now = utc_now().isoformat()
+    with session() as conn:
+        row = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
+        if row is None:
+            return None
+        if row["state"] != "running" or row["worker_id"] != payload.workerId:
+            return "HEARTBEAT_REJECTED"
+        conn.execute(
+            """
+            UPDATE jobs
+            SET heartbeat_at = ?, progress = ?, updated_at = ?
+            WHERE id = ?
+            """,
+            (now, payload.progress, now, job_id),
+        )
+        updated = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
+    return _row_to_job(updated)
