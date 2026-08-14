@@ -19,6 +19,8 @@ from .models import (
     JobSummary,
     ModelCreate,
     ModelSummary,
+    CountByState,
+    ObservabilitySummary,
     PatchCreate,
     PatchSummary,
     PreviewRequest,
@@ -704,3 +706,35 @@ def list_audit_events(trace_id: str | None = None, resource_type: str | None = N
     with session() as conn:
         rows = conn.execute(sql, params).fetchall()
     return AuditEventList(items=[_row_to_audit(row) for row in rows])
+
+
+def _count_by(conn, table: str, column: str) -> list[CountByState]:
+    rows = conn.execute(
+        f"SELECT {column} AS state, COUNT(*) AS count FROM {table} GROUP BY {column} ORDER BY {column}"
+    ).fetchall()
+    return [CountByState(state=row["state"], count=row["count"]) for row in rows]
+
+
+def get_observability_summary(service: str, version: str) -> ObservabilitySummary:
+    with session() as conn:
+        models_total = conn.execute("SELECT COUNT(*) AS count FROM models").fetchone()["count"]
+        drafts_open = conn.execute("SELECT COUNT(*) AS count FROM drafts WHERE status = 'open'").fetchone()["count"]
+        events_total = conn.execute("SELECT COUNT(*) AS count FROM events").fetchone()["count"]
+        audit_total = conn.execute("SELECT COUNT(*) AS count FROM audit_events").fetchone()["count"]
+        last_sequence = conn.execute("SELECT COALESCE(MAX(sequence), 0) AS sequence FROM events").fetchone()["sequence"]
+        jobs_by_state = _count_by(conn, "jobs", "state")
+        releases_by_status = _count_by(conn, "releases", "status")
+        artifacts_by_status = _count_by(conn, "artifacts", "status")
+    return ObservabilitySummary(
+        service=service,
+        version=version,
+        modelsTotal=models_total,
+        draftsOpen=drafts_open,
+        jobsByState=jobs_by_state,
+        releasesByStatus=releases_by_status,
+        artifactsByStatus=artifacts_by_status,
+        eventsTotal=events_total,
+        auditEventsTotal=audit_total,
+        lastEventSequence=last_sequence,
+        generatedAt=utc_now(),
+    )

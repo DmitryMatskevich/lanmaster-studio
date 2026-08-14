@@ -163,6 +163,25 @@ export interface AuditEventList {
   items: AuditEventSummary[];
 }
 
+export interface CountByState {
+  state: string;
+  count: number;
+}
+
+export interface ObservabilitySummary {
+  service: string;
+  version: string;
+  modelsTotal: number;
+  draftsOpen: number;
+  jobsByState: CountByState[];
+  releasesByStatus: CountByState[];
+  artifactsByStatus: CountByState[];
+  eventsTotal: number;
+  auditEventsTotal: number;
+  lastEventSequence: number;
+  generatedAt: string;
+}
+
 export class StudioApiClient {
   constructor(
     private readonly baseUrl = "",
@@ -362,6 +381,10 @@ export class StudioApiClient {
     if (params.limit) query.set("limit", String(params.limit));
     const suffix = query.toString() ? `?${query.toString()}` : "";
     return this.request<AuditEventList>(`/api/v1/audit-events${suffix}`);
+  }
+
+  async observabilitySummary(): Promise<ObservabilitySummary> {
+    return this.request<ObservabilitySummary>("/api/v1/observability/summary");
   }
 
   private async request<T>(path: string, init: RequestInit = {}): Promise<T> {
